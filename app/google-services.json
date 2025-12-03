@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "105692153751",
+    "firebase_url": "https://yuvalsproject-c897a18b-default-rtdb.firebaseio.com",
+    "project_id": "yuvalsproject-c897a18b",
+    "storage_bucket": "yuvalsproject-c897a18b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:105692153751:android:973dcfc931f1c9302c66d2",
+        "android_client_info": {
+          "package_name": "com.example.wordclash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "105692153751-3e0mthg49b7ge4ln6e4sautibmui0dkr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAAAItHXYwTzBHvSgJRbxDxiQZd5fhdE-g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "105692153751-3e0mthg49b7ge4ln6e4sautibmui0dkr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
