@@ -271,7 +271,7 @@ public class DatabaseService {
     ///          if the operation fails, the callback will receive an exception
     /// @see DatabaseCallback
     /// @see User
-    public void getUserByEmailAndPassword(@NotNull final String email, @NotNull final String password, @NotNull final DatabaseCallback<User> callback) {
+    public void login(@NotNull final String email, @NotNull final String password, @NotNull final DatabaseCallback<User> callback) {
         getUserList(new DatabaseCallback<List<User>>() {
             @Override
             public void onCompleted(List<User> users) {

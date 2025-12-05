@@ -16,10 +16,10 @@ import com.example.wordclash.R;
 
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
+import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -27,7 +27,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private DatabaseService db;
 
-    // Views from XML
+
+    // views from the XML
     private EditText etEmail, etPassword, etPassword2, etUserName;
     private Spinner genderSpinner;
     private Button btnConfirm;
@@ -38,6 +39,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
 
+
         // UI Components
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
@@ -46,12 +48,19 @@ public class SignUpActivity extends AppCompatActivity {
         genderSpinner = findViewById(R.id.Gender);
         btnConfirm = findViewById(R.id.ConfirmsignUpButton);
 
+
+        // the reason i don't use "new" in
+        // db = DatabaseService.getInstance(); --- i don't "new" ---
+        // is that the "DatabaseService" is Singleton - which means it's a private method
+        // that cannot be created again - because it can only exist once!!!
+        db = DatabaseService.getInstance();
+
         // Gender Spinner
         ArrayList<String> genders = new ArrayList<>();
-        genders.add("בחר מגדר");
-        genders.add("זכר");
-        genders.add("נקבה");
-        genders.add("אחר");
+        genders.add("Gender");
+        genders.add("Male");
+        genders.add("Female");
+        genders.add("Else");
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, genders);
@@ -92,8 +101,9 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        if (selectedGender.equals("בחר מגדר") || selectedGender.isEmpty()) {
-            selectedGender = "לא צוין";
+        if (selectedGender.equals("Gender") || selectedGender.isEmpty()) {
+            Toast.makeText(this, "You need to choose a gender", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         String id = db.generateUserId();
@@ -110,8 +120,10 @@ public class SignUpActivity extends AppCompatActivity {
                         public void onCompleted(Void v) {
                             Toast.makeText(SignUpActivity.this, "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
 
+                            SharedPreferencesUtils.saveUser(SignUpActivity.this, user);
                             // מעבר למסך MainActivity
                             Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         }

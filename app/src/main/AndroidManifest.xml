@@ -12,9 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
         <activity
-            android:name=".screens.admin_users_Activity"
+            android:name=".screens.UserListActivity"
             android:exported="false" />
-        <!-- MAIN screen (first screen that opens) -->
+        <activity
+            android:name=".screens.admin_users_Activity"
+            android:exported="false" /> <!-- MAIN screen (first screen that opens) -->
         <activity
             android:name=".screens.StartPageActivity"
             android:exported="true">

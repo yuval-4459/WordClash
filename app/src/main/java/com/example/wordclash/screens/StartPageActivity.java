@@ -13,6 +13,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.wordclash.R;
+import com.example.wordclash.utils.SharedPreferencesUtils;
 
 public class StartPageActivity extends AppCompatActivity {
     Button btnSignUp;
@@ -30,14 +31,18 @@ public class StartPageActivity extends AppCompatActivity {
             return insets;
         });
 
+        if (SharedPreferencesUtils.isUserLoggedIn(StartPageActivity.this)) {
+            Intent intent = new Intent(StartPageActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         btnSignUp = findViewById(R.id.signUpButton);
         btnSignUp.setOnClickListener(view -> startActivity(new Intent(StartPageActivity.this, SignUpActivity.class)));
 
         btnLogin = findViewById(R.id.LoginButton);
         btnLogin.setOnClickListener(view -> startActivity(new Intent(StartPageActivity.this, LoginActivity.class)));
-
-        btnTryOut = findViewById(R.id.TryOutButton);
-        btnTryOut.setOnClickListener(view -> startActivity(new Intent(StartPageActivity.this, admin_users_Activity.class)));
 
     }
 }
