@@ -18,7 +18,7 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 public class StartPageActivity extends AppCompatActivity {
     Button btnSignUp;
     Button btnLogin;
-    Button btnTryOut;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -27,6 +28,7 @@ public class admin_users_Activity extends AppCompatActivity {
     private Spinner genderSpinner;
     private EditText emailField, passwordField, confirmPasswordField, usernameField;
     private Button updateBtn, deleteBtn;
+    private CheckBox isAdminCheckBox;
 
     private User selectedUser;
 
@@ -60,6 +62,7 @@ public class admin_users_Activity extends AppCompatActivity {
         emailField = findViewById(R.id.Email);
         passwordField = findViewById(R.id.Password);
         usernameField = findViewById(R.id.UserName);
+        isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
         updateBtn = findViewById(R.id.updateUserBtn);
         deleteBtn = findViewById(R.id.deleteUserBtn);
     }
@@ -85,6 +88,7 @@ public class admin_users_Activity extends AppCompatActivity {
         emailField.setText(selectedUser.getEmail());
         passwordField.setText(selectedUser.getPassword());
         usernameField.setText(selectedUser.getUserName());
+        isAdminCheckBox.setChecked(selectedUser.isAdmin());
 
         String[] genders = {"Male", "Female", "Other"};
         for (int i = 0; i < genders.length; i++) {
@@ -102,6 +106,7 @@ public class admin_users_Activity extends AppCompatActivity {
         String password = passwordField.getText().toString().trim();
         String username = usernameField.getText().toString().trim();
         String gender = genderSpinner.getSelectedItem().toString();
+        boolean isAdmin = isAdminCheckBox.isChecked();
 
         if (email.isEmpty() || password.isEmpty() || username.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -114,6 +119,7 @@ public class admin_users_Activity extends AppCompatActivity {
         selectedUser.setPassword(password);
         selectedUser.setUserName(username);
         selectedUser.setGender(gender);
+        selectedUser.setAdmin(isAdmin);
 
 
         DatabaseService.getInstance().updateUser(selectedUser, new DatabaseService.DatabaseCallback<Void>() {
@@ -163,6 +169,7 @@ public class admin_users_Activity extends AppCompatActivity {
         passwordField.setText("");
         usernameField.setText("");
         genderSpinner.setSelection(0);
+        isAdminCheckBox.setChecked(false);
     }
 
 }

@@ -60,7 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
         genders.add("Gender");
         genders.add("Male");
         genders.add("Female");
-        genders.add("Else");
+        genders.add("Other");
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, genders);

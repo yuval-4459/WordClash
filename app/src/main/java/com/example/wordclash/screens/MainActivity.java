@@ -5,12 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
 
 import com.example.wordclash.models.User;
+import com.example.wordclash.services.EmailService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -20,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button btnDeleteUser;
     Button btnLogout;
+    Button btnChangeDetails;
 
     private User user;
     private TextView tvHelloUser;
@@ -42,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
 
         btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> logout());
+
+        btnChangeDetails = findViewById(R.id.btnChangeDetails);
+        btnChangeDetails.setOnClickListener(v -> initiateChangeDetails());
+
+
         HideAdminButton();
 
     }
@@ -62,6 +70,32 @@ public class MainActivity extends AppCompatActivity {
         //clear history
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    private void initiateChangeDetails() {
+        // Auto-generate and send verification code
+        String code = EmailService.generateVerificationCode();
+        EmailService.sendVerificationEmail(user.getEmail(), code, new EmailService.EmailCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(MainActivity.this,
+                        "קוד אימות נשלח לאימייל שלך",
+                        Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(MainActivity.this, VerifyCodeActivity.class);
+                intent.putExtra("email", user.getEmail());
+                intent.putExtra("code", code);
+                intent.putExtra("type", "change_details");
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                Toast.makeText(MainActivity.this,
+                        "שגיאה בשליחת קוד: " + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }

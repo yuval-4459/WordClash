@@ -119,6 +119,8 @@
                 app:passwordToggleEnabled="true"
                 android:hint="Password">
 
+
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/Password"
                     android:layout_width="match_parent"
@@ -168,8 +170,27 @@
                     android:layout_height="56dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
-
             </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#F5F5F5">
+                <CheckBox
+                    android:id="@+id/isAdminCheckBox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Admin User"
+                    android:textSize="16sp"
+                    android:padding="8dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/Gender"/>
+            </androidx.cardview.widget.CardView>
+
 
             <!-- Action Buttons -->
             <LinearLayout

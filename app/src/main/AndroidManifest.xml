@@ -12,6 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
         <activity
+            android:name=".screens.ChangeDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ResetPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.VerifyCodeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.UserListActivity"
             android:exported="false" />
         <activity

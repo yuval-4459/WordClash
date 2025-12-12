@@ -16,7 +16,8 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
-    private Button btnConfirm;
+
+    private Button btnConfirm, btnForgotPassword;
 
     private DatabaseService db;
 
@@ -28,10 +29,15 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         btnConfirm = findViewById(R.id.ConfirmsignUpButton); // same button id
+        btnForgotPassword = findViewById(R.id.ForgotPasswordButton);
 
         db = DatabaseService.getInstance();
 
         btnConfirm.setOnClickListener(v -> loginUser());
+        btnForgotPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void loginUser() {
