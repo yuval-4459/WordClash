@@ -128,9 +128,6 @@ public class SharedPreferencesUtils {
     /// @see User
     /// @see #isUserLoggedIn(Context)
     public static User getUser(Context context) {
-        if (!isUserLoggedIn(context)) {
-            return null;
-        }
         return getObject(context, "user", User.class);
     }
 

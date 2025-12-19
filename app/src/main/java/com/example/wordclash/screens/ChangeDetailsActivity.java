@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 public class ChangeDetailsActivity extends AppCompatActivity {
 
-    private EditText etPassword, etPassword2, etUserName;
+    private EditText etUserName;
     private Spinner genderSpinner;
     private Button btnUpdateDetails;
     private String selectedGender = "";
@@ -40,8 +40,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             return;
         }
 
-        etPassword = findViewById(R.id.Password);
-        etPassword2 = findViewById(R.id.PassswordAuthentication);
         etUserName = findViewById(R.id.UserName);
         genderSpinner = findViewById(R.id.Gender);
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
@@ -57,7 +55,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         genders.add("Gender");
         genders.add("Male");
         genders.add("Female");
-        genders.add("Else");
+        genders.add("Other");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, genders);
@@ -78,38 +76,31 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void populateFields() {
-        etPassword.setText(currentUser.getPassword());
-        etPassword2.setText(currentUser.getPassword());
         etUserName.setText(currentUser.getUserName());
 
-        // Set gender spinner selection
         String[] genders = {"Gender", "Male", "Female", "Else"};
         for (int i = 0; i < genders.length; i++) {
             if (genders[i].equalsIgnoreCase(currentUser.getGender())) {
                 genderSpinner.setSelection(i);
+                selectedGender = genders[i];
                 break;
             }
         }
     }
 
+
     private void updateDetails() {
-        String password = etPassword.getText().toString().trim();
-        String password2 = etPassword2.getText().toString().trim();
         String userName = etUserName.getText().toString().trim();
 
-
-
-        if (!password.equals(password2)) {
-            Toast.makeText(this, "הסיסמאות אינן תואמות", Toast.LENGTH_SHORT).show();
+        if (userName.isEmpty()) {
+            Toast.makeText(this, "נא למלא שם משתמש", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (selectedGender.equals("Gender") || selectedGender.isEmpty()) {
-            Toast.makeText(this, "נא לבחור מגדר", Toast.LENGTH_SHORT).show();
-            return;
+            selectedGender = currentUser.getGender();
         }
 
-        currentUser.setPassword(password);
         currentUser.setUserName(userName);
         currentUser.setGender(selectedGender);
 

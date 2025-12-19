@@ -2,20 +2,29 @@ package com.example.wordclash.services;
 
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
+import java.util.Properties;
 import java.util.Random;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Service for sending verification emails
- * Note: This is a simplified version. In production, you should use:
- * - Firebase Authentication email verification
- * - SendGrid API
- * - Amazon SES
- * - Or another email service provider
- */
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+
+
 public class EmailService {
+    private static final String TAG = "EmailService";
+
+    // Your Gmail credentials
+    private static final String EMAIL = "wordclash445@gmail.com";
+    private static final String PASSWORD = "Es4zAGejw4itH5z"; // 16 chars from Google
 
     public interface EmailCallback {
         void onSuccess();
@@ -25,48 +34,40 @@ public class EmailService {
     private static final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private static final Handler mainHandler = new Handler(Looper.getMainLooper());
 
-    /**
-     * Generate a random 6-digit verification code
-     */
     public static String generateVerificationCode() {
         Random random = new Random();
         int code = 100000 + random.nextInt(900000);
         return String.valueOf(code);
     }
 
-    /**
-     * Send verification email
-     *
-     * IMPORTANT: This is a mock implementation!
-     *
-     * For production, you need to:
-     * 1. Add email service dependency (e.g., JavaMail API, SendGrid)
-     * 2. Configure SMTP settings or API keys
-     * 3. Implement actual email sending
-     *
-     * Example with JavaMail:
-     * - Add to build.gradle: implementation 'com.sun.mail:android-mail:1.6.7'
-     * - Configure SMTP (Gmail, SendGrid, etc.)
-     *
-     * Example with Firebase Auth:
-     * - Use Firebase Authentication's sendPasswordResetEmail()
-     */
-    public static void sendVerificationEmail(String email, String code, EmailCallback callback) {
+    public static void sendVerificationEmail(String toEmail, String code, EmailCallback callback) {
         executorService.execute(() -> {
             try {
-                // Simulate network delay
-                Thread.sleep(1000);
+                Properties props = new Properties();
+                props.put("mail.smtp.host", "smtp.gmail.com");
+                props.put("mail.smtp.port", "587");
+                props.put("mail.smtp.auth", "true");
+                props.put("mail.smtp.starttls.enable", "true");
 
-                // TODO: Replace with actual email sending implementation
-                // For now, this just logs the code
-                System.out.println("Verification code for " + email + ": " + code);
+                Session session = Session.getInstance(props, new Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(EMAIL, PASSWORD);
+                    }
+                });
 
-                // In development, the code is just stored in memory
-                // In production, send actual email here
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(EMAIL));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toEmail));
+                message.setSubject("WordClash - Verification Code");
+                message.setText("Your verification code is: " + code);
 
+                Transport.send(message);
+
+                Log.d(TAG, "Email sent to: " + toEmail);
                 mainHandler.post(() -> callback.onSuccess());
 
             } catch (Exception e) {
+                Log.e(TAG, "Failed to send email", e);
                 mainHandler.post(() -> callback.onFailure(e));
             }
         });

@@ -20,7 +20,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
 
-    Button btnDeleteUser;
+    Button btnUsersTable;
     Button btnLogout;
     Button btnChangeDetails;
 
@@ -39,15 +39,16 @@ public class MainActivity extends AppCompatActivity {
         tvHelloUser.setText("Hello "+ user.getUserName());
 
 
-        btnDeleteUser = findViewById(R.id.DeleteUserButton);
-        btnDeleteUser.setOnClickListener(view ->
+        btnUsersTable = findViewById(R.id.UsersTableButton);
+        btnUsersTable.setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, UserListActivity.class)));
 
         btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> logout());
 
         btnChangeDetails = findViewById(R.id.btnChangeDetails);
-        btnChangeDetails.setOnClickListener(v -> initiateChangeDetails());
+        btnChangeDetails.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, ChangeDetailsActivity.class)));
 
 
         HideAdminButton();
@@ -56,10 +57,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void HideAdminButton(){
         if(!user.isAdmin()){
-            btnDeleteUser.setVisibility(View.GONE);
+            btnUsersTable.setVisibility(View.GONE);
         }
         else{
-            btnDeleteUser.setVisibility(View.VISIBLE);
+            btnUsersTable.setVisibility(View.VISIBLE);
         }
     }
 
