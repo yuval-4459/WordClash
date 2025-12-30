@@ -34,10 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         db = DatabaseService.getInstance();
 
         btnConfirm.setOnClickListener(v -> loginUser());
-        btnForgotPassword.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent);
-        });
+
     }
 
     private void loginUser() {

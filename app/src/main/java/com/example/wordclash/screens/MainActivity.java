@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnUsersTable;
     Button btnLogout;
     Button btnChangeDetails;
+    Button btnRanks;
 
     private User user;
     private TextView tvHelloUser;
@@ -51,6 +52,11 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, ChangeDetailsActivity.class)));
 
 
+        btnRanks = findViewById(R.id.btnRanks);
+        btnRanks.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, RanksActivity.class)));
+
+
         HideAdminButton();
 
     }
@@ -72,31 +78,4 @@ public class MainActivity extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }
-
-    private void initiateChangeDetails() {
-        // Auto-generate and send verification code
-        String code = EmailService.generateVerificationCode();
-        EmailService.sendVerificationEmail(user.getEmail(), code, new EmailService.EmailCallback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(MainActivity.this,
-                        "קוד אימות נשלח לאימייל שלך",
-                        Toast.LENGTH_SHORT).show();
-
-                Intent intent = new Intent(MainActivity.this, VerifyCodeActivity.class);
-                intent.putExtra("email", user.getEmail());
-                intent.putExtra("code", code);
-                intent.putExtra("type", "change_details");
-                startActivity(intent);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-                Toast.makeText(MainActivity.this,
-                        "שגיאה בשליחת קוד: " + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
 }
