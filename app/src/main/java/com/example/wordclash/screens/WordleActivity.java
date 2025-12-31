@@ -16,6 +16,7 @@ import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -71,16 +72,16 @@ public class WordleActivity extends AppCompatActivity {
         for (int i = 0; i < MAX_ATTEMPTS * WORD_LENGTH; i++) {
             TextView tv = new TextView(this);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 100;
-            params.height = 100;
-            params.setMargins(4, 4, 4, 4);
+            params.width = 120;  // Increased from 100
+            params.height = 120; // Increased from 100
+            params.setMargins(6, 6, 6, 6); // Increased margins
             tv.setLayoutParams(params);
 
             tv.setGravity(android.view.Gravity.CENTER);
-            tv.setTextSize(24);
+            tv.setTextSize(28); // Increased from 24
             tv.setTextColor(Color.BLACK);
             tv.setBackgroundColor(Color.WHITE);
-            tv.setPadding(4, 4, 4, 4);
+            tv.setPadding(8, 8, 8, 8); // Increased padding
 
             // Add border
             tv.setBackground(getDrawable(android.R.drawable.edit_text));

@@ -13,7 +13,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
-
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
@@ -118,6 +118,10 @@ public class SignUpActivity extends AppCompatActivity {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<Void>() {
                         @Override
                         public void onCompleted(Void v) {
+                            // Create initial stats with ONLY rank and totalScore
+                            Stats initialStats = new Stats(user.getId(), 1, 0);
+                            db.createStats(initialStats, null);
+
                             Toast.makeText(SignUpActivity.this, "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
 
                             SharedPreferencesUtils.saveUser(SignUpActivity.this, user);

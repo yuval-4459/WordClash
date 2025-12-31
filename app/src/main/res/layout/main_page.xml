@@ -42,14 +42,30 @@
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:padding="16dp"
-        android:text="Table of Users"
+        android:text="📊 Table of Users"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.15" />
+
+    <!-- Admin: Add Word Button (NEW) -->
+    <Button
+        android:id="@+id/AddWordButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="@android:color/holo_purple"
+        android:padding="16dp"
+        android:text="➕ Add New Word"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/UsersTableButton" />
 
     <!-- Change Details Button -->
     <Button
@@ -57,14 +73,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:padding="16dp"
-        android:text="Change Details"
+        android:text="⚙️ Change Details"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/UsersTableButton" />
+        app:layout_constraintTop_toBottomOf="@id/AddWordButton" />
 
     <!-- Start Playing Button -->
     <Button
@@ -72,24 +88,23 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:backgroundTint="@android:color/holo_green_dark"
         android:padding="16dp"
-        android:text="Start Playing"
+        android:text="🎮 Start Playing"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnChangeDetails" />
 
-
-
+    <!-- Wordle Button -->
     <Button
         android:id="@+id/WordleButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:padding="16dp"
         android:text="🎮 Wordle"

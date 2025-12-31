@@ -26,6 +26,7 @@ import java.util.Random;
 
 /**
  * Quiz game activity
+ * FIXED: Now saves practice count to the correct rank
  */
 public class GameActivity extends AppCompatActivity {
 
@@ -276,47 +277,56 @@ public class GameActivity extends AppCompatActivity {
             timer.cancel();
         }
 
-        // Update stats if above 80
+        // Update general stats
+        stats.setTotalScore(stats.getTotalScore() + score);
 
-        if (score >= 80)
-        {
-            stats.setPracticeCount(stats.getPracticeCount() + 1);
-            stats.setTotalScore(stats.getTotalScore() + score);
-        }
-        else
-        {
+        if (score >= 80) {
+            // Increment practice count for THIS SPECIFIC RANK
+            DatabaseService.getInstance().incrementPracticeForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
+                @Override
+                public void onCompleted(Void unused) {
+                    // Also update global practice count
+                    stats.setPracticeCount(stats.getPracticeCount() + 1);
+
+                    // Check if can rank up
+                    if (stats.canRankUp()) {
+                        stats.setRank(stats.getRank() + 1);
+                        stats.setPracticeCount(0);
+                        stats.setHasReviewedWords(false);
+                    }
+
+                    DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+                        @Override
+                        public void onCompleted(Void unused) {
+                            showResultDialog();
+                        }
+
+                        @Override
+                        public void onFailed(Exception e) {
+                            Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
+                            showResultDialog();
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    Toast.makeText(GameActivity.this, "Failed to save rank progress", Toast.LENGTH_SHORT).show();
+                    showResultDialog();
+                }
+            });
+        } else {
             Toast.makeText(this, "You need at least 80 points to pass", Toast.LENGTH_SHORT).show();
+            showResultDialog();
         }
-
-        // Check if can rank up
-        if (stats.canRankUp()) {
-            stats.setRank(stats.getRank() + 1);
-            stats.setPracticeCount(0);
-            stats.setHasReviewedWords(false);
-        }
-
-        DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
-            @Override
-            public void onCompleted(Void unused) {
-                showResultDialog();
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
-                showResultDialog();
-            }
-        });
     }
 
     private void showResultDialog() {
-        String message = "Score: " + score + " / " + (gameWords.size() * 10);
+        String message;
         if (score >= 80) {
-            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n"
-                    + "🎉 Congratulations!";
+            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n🎉 Congratulations!";
         } else {
-            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n"
-                    + "❌ You failed.\nYou need at least 80 points to pass.";
+            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n❌ You failed.\nYou need at least 80 points to pass.";
         }
 
         new AlertDialog.Builder(this)

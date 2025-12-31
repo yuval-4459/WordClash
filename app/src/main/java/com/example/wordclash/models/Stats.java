@@ -4,25 +4,22 @@ import java.io.Serializable;
 
 /**
  * Model class for user statistics
- * Tracks user's rank, practice count, and scores
+ * Tracks user's CURRENT rank and total score
+ * Note: practiceCount and hasReviewedWords are now per-rank in rank_progress
  */
 public class Stats implements Serializable {
 
     private String userId;
-    private int rank; // 1-5
-    private int practiceCount; // Number of completed practice sessions
-    private int totalScore; // Total points earned
-    private boolean hasReviewedWords; // Has user reviewed words for current rank
+    private int rank; // Current rank (1-5)
+    private int totalScore; // Total points earned across ALL ranks
 
     public Stats() {
     }
 
-    public Stats(String userId, int rank, int practiceCount, int totalScore, boolean hasReviewedWords) {
+    public Stats(String userId, int rank, int totalScore) {
         this.userId = userId;
         this.rank = rank;
-        this.practiceCount = practiceCount;
         this.totalScore = totalScore;
-        this.hasReviewedWords = hasReviewedWords;
     }
 
     public String getUserId() {
@@ -41,14 +38,6 @@ public class Stats implements Serializable {
         this.rank = rank;
     }
 
-    public int getPracticeCount() {
-        return practiceCount;
-    }
-
-    public void setPracticeCount(int practiceCount) {
-        this.practiceCount = practiceCount;
-    }
-
     public int getTotalScore() {
         return totalScore;
     }
@@ -57,16 +46,8 @@ public class Stats implements Serializable {
         this.totalScore = totalScore;
     }
 
-    public boolean isHasReviewedWords() {
-        return hasReviewedWords;
-    }
-
-    public void setHasReviewedWords(boolean hasReviewedWords) {
-        this.hasReviewedWords = hasReviewedWords;
-    }
-
     /**
-     * Get required practice count to rank up
+     * Get required practice count to rank up from current rank
      */
     public int getRequiredPracticeCount() {
         switch (rank) {
@@ -93,21 +74,12 @@ public class Stats implements Serializable {
         }
     }
 
-    /**
-     * Check if user can rank up
-     */
-    public boolean canRankUp() {
-        return rank < 5 && practiceCount >= getRequiredPracticeCount();
-    }
-
     @Override
     public String toString() {
         return "Stats{" +
                 "userId='" + userId + '\'' +
                 ", rank=" + rank +
-                ", practiceCount=" + practiceCount +
                 ", totalScore=" + totalScore +
-                ", hasReviewedWords=" + hasReviewedWords +
                 '}';
     }
 }

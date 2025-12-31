@@ -29,6 +29,7 @@ public class DatabaseService {
     private static final String USERS_PATH = "users";
     private static final String STATS_PATH = "stats";
     private static final String WORDS_PATH = "vocabulary";
+    private static final String RANK_PROGRESS_PATH = "rank_progress"; // NEW
 
     public interface DatabaseCallback<T> {
         public void onCompleted(T object);
@@ -109,6 +110,11 @@ public class DatabaseService {
     }
 
     private String generateNewId(@NotNull final String path) {
+        return databaseReference.child(path).push().getKey();
+    }
+
+    // Public method to generate new ID (for AdminAddWordActivity)
+    public String generateNewId(String path) {
         return databaseReference.child(path).push().getKey();
     }
 
@@ -312,6 +318,85 @@ public class DatabaseService {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 callback.onFailed(error.toException());
+            }
+        });
+    }
+
+    // endregion
+
+    // region Rank Progress Section - NEW ADDITION
+
+    /**
+     * Simple data holder for rank-specific progress
+     */
+    public static class RankProgressData {
+        public int practiceCount;
+        public boolean hasReviewedWords;
+
+        public RankProgressData() {
+            this.practiceCount = 0;
+            this.hasReviewedWords = false;
+        }
+    }
+
+    /**
+     * Get progress for specific rank
+     */
+    public void getRankProgress(@NotNull final String userId, int rank, @NotNull final DatabaseCallback<RankProgressData> callback) {
+        String path = RANK_PROGRESS_PATH + "/" + userId + "/rank_" + rank;
+        getData(path, RankProgressData.class, callback);
+    }
+
+    /**
+     * Update progress for specific rank
+     */
+    public void updateRankProgress(@NotNull final String userId, int rank, @NotNull final RankProgressData progress, @Nullable final DatabaseCallback<Void> callback) {
+        String path = RANK_PROGRESS_PATH + "/" + userId + "/rank_" + rank;
+        writeData(path, progress, callback);
+    }
+
+    /**
+     * Mark words as reviewed for specific rank
+     */
+    public void markWordsReviewedForRank(@NotNull final String userId, int rank, @Nullable final DatabaseCallback<Void> callback) {
+        getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
+            @Override
+            public void onCompleted(RankProgressData data) {
+                if (data == null) {
+                    data = new RankProgressData();
+                }
+                data.hasReviewedWords = true;
+                updateRankProgress(userId, rank, data, callback);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                RankProgressData data = new RankProgressData();
+                data.hasReviewedWords = true;
+                updateRankProgress(userId, rank, data, callback);
+            }
+        });
+    }
+
+    /**
+     * Increment practice count for specific rank
+     */
+    public void incrementPracticeForRank(@NotNull final String userId, int rank, @Nullable final DatabaseCallback<Void> callback) {
+        getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
+            @Override
+            public void onCompleted(RankProgressData data) {
+                if (data == null) {
+                    data = new RankProgressData();
+                }
+                data.practiceCount++;
+                updateRankProgress(userId, rank, data, callback);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                if (callback != null) {
+                    callback.onFailed(e);
+                }
             }
         });
     }

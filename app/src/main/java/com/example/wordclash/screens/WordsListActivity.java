@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.wordclash.R;
 import com.example.wordclash.adapters.WordAdapter;
-import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -22,6 +21,7 @@ import java.util.List;
 
 /**
  * Words list screen with floating "I'm Ready" button
+ * FIXED: Now marks words as reviewed for THIS specific rank
  */
 public class WordsListActivity extends AppCompatActivity {
 
@@ -32,7 +32,6 @@ public class WordsListActivity extends AppCompatActivity {
 
     private User user;
     private int currentRank;
-    private boolean isScrollingDown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,32 +110,17 @@ public class WordsListActivity extends AppCompatActivity {
     }
 
     private void markAsReviewed() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        // Mark words as reviewed for THIS SPECIFIC RANK
+        DatabaseService.getInstance().markWordsReviewedForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
             @Override
-            public void onCompleted(Stats stats) {
-                if (stats == null) {
-                    stats = new Stats(user.getId(), currentRank, 0, 0, true);
-                } else {
-                    stats.setHasReviewedWords(true);
-                }
-
-                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
-                    @Override
-                    public void onCompleted(Void unused) {
-                        Toast.makeText(WordsListActivity.this, "You're ready to practice!", Toast.LENGTH_SHORT).show();
-                        finish();
-                    }
-
-                    @Override
-                    public void onFailed(Exception e) {
-                        Toast.makeText(WordsListActivity.this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+            public void onCompleted(Void unused) {
+                Toast.makeText(WordsListActivity.this, "You're ready to practice Rank " + currentRank + "!", Toast.LENGTH_SHORT).show();
+                finish();
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(WordsListActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WordsListActivity.this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

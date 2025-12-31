@@ -18,6 +18,7 @@ import com.example.wordclash.utils.VocabularyImporter;
 public class MainActivity extends AppCompatActivity {
 
     Button btnUsersTable;
+    Button btnAddWord; // NEW
     Button btnLogout;
     Button btnChangeDetails;
     Button btnRanks;
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         btnUsersTable.setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, UserListActivity.class)));
 
+        btnAddWord = findViewById(R.id.AddWordButton); // NEW
+        btnAddWord.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, AdminAddWordActivity.class)));
+
         btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> logout());
 
@@ -61,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         btnWordle.setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, WordleActivity.class)));
 
-        HideAdminButton();
+        HideAdminButtons();
     }
 
     private void importVocabularyIfNeeded() {
@@ -82,11 +87,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void HideAdminButton() {
+    private void HideAdminButtons() {
         if (!user.isAdmin()) {
             btnUsersTable.setVisibility(View.GONE);
+            btnAddWord.setVisibility(View.GONE); // NEW
         } else {
             btnUsersTable.setVisibility(View.VISIBLE);
+            btnAddWord.setVisibility(View.VISIBLE); // NEW
         }
     }
 

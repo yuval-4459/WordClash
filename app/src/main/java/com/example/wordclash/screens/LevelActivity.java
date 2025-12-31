@@ -16,6 +16,7 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 /**
  * Level screen showing Words and Practice buttons
+ * FIXED: Now shows progress for THIS specific rank
  */
 public class LevelActivity extends AppCompatActivity {
 
@@ -25,6 +26,9 @@ public class LevelActivity extends AppCompatActivity {
     private User user;
     private Stats stats;
     private int currentRank;
+
+    // Track progress for THIS rank
+    private DatabaseService.RankProgressData rankProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,42 +67,73 @@ public class LevelActivity extends AppCompatActivity {
             @Override
             public void onCompleted(Stats loadedStats) {
                 if (loadedStats == null) {
-                    // Create new stats for user
-                    stats = new Stats(user.getId(), 1, 0, 0, false);
+                    stats = new Stats(user.getId(), 1, 0);
                     DatabaseService.getInstance().createStats(stats, null);
                 } else {
                     stats = loadedStats;
+                }
+                loadRankProgress();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(LevelActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
+                stats = new Stats(user.getId(), 1, 0);
+                loadRankProgress();
+            }
+        });
+    }
+
+    private void loadRankProgress() {
+        // Load progress for THIS specific rank
+        DatabaseService.getInstance().getRankProgress(user.getId(), currentRank, new DatabaseService.DatabaseCallback<DatabaseService.RankProgressData>() {
+            @Override
+            public void onCompleted(DatabaseService.RankProgressData data) {
+                rankProgress = data;
+                if (rankProgress == null) {
+                    rankProgress = new DatabaseService.RankProgressData();
                 }
                 updateUI();
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(LevelActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
-                stats = new Stats(user.getId(), 1, 0, 0, false);
+                rankProgress = new DatabaseService.RankProgressData();
                 updateUI();
             }
         });
     }
 
     private void updateUI() {
-        if (stats == null) return;
+        if (stats == null || rankProgress == null) return;
 
-        // Update progress text
-        int required = stats.getRequiredPracticeCount();
+        // Get required practice count for THIS rank
+        int required = getRequiredPracticeForRank(currentRank);
+
         if (currentRank == 5) {
-            tvProgress.setText("Practice: " + stats.getPracticeCount() + " (Infinite)");
+            tvProgress.setText("Practice: " + rankProgress.practiceCount + " (Infinite)");
         } else {
-            tvProgress.setText("Practice: " + stats.getPracticeCount() + " / " + required);
+            tvProgress.setText("Practice: " + rankProgress.practiceCount + " / " + required);
         }
 
-        // Enable/disable practice button based on whether user reviewed words
-        if (stats.isHasReviewedWords()) {
+        // Enable/disable practice button based on reviewed status for THIS rank
+        if (rankProgress.hasReviewedWords) {
             btnPractice.setEnabled(true);
             btnPractice.setAlpha(1.0f);
         } else {
             btnPractice.setEnabled(false);
             btnPractice.setAlpha(0.5f);
+        }
+    }
+
+    private int getRequiredPracticeForRank(int rank) {
+        switch (rank) {
+            case 1: return 15;
+            case 2: return 25;
+            case 3: return 40;
+            case 4: return 60;
+            case 5: return Integer.MAX_VALUE;
+            default: return 15;
         }
     }
 
@@ -109,7 +144,7 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     private void openPractice() {
-        if (!stats.isHasReviewedWords()) {
+        if (rankProgress == null || !rankProgress.hasReviewedWords) {
             Toast.makeText(this, "Please review the words first!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -122,7 +157,11 @@ public class LevelActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload stats when coming back from words list
-        loadStats();
+        // Reload when coming back
+        if (stats != null) {
+            loadRankProgress();
+        } else {
+            loadStats();
+        }
     }
 }

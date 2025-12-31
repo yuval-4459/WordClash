@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
         <activity
+            android:name=".screens.AdminAddWordActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.WordleActivity"
             android:exported="false" />
         <activity
