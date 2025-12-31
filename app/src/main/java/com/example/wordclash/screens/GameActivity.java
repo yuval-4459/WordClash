@@ -276,9 +276,17 @@ public class GameActivity extends AppCompatActivity {
             timer.cancel();
         }
 
-        // Update stats
-        stats.setPracticeCount(stats.getPracticeCount() + 1);
-        stats.setTotalScore(stats.getTotalScore() + score);
+        // Update stats if above 80
+
+        if (score >= 80)
+        {
+            stats.setPracticeCount(stats.getPracticeCount() + 1);
+            stats.setTotalScore(stats.getTotalScore() + score);
+        }
+        else
+        {
+            Toast.makeText(this, "You need at least 80 points to pass", Toast.LENGTH_SHORT).show();
+        }
 
         // Check if can rank up
         if (stats.canRankUp()) {
@@ -303,8 +311,12 @@ public class GameActivity extends AppCompatActivity {
 
     private void showResultDialog() {
         String message = "Score: " + score + " / " + (gameWords.size() * 10);
-        if (stats.canRankUp()) {
-            message += "\n\nCongratulations! You've ranked up to Rank " + stats.getRank() + "!";
+        if (score >= 80) {
+            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n"
+                    + "🎉 Congratulations!";
+        } else {
+            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n"
+                    + "❌ You failed.\nYou need at least 80 points to pass.";
         }
 
         new AlertDialog.Builder(this)

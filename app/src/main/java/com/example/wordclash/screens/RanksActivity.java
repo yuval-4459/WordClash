@@ -29,7 +29,7 @@ public class RanksActivity extends AppCompatActivity {
     // UI Components
     private TextView tvOnlinePlayers;
     private CardView cardLevel1, cardLevel2, cardLevel3, cardLevel4, cardLevel5;
-    private Button btnLevel1, btnLevel2, btnLevel3, btnLevel4, btnLevel5;
+    private Button btnLevel1, btnLevel2, btnLevel3, btnLevel4, btnLevel5, btn_Ranks_back;
     private TextView tvLevelStatus1, tvLevelStatus2, tvLevelStatus3, tvLevelStatus4, tvLevelStatus5;
 
     // Data
@@ -46,6 +46,9 @@ public class RanksActivity extends AppCompatActivity {
         initializeViews();
         loadUserStats();
         updateOnlinePlayersCount();
+
+        btn_Ranks_back = findViewById(R.id.btnBack);
+
     }
 
     /**

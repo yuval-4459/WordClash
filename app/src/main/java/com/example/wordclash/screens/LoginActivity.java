@@ -29,7 +29,6 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         btnConfirm = findViewById(R.id.ConfirmsignUpButton); // same button id
-        btnForgotPassword = findViewById(R.id.ForgotPasswordButton);
 
         db = DatabaseService.getInstance();
 

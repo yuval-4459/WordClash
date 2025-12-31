@@ -28,7 +28,7 @@ public class DatabaseService {
     private static final String TAG = "DatabaseService";
     private static final String USERS_PATH = "users";
     private static final String STATS_PATH = "stats";
-    private static final String WORDS_PATH = "words";
+    private static final String WORDS_PATH = "vocabulary";
 
     public interface DatabaseCallback<T> {
         public void onCompleted(T object);
@@ -243,11 +243,39 @@ public class DatabaseService {
     // region Words Section
 
     public void getWordsByRank(int rank, @NotNull final DatabaseCallback<List<Word>> callback) {
-        getDataList(WORDS_PATH + "/rank_" + rank, Word.class, callback);
+        String levelPath = WORDS_PATH + "/level" + rank;
+
+        readData(levelPath).get().addOnCompleteListener(task -> {
+            if (!task.isSuccessful()) {
+                callback.onFailed(task.getException());
+                return;
+            }
+
+            List<Word> list = new ArrayList<>();
+
+            for (DataSnapshot s : task.getResult().getChildren()) {
+
+                String id = s.getKey(); // ✅ חשוב! מזהה ייחודי
+                String en = s.child("en").getValue(String.class);
+                String he = s.child("he").getValue(String.class);
+
+                if (id != null && en != null && he != null) {
+                    Word w = new Word();
+                    w.setId(id);          //  זה מה שימנע לי את הקריסה
+                    w.setEnglish(en);
+                    w.setHebrew(he);
+                    w.setRank(rank);
+                    list.add(w);
+                }
+            }
+
+            callback.onCompleted(list);
+        });
     }
 
+
     public void createWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(WORDS_PATH + "/rank_" + word.getRank() + "/" + word.getId(), word, callback);
+        writeData(WORDS_PATH + "/level" + word.getRank() + "/" + word.getId(), word, callback);
     }
 
     /**
@@ -261,17 +289,22 @@ public class DatabaseService {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Word> fiveLetterWords = new ArrayList<>();
 
-                // Loop through all rank nodes (rank_1, rank_2, rank_3, rank_4, rank_5)
-                for (DataSnapshot rankSnapshot : snapshot.getChildren()) {
-                    // Loop through all words in this rank
-                    for (DataSnapshot wordSnapshot : rankSnapshot.getChildren()) {
-                        Word word = wordSnapshot.getValue(Word.class);
-                        if (word != null && word.getEnglish() != null
-                                && word.getEnglish().length() == 5) {
-                            fiveLetterWords.add(word);
+                // Loop through all rank nodes (level1, level2, level3, level4, level5)
+                for (DataSnapshot levelSnapshot : snapshot.getChildren()) {
+                    for (DataSnapshot wordSnapshot : levelSnapshot.getChildren()) {
+
+                        String en = wordSnapshot.child("en").getValue(String.class);
+                        if (en != null) {
+                            en = en.trim();
+                            if (en.length() == 5) {
+                                Word w = new Word();
+                                w.setEnglish(en);
+                                fiveLetterWords.add(w);
+                            }
                         }
                     }
                 }
+
 
                 callback.onCompleted(fiveLetterWords);
             }
