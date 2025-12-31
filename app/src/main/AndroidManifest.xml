@@ -14,13 +14,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
         <activity
+            android:name=".screens.WordleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.WordsListActivity"
+            android:exported="false" /> <!-- NEW ACTIVITIES -->
+        <activity
+            android:name=".screens.LevelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.GameActivity"
+            android:exported="false" /> <!-- EXISTING ACTIVITIES -->
+        <activity
             android:name=".screens.RanksActivity"
             android:exported="false" />
         <activity
             android:name=".screens.ChangeDetailsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screens.VerifyCodeActivity"
             android:exported="false" />
         <activity
             android:name=".screens.UserListActivity"

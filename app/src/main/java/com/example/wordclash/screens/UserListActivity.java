@@ -25,6 +25,7 @@ import com.example.wordclash.R;
 import com.example.wordclash.adapters.UserAdapter;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
+import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class UserListActivity extends AppCompatActivity {
     Button btnBackToMain;
 
     List<User> allUsers = new ArrayList<>();
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class UserListActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        currentUser = SharedPreferencesUtils.getUser(this);
 
         rvUsers = findViewById(R.id.rv_user_list_list);
         searchUsername = findViewById(R.id.searchUsername);
@@ -134,6 +138,11 @@ public class UserListActivity extends AppCompatActivity {
                 List<User> adminUsers = new ArrayList<>();
                 List<User> regularUsers = new ArrayList<>();
                 for (User user : users) {
+                    // Skip current admin user from the list
+                    if (currentUser != null && user.getId().equals(currentUser.getId())) {
+                        continue;
+                    }
+
                     if (user.isAdmin()) {
                         adminUsers.add(user);
                     } else {
@@ -215,6 +224,11 @@ public class UserListActivity extends AppCompatActivity {
                 List<User> adminUsers = new ArrayList<>();
                 List<User> regularUsers = new ArrayList<>();
                 for (User user : users) {
+                    // Skip current admin user from the list
+                    if (currentUser != null && user.getId().equals(currentUser.getId())) {
+                        continue;
+                    }
+
                     if (user.isAdmin()) {
                         adminUsers.add(user);
                     } else {

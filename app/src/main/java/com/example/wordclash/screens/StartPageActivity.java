@@ -20,6 +20,7 @@ public class StartPageActivity extends AppCompatActivity {
     Button btnLogin;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,5 +45,5 @@ public class StartPageActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.LoginButton);
         btnLogin.setOnClickListener(view -> startActivity(new Intent(StartPageActivity.this, LoginActivity.class)));
 
-    }
+        }
 }

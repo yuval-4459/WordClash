@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.google.firebase.database.DataSnapshot;
@@ -18,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.example.wordclash.services.DatabaseService;
 
 /**
  * Ranks activity displaying available game levels and online player count
@@ -32,7 +34,7 @@ public class RanksActivity extends AppCompatActivity {
 
     // Data
     private User user;
-    private int currentLevel = 3; // Example: user is on level 3
+    private int currentLevel = 1; // Default to level 1
     private int onlinePlayersCount = 0;
 
     @Override
@@ -42,7 +44,7 @@ public class RanksActivity extends AppCompatActivity {
 
         initializeUser();
         initializeViews();
-        setupLevelButtons();
+        loadUserStats();
         updateOnlinePlayersCount();
     }
 
@@ -51,10 +53,9 @@ public class RanksActivity extends AppCompatActivity {
      */
     private void initializeUser() {
         user = SharedPreferencesUtils.getUser(RanksActivity.this);
-        if (user != null) {
-            // Get user's current level (you should have this in your User model)
-            // currentLevel = user.getCurrentLevel();
-            currentLevel = 3; // Placeholder - replace with actual user level
+        if (user == null) {
+            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
@@ -84,6 +85,36 @@ public class RanksActivity extends AppCompatActivity {
         tvLevelStatus3 = findViewById(R.id.tvLevelStatus3);
         tvLevelStatus4 = findViewById(R.id.tvLevelStatus4);
         tvLevelStatus5 = findViewById(R.id.tvLevelStatus5);
+    }
+
+    /**
+     * Loads user statistics from Firebase stats database
+     */
+    private void loadUserStats() {
+        if (user == null) return;
+
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats != null) {
+                    currentLevel = stats.getRank();
+                } else {
+                    // Create new stats for user
+                    Stats newStats = new Stats(user.getId(), 1, 0, 0, false);
+                    DatabaseService.getInstance().createStats(newStats, null);
+                    currentLevel = 1;
+                }
+                setupLevelButtons();
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                Toast.makeText(RanksActivity.this,
+                        "Failed to load stats",
+                        Toast.LENGTH_SHORT).show();
+                setupLevelButtons();
+            }
+        });
     }
 
     /**
@@ -129,11 +160,9 @@ public class RanksActivity extends AppCompatActivity {
      * Starts the selected level
      */
     private void startLevel(int level) {
-        Toast.makeText(this, "Starting Level " + level + "...", Toast.LENGTH_SHORT).show();
-        // TODO: Navigate to game activity with level parameter
-        // Intent intent = new Intent(RanksActivity.this, GameActivity.class);
-        // intent.putExtra("LEVEL", level);
-        // startActivity(intent);
+        Intent intent = new Intent(RanksActivity.this, LevelActivity.class);
+        intent.putExtra("RANK", level);
+        startActivity(intent);
     }
 
     /**
@@ -202,5 +231,11 @@ public class RanksActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         setUserOffline();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserStats();
     }
 }
