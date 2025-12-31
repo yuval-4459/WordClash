@@ -14,6 +14,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -247,6 +248,39 @@ public class DatabaseService {
 
     public void createWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
         writeData(WORDS_PATH + "/rank_" + word.getRank() + "/" + word.getId(), word, callback);
+    }
+
+    /**
+     * Get all 5-letter words from ALL ranks for Wordle game
+     */
+    public void getAllFiveLetterWords(@NotNull final DatabaseCallback<List<Word>> callback) {
+        DatabaseReference wordsRef = databaseReference.child(WORDS_PATH);
+
+        wordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Word> fiveLetterWords = new ArrayList<>();
+
+                // Loop through all rank nodes (rank_1, rank_2, rank_3, rank_4, rank_5)
+                for (DataSnapshot rankSnapshot : snapshot.getChildren()) {
+                    // Loop through all words in this rank
+                    for (DataSnapshot wordSnapshot : rankSnapshot.getChildren()) {
+                        Word word = wordSnapshot.getValue(Word.class);
+                        if (word != null && word.getEnglish() != null
+                                && word.getEnglish().length() == 5) {
+                            fiveLetterWords.add(word);
+                        }
+                    }
+                }
+
+                callback.onCompleted(fiveLetterWords);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailed(error.toException());
+            }
+        });
     }
 
     // endregion

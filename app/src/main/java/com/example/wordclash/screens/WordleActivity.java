@@ -86,38 +86,27 @@ public class WordleActivity extends AppCompatActivity {
     private void loadWords() {
         allWords = new ArrayList<>();
 
-        // Load words from all ranks
-        for (int rank = 1; rank <= 5; rank++) {
-            final int currentRank = rank;
-            DatabaseService.getInstance().getWordsByRank(rank, new DatabaseService.DatabaseCallback<List<Word>>() {
-                @Override
-                public void onCompleted(List<Word> words) {
-                    if (words != null) {
-                        // Filter only 5-letter words
-                        for (Word word : words) {
-                            if (word.getEnglish() != null &&
-                                    word.getEnglish().length() == WORD_LENGTH) {
-                                allWords.add(word);
-                            }
-                        }
-                    }
-
-                    // Start game once we have words
-                    if (currentRank == 5 && !allWords.isEmpty()) {
-                        startNewGame();
-                    }
+        // Use the new method to get ALL 5-letter words from ALL ranks
+        DatabaseService.getInstance().getAllFiveLetterWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+            @Override
+            public void onCompleted(List<Word> words) {
+                if (words != null && !words.isEmpty()) {
+                    allWords = words;
+                    startNewGame();
+                } else {
+                    // Use fallback words if no words in database
+                    useFallbackWords();
+                    startNewGame();
                 }
+            }
 
-                @Override
-                public void onFailed(Exception e) {
-                    if (currentRank == 5) {
-                        // Use fallback words if loading fails
-                        useFallbackWords();
-                        startNewGame();
-                    }
-                }
-            });
-        }
+            @Override
+            public void onFailed(Exception e) {
+                // Use fallback words if loading fails
+                useFallbackWords();
+                startNewGame();
+            }
+        });
     }
 
     private void useFallbackWords() {
