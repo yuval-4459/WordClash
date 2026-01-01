@@ -113,11 +113,6 @@ public class DatabaseService {
         return databaseReference.child(path).push().getKey();
     }
 
-    // Public method to generate new ID (for AdminAddWordActivity)
-    public String generateNewId(String path) {
-        return databaseReference.child(path).push().getKey();
-    }
-
     private <T> void runTransaction(@NotNull final String path, @NotNull final Class<T> clazz, @NotNull UnaryOperator<T> function, @NotNull final DatabaseCallback<T> callback) {
         readData(path).runTransaction(new Transaction.Handler() {
             @NonNull
@@ -244,6 +239,43 @@ public class DatabaseService {
         writeData(STATS_PATH + "/" + stats.getUserId(), stats, callback);
     }
 
+    /**
+     * SAFE: If stats node was deleted, recreate defaults and return it.
+     */
+    public void getStatsSafe(@NotNull final String userId, @NotNull final DatabaseCallback<Stats> callback) {
+        getStats(userId, new DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats loaded) {
+                if (loaded == null) {
+                    Stats s = new Stats(userId, 1, 0);
+                    createStats(s, null);
+                    callback.onCompleted(s);
+                } else {
+                    callback.onCompleted(loaded);
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                callback.onFailed(e);
+            }
+        });
+    }
+
+    /**
+     * Update rank in: stats/{userId}/rank
+     */
+    public void updateCurrentRank(@NotNull final String userId, int newRank, @Nullable final DatabaseCallback<Void> callback) {
+        writeData(STATS_PATH + "/" + userId + "/rank", newRank, callback);
+    }
+
+    /**
+     * Update totalScore in: stats/{userId}/totalScore
+     */
+    public void updateTotalScore(@NotNull final String userId, int newTotalScore, @Nullable final DatabaseCallback<Void> callback) {
+        writeData(STATS_PATH + "/" + userId + "/totalScore", newTotalScore, callback);
+    }
+
     // endregion
 
     // region Words Section
@@ -279,9 +311,15 @@ public class DatabaseService {
         });
     }
 
-
     public void createWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
         writeData(WORDS_PATH + "/level" + word.getRank() + "/" + word.getId(), word, callback);
+    }
+
+    /**
+     * Public helper for admin add-word: generates a key under vocabulary/level{rank}
+     */
+    public String generateWordId(int rank) {
+        return generateNewId(WORDS_PATH + "/level" + rank);
     }
 
     /**
@@ -310,7 +348,6 @@ public class DatabaseService {
                         }
                     }
                 }
-
 
                 callback.onCompleted(fiveLetterWords);
             }
@@ -345,6 +382,29 @@ public class DatabaseService {
     public void getRankProgress(@NotNull final String userId, int rank, @NotNull final DatabaseCallback<RankProgressData> callback) {
         String path = RANK_PROGRESS_PATH + "/" + userId + "/rank_" + rank;
         getData(path, RankProgressData.class, callback);
+    }
+
+    /**
+     * SAFE: If rank node was deleted, recreate defaults and return it.
+     */
+    public void getRankProgressSafe(@NotNull final String userId, int rank, @NotNull final DatabaseCallback<RankProgressData> callback) {
+        getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
+            @Override
+            public void onCompleted(RankProgressData data) {
+                if (data == null) {
+                    RankProgressData d = new RankProgressData();
+                    updateRankProgress(userId, rank, d, null);
+                    callback.onCompleted(d);
+                } else {
+                    callback.onCompleted(data);
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                callback.onFailed(e);
+            }
+        });
     }
 
     /**
@@ -399,6 +459,32 @@ public class DatabaseService {
                 }
             }
         });
+    }
+
+    // endregion
+
+    // region Helpers (used by UI)
+
+    public static int getRequiredPracticeCount(int rank) {
+        switch (rank) {
+            case 1: return 15;
+            case 2: return 25;
+            case 3: return 40;
+            case 4: return 60;
+            case 5: return Integer.MAX_VALUE;
+            default: return 15;
+        }
+    }
+
+    public static int getQuestionsPerPractice(int rank) {
+        switch (rank) {
+            case 1: return 10;
+            case 2: return 13;
+            case 3: return 16;
+            case 4: return 20;
+            case 5: return 25;
+            default: return 10;
+        }
     }
 
     // endregion

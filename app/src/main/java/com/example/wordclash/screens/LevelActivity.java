@@ -16,7 +16,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 /**
  * Level screen showing Words and Practice buttons
- * FIXED: Now shows progress for THIS specific rank
  */
 public class LevelActivity extends AppCompatActivity {
 
@@ -27,7 +26,7 @@ public class LevelActivity extends AppCompatActivity {
     private Stats stats;
     private int currentRank;
 
-    // Track progress for THIS rank
+    // NEW: rank progress is not inside Stats anymore
     private DatabaseService.RankProgressData rankProgress;
 
     @Override
@@ -67,11 +66,14 @@ public class LevelActivity extends AppCompatActivity {
             @Override
             public void onCompleted(Stats loadedStats) {
                 if (loadedStats == null) {
+                    // Create new stats for user
                     stats = new Stats(user.getId(), 1, 0);
                     DatabaseService.getInstance().createStats(stats, null);
                 } else {
                     stats = loadedStats;
                 }
+
+                // NEW: load rank progress after stats
                 loadRankProgress();
             }
 
@@ -79,61 +81,51 @@ public class LevelActivity extends AppCompatActivity {
             public void onFailed(Exception e) {
                 Toast.makeText(LevelActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
                 stats = new Stats(user.getId(), 1, 0);
+
+                // NEW: still try to load rank progress
                 loadRankProgress();
             }
         });
     }
 
+    // NEW: load practiceCount + hasReviewedWords from rank_progress
     private void loadRankProgress() {
-        // Load progress for THIS specific rank
-        DatabaseService.getInstance().getRankProgress(user.getId(), currentRank, new DatabaseService.DatabaseCallback<DatabaseService.RankProgressData>() {
-            @Override
-            public void onCompleted(DatabaseService.RankProgressData data) {
-                rankProgress = data;
-                if (rankProgress == null) {
-                    rankProgress = new DatabaseService.RankProgressData();
-                }
-                updateUI();
-            }
+        DatabaseService.getInstance().getRankProgressSafe(user.getId(), currentRank,
+                new DatabaseService.DatabaseCallback<DatabaseService.RankProgressData>() {
+                    @Override
+                    public void onCompleted(DatabaseService.RankProgressData data) {
+                        rankProgress = data;
+                        updateUI();
+                    }
 
-            @Override
-            public void onFailed(Exception e) {
-                rankProgress = new DatabaseService.RankProgressData();
-                updateUI();
-            }
-        });
+                    @Override
+                    public void onFailed(Exception e) {
+                        // Fallback to defaults to avoid crashes
+                        rankProgress = new DatabaseService.RankProgressData();
+                        updateUI();
+                    }
+                });
     }
 
     private void updateUI() {
-        if (stats == null || rankProgress == null) return;
+        if (stats == null) return;
+        if (rankProgress == null) return;
 
-        // Get required practice count for THIS rank
-        int required = getRequiredPracticeForRank(currentRank);
-
+        // Update progress text
+        int required = DatabaseService.getRequiredPracticeCount(currentRank);
         if (currentRank == 5) {
             tvProgress.setText("Practice: " + rankProgress.practiceCount + " (Infinite)");
         } else {
             tvProgress.setText("Practice: " + rankProgress.practiceCount + " / " + required);
         }
 
-        // Enable/disable practice button based on reviewed status for THIS rank
+        // Enable/disable practice button based on whether user reviewed words
         if (rankProgress.hasReviewedWords) {
             btnPractice.setEnabled(true);
             btnPractice.setAlpha(1.0f);
         } else {
             btnPractice.setEnabled(false);
             btnPractice.setAlpha(0.5f);
-        }
-    }
-
-    private int getRequiredPracticeForRank(int rank) {
-        switch (rank) {
-            case 1: return 15;
-            case 2: return 25;
-            case 3: return 40;
-            case 4: return 60;
-            case 5: return Integer.MAX_VALUE;
-            default: return 15;
         }
     }
 
@@ -157,11 +149,7 @@ public class LevelActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload when coming back
-        if (stats != null) {
-            loadRankProgress();
-        } else {
-            loadStats();
-        }
+        // Reload stats when coming back from words list
+        loadStats();
     }
 }

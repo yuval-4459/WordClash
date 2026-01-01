@@ -48,6 +48,7 @@ public class RanksActivity extends AppCompatActivity {
         updateOnlinePlayersCount();
 
         btn_Ranks_back = findViewById(R.id.btnBack);
+        btn_Ranks_back.setOnClickListener(v -> finish());
 
     }
 
@@ -103,7 +104,7 @@ public class RanksActivity extends AppCompatActivity {
                     currentLevel = stats.getRank();
                 } else {
                     // Create new stats for user
-                    Stats newStats = new Stats(user.getId(), 1, 0, 0, false);
+                    Stats newStats = new Stats(user.getId(), 1, 0);
                     DatabaseService.getInstance().createStats(newStats, null);
                     currentLevel = 1;
                 }

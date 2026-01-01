@@ -24,10 +24,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Quiz game activity
- * FIXED: Now saves practice count to the correct rank
- */
 public class GameActivity extends AppCompatActivity {
 
     private TextView tvQuestion, tvTimer, tvScore, tvProgress;
@@ -91,7 +87,7 @@ public class GameActivity extends AppCompatActivity {
                     return;
                 }
 
-                totalQuestions = stats.getQuestionsPerPractice();
+                totalQuestions = getQuestionsForRank(currentRank);
                 loadWords();
             }
 
@@ -101,6 +97,17 @@ public class GameActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    private int getQuestionsForRank(int rank) {
+        switch (rank) {
+            case 1: return 10;
+            case 2: return 13;
+            case 3: return 16;
+            case 4: return 20;
+            case 5: return 25;
+            default: return 10;
+        }
     }
 
     private void loadWords() {
@@ -145,16 +152,15 @@ public class GameActivity extends AppCompatActivity {
         answerSelected = false;
         Word currentWord = gameWords.get(currentQuestionIndex);
 
-        // Randomly choose to show English or Hebrew
         Random random = new Random();
         boolean showEnglish = random.nextBoolean();
 
         if (showEnglish) {
             tvQuestion.setText(currentWord.getEnglish());
-            setupOptions(currentWord, false); // Show Hebrew options
+            setupOptions(currentWord, false);
         } else {
             tvQuestion.setText(currentWord.getHebrew());
-            setupOptions(currentWord, true); // Show English options
+            setupOptions(currentWord, true);
         }
 
         updateProgress();
@@ -165,7 +171,6 @@ public class GameActivity extends AppCompatActivity {
         List<Word> options = new ArrayList<>();
         options.add(correctWord);
 
-        // Add 3 random wrong answers
         List<Word> otherWords = new ArrayList<>(allWords);
         otherWords.remove(correctWord);
         Collections.shuffle(otherWords);
@@ -176,7 +181,6 @@ public class GameActivity extends AppCompatActivity {
 
         Collections.shuffle(options);
 
-        // Set button texts
         Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
         for (int i = 0; i < buttons.length && i < options.size(); i++) {
             Word word = options.get(i);
@@ -225,12 +229,10 @@ public class GameActivity extends AppCompatActivity {
         Word correctWord = gameWords.get(currentQuestionIndex);
 
         if (selectedWord.getId().equals(correctWord.getId())) {
-            // Correct answer
             selectedButton.setBackgroundColor(Color.GREEN);
             score += 10;
             updateScore();
         } else {
-            // Wrong answer
             selectedButton.setBackgroundColor(Color.RED);
             showCorrectAnswer();
         }
@@ -277,36 +279,13 @@ public class GameActivity extends AppCompatActivity {
             timer.cancel();
         }
 
-        // Update general stats
         stats.setTotalScore(stats.getTotalScore() + score);
 
         if (score >= 80) {
-            // Increment practice count for THIS SPECIFIC RANK
             DatabaseService.getInstance().incrementPracticeForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
                 public void onCompleted(Void unused) {
-                    // Also update global practice count
-                    stats.setPracticeCount(stats.getPracticeCount() + 1);
-
-                    // Check if can rank up
-                    if (stats.canRankUp()) {
-                        stats.setRank(stats.getRank() + 1);
-                        stats.setPracticeCount(0);
-                        stats.setHasReviewedWords(false);
-                    }
-
-                    DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
-                        @Override
-                        public void onCompleted(Void unused) {
-                            showResultDialog();
-                        }
-
-                        @Override
-                        public void onFailed(Exception e) {
-                            Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
-                            showResultDialog();
-                        }
-                    });
+                    checkAndUpdateRank();
                 }
 
                 @Override
@@ -316,8 +295,71 @@ public class GameActivity extends AppCompatActivity {
                 }
             });
         } else {
-            Toast.makeText(this, "You need at least 80 points to pass", Toast.LENGTH_SHORT).show();
-            showResultDialog();
+            DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+                @Override
+                public void onCompleted(Void unused) {
+                    showResultDialog();
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+                    Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
+                    showResultDialog();
+                }
+            });
+        }
+    }
+
+    private void checkAndUpdateRank() {
+        DatabaseService.getInstance().getRankProgress(user.getId(), currentRank, new DatabaseService.DatabaseCallback<DatabaseService.RankProgressData>() {
+            @Override
+            public void onCompleted(DatabaseService.RankProgressData progress) {
+                if (progress != null) {
+                    int required = getRequiredPracticeForRank(currentRank);
+                    if (progress.practiceCount >= required && currentRank < 5) {
+                        stats.setRank(currentRank + 1);
+                    }
+                }
+
+                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+                    @Override
+                    public void onCompleted(Void unused) {
+                        showResultDialog();
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+                        Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
+                        showResultDialog();
+                    }
+                });
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+                    @Override
+                    public void onCompleted(Void unused) {
+                        showResultDialog();
+                    }
+
+                    @Override
+                    public void onFailed(Exception ex) {
+                        showResultDialog();
+                    }
+                });
+            }
+        });
+    }
+
+    private int getRequiredPracticeForRank(int rank) {
+        switch (rank) {
+            case 1: return 15;
+            case 2: return 25;
+            case 3: return 40;
+            case 4: return 60;
+            case 5: return Integer.MAX_VALUE;
+            default: return 15;
         }
     }
 

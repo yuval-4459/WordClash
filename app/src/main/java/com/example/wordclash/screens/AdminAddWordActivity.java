@@ -69,8 +69,8 @@ public class AdminAddWordActivity extends AppCompatActivity {
 
         int rank = Integer.parseInt(spinnerRank.getSelectedItem().toString());
 
-        // Generate unique ID for the word
-        String wordId = DatabaseService.getInstance().generateNewId("vocabulary/level" + rank);
+        // Generate unique ID for the word (public wrapper, not private generateNewId)
+        String wordId = DatabaseService.getInstance().generateWordId(rank);
 
         Word word = new Word(wordId, english, hebrew, rank);
 
