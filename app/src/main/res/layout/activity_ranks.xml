@@ -101,7 +101,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:backgroundTint="@android:color/holo_blue_light"
                         android:text="Play Level 1"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -143,7 +142,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:backgroundTint="@android:color/holo_blue_light"
                         android:text="Play Level 2"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -185,7 +183,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:backgroundTint="@android:color/holo_blue_light"
                         android:text="Play Level 3"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -227,7 +224,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:backgroundTint="@android:color/darker_gray"
                         android:text="Play Level 4"
                         android:textSize="18sp" />
                 </LinearLayout>
@@ -269,7 +265,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:backgroundTint="@android:color/darker_gray"
                         android:text="Play Level 5"
                         android:textSize="18sp" />
                 </LinearLayout>

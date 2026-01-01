@@ -49,7 +49,6 @@ public class RanksActivity extends AppCompatActivity {
 
         btn_Ranks_back = findViewById(R.id.btnBack);
         btn_Ranks_back.setOnClickListener(v -> finish());
-
     }
 
     /**
@@ -142,6 +141,7 @@ public class RanksActivity extends AppCompatActivity {
             // Unlocked level
             card.setAlpha(1.0f);
             button.setEnabled(true);
+            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_blue_light));
             statusText.setText("Unlocked");
             statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
 
@@ -150,6 +150,7 @@ public class RanksActivity extends AppCompatActivity {
             // Locked level
             card.setAlpha(0.5f);
             button.setEnabled(false);
+            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.darker_gray));
             statusText.setText("🔒 Locked");
             statusText.setTextColor(getResources().getColor(android.R.color.darker_gray));
 

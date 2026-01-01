@@ -2,6 +2,9 @@ package com.example.wordclash.screens;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.InputFilter;
+import android.text.TextWatcher;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -22,18 +25,12 @@ import java.util.Random;
 
 /**
  * Wordle game - Guess a 5-letter English word
- *
- * Rules:
- * - 6 attempts to guess a 5-letter word
- * - Green: letter is correct and in the correct position
- * - Yellow: letter is in the word but in the wrong position
- * - Gray: letter is not in the word
  */
 public class WordleActivity extends AppCompatActivity {
 
     private GridLayout gridGuesses;
     private EditText etGuess;
-    private Button btnSubmit, btnNewGame;
+    private Button btnSubmit, btnNewGame, btnBack;
     private TextView tvInstructions;
 
     private String targetWord;
@@ -41,6 +38,7 @@ public class WordleActivity extends AppCompatActivity {
     private final int MAX_ATTEMPTS = 6;
     private final int WORD_LENGTH = 5;
     private List<Word> allFiveLetterWords;
+    private TextWatcher textWatcher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,10 +54,33 @@ public class WordleActivity extends AppCompatActivity {
         etGuess = findViewById(R.id.etGuess);
         btnSubmit = findViewById(R.id.btnSubmit);
         btnNewGame = findViewById(R.id.btnNewGame);
+        btnBack = findViewById(R.id.btnBack);
         tvInstructions = findViewById(R.id.tvInstructions);
 
         btnSubmit.setOnClickListener(v -> submitGuess());
         btnNewGame.setOnClickListener(v -> startNewGame());
+        btnBack.setOnClickListener(v -> finish());
+
+        // Limit EditText to 5 uppercase letters
+        etGuess.setFilters(new InputFilter[]{
+                new InputFilter.LengthFilter(WORD_LENGTH),
+                new InputFilter.AllCaps()
+        });
+
+        // Show letters in grid as user types
+        textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateCurrentRowWithInput(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+        etGuess.addTextChangedListener(textWatcher);
 
         setupGrid();
     }
@@ -68,25 +89,45 @@ public class WordleActivity extends AppCompatActivity {
         gridGuesses.removeAllViews();
         gridGuesses.setColumnCount(WORD_LENGTH);
         gridGuesses.setRowCount(MAX_ATTEMPTS);
+        gridGuesses.setLayoutDirection(android.view.View.LAYOUT_DIRECTION_LTR);
+
+        int size = (int) (getResources().getDisplayMetrics().widthPixels * 0.15);
 
         for (int i = 0; i < MAX_ATTEMPTS * WORD_LENGTH; i++) {
             TextView tv = new TextView(this);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-            params.width = 120;  // Increased from 100
-            params.height = 120; // Increased from 100
-            params.setMargins(6, 6, 6, 6); // Increased margins
+            params.width = size;
+            params.height = size;
+            params.setMargins(6, 6, 6, 6);
             tv.setLayoutParams(params);
 
             tv.setGravity(android.view.Gravity.CENTER);
-            tv.setTextSize(28); // Increased from 24
+            tv.setTextSize(32);
             tv.setTextColor(Color.BLACK);
             tv.setBackgroundColor(Color.WHITE);
-            tv.setPadding(8, 8, 8, 8); // Increased padding
+            tv.setTextDirection(android.view.View.TEXT_DIRECTION_LTR);
+            tv.setLayoutDirection(android.view.View.LAYOUT_DIRECTION_LTR);
 
             // Add border
             tv.setBackground(getDrawable(android.R.drawable.edit_text));
 
             gridGuesses.addView(tv);
+        }
+    }
+
+    private void updateCurrentRowWithInput(String input) {
+        int startIndex = currentAttempt * WORD_LENGTH;
+
+        // Clear current row first
+        for (int i = 0; i < WORD_LENGTH; i++) {
+            TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
+            tv.setText("");
+        }
+
+        // Fill in the letters
+        for (int i = 0; i < input.length() && i < WORD_LENGTH; i++) {
+            TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
+            tv.setText(String.valueOf(input.charAt(i)));
         }
     }
 
@@ -121,7 +162,6 @@ public class WordleActivity extends AppCompatActivity {
             return;
         }
 
-        // Select random 5-letter word
         Random random = new Random();
         targetWord = allFiveLetterWords.get(random.nextInt(allFiveLetterWords.size()))
                 .getEnglish()
@@ -148,14 +188,17 @@ public class WordleActivity extends AppCompatActivity {
             return;
         }
 
-        // Check if guess contains only letters
         if (!guess.matches("[A-Z]+")) {
             Toast.makeText(this, "Please use only letters", Toast.LENGTH_SHORT).show();
             return;
         }
 
         displayGuess(guess);
+
+        // Remove TextWatcher temporarily to avoid clearing the grid
+        etGuess.removeTextChangedListener(textWatcher);
         etGuess.setText("");
+        etGuess.addTextChangedListener(textWatcher);
 
         if (guess.equals(targetWord)) {
             gameWon();
@@ -170,7 +213,6 @@ public class WordleActivity extends AppCompatActivity {
     private void displayGuess(String guess) {
         int startIndex = currentAttempt * WORD_LENGTH;
 
-        // Create a char array to track which letters in target have been used
         char[] targetChars = targetWord.toCharArray();
         boolean[] used = new boolean[WORD_LENGTH];
 
@@ -178,10 +220,11 @@ public class WordleActivity extends AppCompatActivity {
         for (int i = 0; i < WORD_LENGTH; i++) {
             TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
             char letter = guess.charAt(i);
-            tv.setText(String.valueOf(letter));
+            // DON'T set text again - it's already there from typing
+            // tv.setText(String.valueOf(letter));
 
             if (letter == targetChars[i]) {
-                tv.setBackgroundColor(Color.GREEN); // Correct position
+                tv.setBackgroundColor(Color.GREEN);
                 tv.setTextColor(Color.WHITE);
                 used[i] = true;
             }
@@ -192,16 +235,14 @@ public class WordleActivity extends AppCompatActivity {
             TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
             char letter = guess.charAt(i);
 
-            // Skip if already marked as correct position
             if (letter == targetChars[i]) {
                 continue;
             }
 
-            // Check if letter exists elsewhere in target
             boolean foundInTarget = false;
             for (int j = 0; j < WORD_LENGTH; j++) {
                 if (!used[j] && letter == targetChars[j]) {
-                    tv.setBackgroundColor(Color.YELLOW); // Wrong position
+                    tv.setBackgroundColor(Color.YELLOW);
                     tv.setTextColor(Color.BLACK);
                     used[j] = true;
                     foundInTarget = true;
@@ -210,7 +251,7 @@ public class WordleActivity extends AppCompatActivity {
             }
 
             if (!foundInTarget) {
-                tv.setBackgroundColor(Color.DKGRAY); // Not in word
+                tv.setBackgroundColor(Color.DKGRAY);
                 tv.setTextColor(Color.WHITE);
             }
         }

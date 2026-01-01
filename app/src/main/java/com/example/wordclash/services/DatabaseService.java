@@ -19,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
@@ -29,7 +30,7 @@ public class DatabaseService {
     private static final String USERS_PATH = "users";
     private static final String STATS_PATH = "stats";
     private static final String WORDS_PATH = "vocabulary";
-    private static final String RANK_PROGRESS_PATH = "rank_progress"; // NEW
+    private static final String RANK_PROGRESS_PATH = "rank_progress";
 
     public interface DatabaseCallback<T> {
         public void onCompleted(T object);
@@ -293,13 +294,13 @@ public class DatabaseService {
 
             for (DataSnapshot s : task.getResult().getChildren()) {
 
-                String id = s.getKey(); // ✅ חשוב! מזהה ייחודי
+                String id = s.getKey();
                 String en = s.child("en").getValue(String.class);
                 String he = s.child("he").getValue(String.class);
 
                 if (id != null && en != null && he != null) {
                     Word w = new Word();
-                    w.setId(id);          //  זה מה שימנע לי את הקריסה
+                    w.setId(id);
                     w.setEnglish(en);
                     w.setHebrew(he);
                     w.setRank(rank);
@@ -312,7 +313,13 @@ public class DatabaseService {
     }
 
     public void createWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(WORDS_PATH + "/level" + word.getRank() + "/" + word.getId(), word, callback);
+        // Create a map with only en and he fields to match Firebase structure
+        HashMap<String, String> wordData = new HashMap<>();
+        wordData.put("en", word.getEnglish());
+        wordData.put("he", word.getHebrew());
+
+        String path = WORDS_PATH + "/level" + word.getRank() + "/" + word.getId();
+        writeData(path, wordData, callback);
     }
 
     /**
@@ -333,7 +340,6 @@ public class DatabaseService {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 List<Word> fiveLetterWords = new ArrayList<>();
 
-                // Loop through all rank nodes (level1, level2, level3, level4, level5)
                 for (DataSnapshot levelSnapshot : snapshot.getChildren()) {
                     for (DataSnapshot wordSnapshot : levelSnapshot.getChildren()) {
 
@@ -361,7 +367,7 @@ public class DatabaseService {
 
     // endregion
 
-    // region Rank Progress Section - NEW ADDITION
+    // region Rank Progress Section
 
     /**
      * Simple data holder for rank-specific progress
