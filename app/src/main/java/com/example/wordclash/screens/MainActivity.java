@@ -2,8 +2,12 @@ package com.example.wordclash.screens;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -29,6 +33,8 @@ public class MainActivity extends AppCompatActivity
     private Button btnLeaderboard;
 
     private TextView tvHelloUser;
+    private ImageView ivUserAvatar;
+    private TextView tvUserInitial;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView menuIcon;
@@ -63,11 +69,25 @@ public class MainActivity extends AppCompatActivity
         setupUI();
         importVocabularyIfNeeded();
         setupMenu();
+        loadProfilePicture();
     }
 
     private void setupUI() {
         tvHelloUser = findViewById(R.id.tvHelloUser);
         tvHelloUser.setText(getString(R.string.hello) + " " + user.getUserName());
+
+        // Profile picture views
+        ivUserAvatar = findViewById(R.id.ivUserAvatar);
+        tvUserInitial = findViewById(R.id.tvUserInitial);
+
+        // Make avatar clickable
+        View avatarContainer = findViewById(R.id.avatarContainer);
+        if (avatarContainer != null) {
+            avatarContainer.setOnClickListener(v -> {
+                Intent intent = new Intent(this, ProfilePictureActivity.class);
+                startActivity(intent);
+            });
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -129,6 +149,8 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, AdminManageWordsActivity.class));
         } else if (id == R.id.nav_change_details) {
             startActivity(new Intent(this, ChangeDetailsActivity.class));
+        } else if (id == R.id.nav_profile_picture) {
+            startActivity(new Intent(this, ProfilePictureActivity.class));
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -142,6 +164,48 @@ public class MainActivity extends AppCompatActivity
         if (!imported) {
             VocabularyImporter.importVocabularyFromAssets(this);
             prefs.edit().putBoolean(KEY_VOCABULARY_IMPORTED, true).apply();
+        }
+    }
+
+    private void loadProfilePicture() {
+        String profilePictureUrl = user.getProfilePictureUrl();
+
+        if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+            // Show profile picture
+            ivUserAvatar.setVisibility(View.VISIBLE);
+            tvUserInitial.setVisibility(View.GONE);
+
+            // Load from base64
+            try {
+                byte[] decodedString = Base64.decode(profilePictureUrl, Base64.DEFAULT);
+                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                ivUserAvatar.setImageBitmap(decodedByte);
+            } catch (Exception e) {
+                showDefaultAvatar();
+            }
+        } else {
+            showDefaultAvatar();
+        }
+    }
+
+    private void showDefaultAvatar() {
+        ivUserAvatar.setVisibility(View.GONE);
+        tvUserInitial.setVisibility(View.VISIBLE);
+
+        String initial = "";
+        if (user.getUserName() != null && !user.getUserName().isEmpty()) {
+            initial = String.valueOf(user.getUserName().charAt(0)).toUpperCase();
+        }
+        tvUserInitial.setText(initial);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Reload user data to get updated profile picture
+        user = SharedPreferencesUtils.getUser(this);
+        if (user != null) {
+            loadProfilePicture();
         }
     }
 

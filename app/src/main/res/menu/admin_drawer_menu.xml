@@ -17,6 +17,11 @@
             android:title="📝 Manage Words" />
 
         <item
+            android:id="@+id/nav_profile_picture"
+            android:icon="@android:drawable/ic_menu_gallery"
+            android:title="🖼️ Profile Picture" />
+
+        <item
             android:id="@+id/nav_change_details"
             android:icon="@android:drawable/ic_menu_preferences"
             android:title="⚙️ Change Details" />
