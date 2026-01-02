@@ -80,7 +80,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.4" />
+
+        <!-- Leaderboard Button -->
+        <Button
+            android:id="@+id/btnLeaderboard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="32dp"
+            android:backgroundTint="#FF6F00"
+            android:padding="16dp"
+            android:text="🏆 Leaderboard"
+            android:textSize="24sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnRanks" />
 
         <!-- Wordle Button -->
         <Button
@@ -96,7 +112,7 @@
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/btnRanks" />
+            app:layout_constraintTop_toBottomOf="@id/btnLeaderboard" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

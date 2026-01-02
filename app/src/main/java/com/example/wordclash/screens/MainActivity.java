@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Button btnLogout;
     Button btnRanks;
     Button btnWordle;
+    Button btnLeaderboard;
 
     private User user;
     private TextView tvHelloUser;
@@ -65,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         btnRanks = findViewById(R.id.btnRanks);
         btnRanks.setOnClickListener(view ->
                 startActivity(new Intent(MainActivity.this, RanksActivity.class)));
+
+        btnLeaderboard = findViewById(R.id.btnLeaderboard);
+        btnLeaderboard.setOnClickListener(view ->
+                startActivity(new Intent(MainActivity.this, LeaderboardActivity.class)));
 
         btnWordle = findViewById(R.id.WordleButton);
         btnWordle.setOnClickListener(view ->

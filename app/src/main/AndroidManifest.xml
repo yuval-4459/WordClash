@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
         <activity
+            android:name=".screens.LeaderboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".screens.StartPageActivity"
             android:exported="false" />
         <activity
