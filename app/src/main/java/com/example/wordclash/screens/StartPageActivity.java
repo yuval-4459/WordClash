@@ -13,6 +13,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.User;
+import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
 public class StartPageActivity extends AppCompatActivity {
@@ -32,11 +34,29 @@ public class StartPageActivity extends AppCompatActivity {
             return insets;
         });
 
+
+
         if (SharedPreferencesUtils.isUserLoggedIn(StartPageActivity.this)) {
-            Intent intent = new Intent(StartPageActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-            return;
+            // old user is the connected saved user
+            User oldUser = SharedPreferencesUtils.getUser(this);
+            DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<User>() {
+                @Override
+                public void onCompleted(User newUser) {
+                    if (newUser == null) {
+                        SharedPreferencesUtils.signOutUser(StartPageActivity.this);
+                        return;
+                    }
+                    SharedPreferencesUtils.saveUser(StartPageActivity.this, newUser);
+                    Intent intent = new Intent(StartPageActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
+                @Override
+                public void onFailed(Exception e) {
+
+                }
+            });
         }
 
         btnSignUp = findViewById(R.id.signUpButton);

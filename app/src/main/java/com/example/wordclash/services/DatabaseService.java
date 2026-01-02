@@ -322,6 +322,63 @@ public class DatabaseService {
         writeData(path, wordData, callback);
     }
 
+
+    /**
+     * Delete a word from the vocabulary
+     */
+    public void deleteWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
+        String path = WORDS_PATH + "/level" + word.getRank() + "/" + word.getId();
+        deleteData(path, callback);
+    }
+
+    /**
+     * Get all words from all ranks (for admin management)
+     */
+    public void getAllWords(@NotNull final DatabaseCallback<List<Word>> callback) {
+        DatabaseReference wordsRef = databaseReference.child(WORDS_PATH);
+
+        wordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<Word> allWords = new ArrayList<>();
+
+                for (DataSnapshot levelSnapshot : snapshot.getChildren()) {
+                    // Extract rank from "level1", "level2", etc.
+                    String levelKey = levelSnapshot.getKey();
+                    if (levelKey == null) continue;
+
+                    int rank = 1;
+                    try {
+                        rank = Integer.parseInt(levelKey.replace("level", ""));
+                    } catch (NumberFormatException e) {
+                        continue;
+                    }
+
+                    for (DataSnapshot wordSnapshot : levelSnapshot.getChildren()) {
+                        String id = wordSnapshot.getKey();
+                        String en = wordSnapshot.child("en").getValue(String.class);
+                        String he = wordSnapshot.child("he").getValue(String.class);
+
+                        if (id != null && en != null && he != null) {
+                            Word w = new Word();
+                            w.setId(id);
+                            w.setEnglish(en);
+                            w.setHebrew(he);
+                            w.setRank(rank);
+                            allWords.add(w);
+                        }
+                    }
+                }
+
+                callback.onCompleted(allWords);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                callback.onFailed(error.toException());
+            }
+        });
+    }
     /**
      * Public helper for admin add-word: generates a key under vocabulary/level{rank}
      */
@@ -494,4 +551,9 @@ public class DatabaseService {
     }
 
     // endregion
+
+
+
+
+
 }

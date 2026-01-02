@@ -55,6 +55,9 @@ dependencies {
     implementation libs.firebase.database
     implementation libs.recyclerview
 
+    // DrawerLayout (ADD THIS)
+    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core

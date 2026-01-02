@@ -4,7 +4,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
@@ -19,7 +22,6 @@ import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -29,16 +31,17 @@ import java.util.Random;
 public class WordleActivity extends AppCompatActivity {
 
     private GridLayout gridGuesses;
-    private EditText etGuess;
     private Button btnSubmit, btnNewGame, btnBack;
     private TextView tvInstructions;
+    private EditText hiddenInput;
 
     private String targetWord;
     private int currentAttempt = 0;
+    private int currentLetterIndex = 0;
     private final int MAX_ATTEMPTS = 6;
     private final int WORD_LENGTH = 5;
     private List<Word> allFiveLetterWords;
-    private TextWatcher textWatcher;
+    private String currentGuess = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,38 +54,113 @@ public class WordleActivity extends AppCompatActivity {
 
     private void initializeViews() {
         gridGuesses = findViewById(R.id.gridGuesses);
-        etGuess = findViewById(R.id.etGuess);
         btnSubmit = findViewById(R.id.btnSubmit);
         btnNewGame = findViewById(R.id.btnNewGame);
         btnBack = findViewById(R.id.btnBack);
         tvInstructions = findViewById(R.id.tvInstructions);
+        hiddenInput = findViewById(R.id.hiddenInput);
 
         btnSubmit.setOnClickListener(v -> submitGuess());
         btnNewGame.setOnClickListener(v -> startNewGame());
         btnBack.setOnClickListener(v -> finish());
 
-        // Limit EditText to 5 uppercase letters
-        etGuess.setFilters(new InputFilter[]{
-                new InputFilter.LengthFilter(WORD_LENGTH),
-                new InputFilter.AllCaps()
-        });
+        setupGrid();
+        setupHiddenInput();
+    }
 
-        // Show letters in grid as user types
-        textWatcher = new TextWatcher() {
+    private void setupHiddenInput() {
+        // Configure the hidden EditText to capture keyboard input on mobile
+        hiddenInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS | InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        hiddenInput.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        hiddenInput.setImeOptions(android.view.inputmethod.EditorInfo.IME_ACTION_DONE);
+
+        hiddenInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateCurrentRowWithInput(s.toString());
-            }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
             @Override
-            public void afterTextChanged(Editable s) {}
-        };
-        etGuess.addTextChangedListener(textWatcher);
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
 
-        setupGrid();
+                if (text.length() > 0) {
+                    // Process the text character by character
+                    for (int i = 0; i < text.length(); i++) {
+                        char letter = text.charAt(i);
+                        if (Character.isLetter(letter)) {
+                            handleLetterInput(Character.toUpperCase(letter));
+                        }
+                    }
+
+                    // Clear immediately after processing
+                    hiddenInput.removeTextChangedListener(this);
+                    hiddenInput.setText("");
+                    hiddenInput.addTextChangedListener(this);
+                }
+            }
+        });
+
+        hiddenInput.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (keyCode == KeyEvent.KEYCODE_DEL) {
+                    handleBackspace();
+                    return true;
+                } else if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    submitGuess();
+                    return true;
+                }
+            }
+            return false;
+        });
+
+        // Handle IME action (when "סיום" is pressed)
+        hiddenInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == android.view.inputmethod.EditorInfo.IME_ACTION_DONE ||
+                    actionId == android.view.inputmethod.EditorInfo.IME_ACTION_GO ||
+                    actionId == android.view.inputmethod.EditorInfo.IME_ACTION_NEXT) {
+                submitGuess();
+                return true;
+            }
+            return false;
+        });
+
+        // Make the grid clickable to focus the hidden input
+        gridGuesses.setOnClickListener(v -> {
+            hiddenInput.requestFocus();
+            showKeyboard();
+        });
+    }
+
+    private void showKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.showSoftInput(hiddenInput, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    private void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(hiddenInput.getWindowToken(), 0);
+    }
+
+    private void handleLetterInput(char letter) {
+        if (currentLetterIndex < WORD_LENGTH) {
+            int cellIndex = currentAttempt * WORD_LENGTH + currentLetterIndex;
+            TextView tv = (TextView) gridGuesses.getChildAt(cellIndex);
+            tv.setText(String.valueOf(letter));
+            currentGuess += letter;
+            currentLetterIndex++;
+        }
+    }
+
+    private void handleBackspace() {
+        if (currentLetterIndex > 0) {
+            currentLetterIndex--;
+            int cellIndex = currentAttempt * WORD_LENGTH + currentLetterIndex;
+            TextView tv = (TextView) gridGuesses.getChildAt(cellIndex);
+            tv.setText("");
+            currentGuess = currentGuess.substring(0, currentGuess.length() - 1);
+        }
     }
 
     private void setupGrid() {
@@ -112,22 +190,6 @@ public class WordleActivity extends AppCompatActivity {
             tv.setBackground(getDrawable(android.R.drawable.edit_text));
 
             gridGuesses.addView(tv);
-        }
-    }
-
-    private void updateCurrentRowWithInput(String input) {
-        int startIndex = currentAttempt * WORD_LENGTH;
-
-        // Clear current row first
-        for (int i = 0; i < WORD_LENGTH; i++) {
-            TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
-            tv.setText("");
-        }
-
-        // Fill in the letters
-        for (int i = 0; i < input.length() && i < WORD_LENGTH; i++) {
-            TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
-            tv.setText(String.valueOf(input.charAt(i)));
         }
     }
 
@@ -168,10 +230,14 @@ public class WordleActivity extends AppCompatActivity {
                 .toUpperCase();
 
         currentAttempt = 0;
-        etGuess.setText("");
-        etGuess.setEnabled(true);
+        currentLetterIndex = 0;
+        currentGuess = "";
         btnSubmit.setEnabled(true);
         setupGrid();
+
+        // Focus on hidden input and show keyboard
+        hiddenInput.requestFocus();
+        hiddenInput.postDelayed(() -> showKeyboard(), 200);
 
         tvInstructions.setText("🎮 Guess the 5-letter word!\n" +
                 "🟩 = Correct position\n" +
@@ -180,32 +246,31 @@ public class WordleActivity extends AppCompatActivity {
     }
 
     private void submitGuess() {
-        String guess = etGuess.getText().toString().toUpperCase().trim();
-
-        if (guess.length() != WORD_LENGTH) {
+        if (currentGuess.length() != WORD_LENGTH) {
             Toast.makeText(this, "Please enter a " + WORD_LENGTH + "-letter word",
                     Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!guess.matches("[A-Z]+")) {
+        if (!currentGuess.matches("[A-Z]+")) {
             Toast.makeText(this, "Please use only letters", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        displayGuess(guess);
+        displayGuess(currentGuess);
 
-        // Remove TextWatcher temporarily to avoid clearing the grid
-        etGuess.removeTextChangedListener(textWatcher);
-        etGuess.setText("");
-        etGuess.addTextChangedListener(textWatcher);
-
-        if (guess.equals(targetWord)) {
+        if (currentGuess.equals(targetWord)) {
             gameWon();
         } else {
             currentAttempt++;
+            currentLetterIndex = 0;
+            currentGuess = "";
             if (currentAttempt >= MAX_ATTEMPTS) {
                 gameLost();
+            } else {
+                // Keep keyboard open for next guess
+                hiddenInput.requestFocus();
+                hiddenInput.postDelayed(() -> showKeyboard(), 100);
             }
         }
     }
@@ -220,8 +285,6 @@ public class WordleActivity extends AppCompatActivity {
         for (int i = 0; i < WORD_LENGTH; i++) {
             TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
             char letter = guess.charAt(i);
-            // DON'T set text again - it's already there from typing
-            // tv.setText(String.valueOf(letter));
 
             if (letter == targetChars[i]) {
                 tv.setBackgroundColor(Color.GREEN);
@@ -258,8 +321,8 @@ public class WordleActivity extends AppCompatActivity {
     }
 
     private void gameWon() {
-        etGuess.setEnabled(false);
         btnSubmit.setEnabled(false);
+        hideKeyboard();
 
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Congratulations!")
@@ -272,8 +335,8 @@ public class WordleActivity extends AppCompatActivity {
     }
 
     private void gameLost() {
-        etGuess.setEnabled(false);
         btnSubmit.setEnabled(false);
+        hideKeyboard();
 
         new AlertDialog.Builder(this)
                 .setTitle("Game Over")

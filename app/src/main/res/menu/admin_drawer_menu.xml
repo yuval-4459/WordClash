@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_users_table"
+            android:icon="@android:drawable/ic_menu_sort_by_size"
+            android:title="📊 Table of Users" />
+
+        <item
+            android:id="@+id/nav_add_word"
+            android:icon="@android:drawable/ic_input_add"
+            android:title="➕ Add New Word" />
+
+        <item
+            android:id="@+id/nav_manage_words"
+            android:icon="@android:drawable/ic_menu_edit"
+            android:title="📝 Manage Words" />
+
+        <item
+            android:id="@+id/nav_change_details"
+            android:icon="@android:drawable/ic_menu_preferences"
+            android:title="⚙️ Change Details" />
+    </group>
+</menu>
