@@ -3,96 +3,97 @@ package com.example.wordclash.screens;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
 import com.example.wordclash.R;
 import com.example.wordclash.models.User;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.example.wordclash.utils.VocabularyImporter;
 import com.google.android.material.navigation.NavigationView;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+/**
+ * מסך הבית של האפליקציה
+ * כאן המשתמש יכול לבחור:
+ * - להתחיל לשחק (Ranks)
+ * - לראות לוח תוצאות (Leaderboard)
+ * - לשחק Wordle
+ * - להתנתק (Logout)
+ *
+ * אם המשתמש הוא אדמין, הוא גם יכול:
+ * - לנהל משתמשים
+ * - להוסיף מילים
+ * - לערוך מילים
+ */
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
 
-    Button btnLogout;
-    Button btnRanks;
-    Button btnWordle;
-    Button btnLeaderboard;
+    // ========== חלק 1: משתנים ==========
 
-    private User user;
-    private TextView tvHelloUser;
+    // כפתורים ראשיים
+    private Button btnLogout;       // כפתור התנתקות
+    private Button btnRanks;        // כפתור למשחק
+    private Button btnWordle;       // כפתור לWordle
+    private Button btnLeaderboard;  // כפתור ללוח תוצאות
 
-    // Drawer components
-    private DrawerLayout drawerLayout;
-    private NavigationView navigationView;
-    private ImageView menuIcon;
-    private Toolbar toolbar;
+    // טקסט וממשק
+    private TextView tvHelloUser;   // טקסט "Hello [שם]"
+    private DrawerLayout drawerLayout;     // תפריט צד
+    private NavigationView navigationView; // פריטי תפריט
+    private ImageView menuIcon;            // אייקון תפריט
 
+    // נתונים
+    private User user;  // המשתמש המחובר
+
+    // קבועים
     private static final String PREFS_NAME = "WordClashPrefs";
     private static final String KEY_VOCABULARY_IMPORTED = "vocabulary_imported";
+
+    // ========== חלק 2: יצירת המסך ==========
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
 
-        user = SharedPreferencesUtils.getUser(MainActivity.this);
-        assert user != null;
+        // קבלת המשתמש המחובר
+        user = SharedPreferencesUtils.getUser(this);
+        if (user == null) {
+            // אם אין משתמש מחובר - חזרה למסך התחלה
+            startActivity(new Intent(this, StartPageActivity.class));
+            finish();
+            return;
+        }
 
+        // הקמת ממשק
+        setupUI();
+
+        // טעינת מילים (פעם ראשונה בלבד)
+        importVocabularyIfNeeded();
+
+        // הגדרת תפריט
+        setupMenu();
+    }
+
+    // ========== חלק 3: הקמת ממשק ==========
+
+    /**
+     * חיבור כל הכפתורים וטקסטים מה-XML
+     */
+    private void setupUI() {
+        // טקסט ברכה
         tvHelloUser = findViewById(R.id.tvHelloUser);
         tvHelloUser.setText("Hello " + user.getUserName());
 
-        // Import vocabulary on first launch
-        importVocabularyIfNeeded();
-
-        // Setup drawer
-        setupDrawer();
-
-        btnLogout = findViewById(R.id.btnLogout);
-        btnLogout.setOnClickListener(v -> logout());
-
-        btnRanks = findViewById(R.id.btnRanks);
-        btnRanks.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, RanksActivity.class)));
-
-        btnLeaderboard = findViewById(R.id.btnLeaderboard);
-        btnLeaderboard.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, LeaderboardActivity.class)));
-
-        btnWordle = findViewById(R.id.WordleButton);
-        btnWordle.setOnClickListener(view ->
-                startActivity(new Intent(MainActivity.this, WordleActivity.class)));
-
-        // Setup menu based on user role
-        setupMenuForUser();
-
-        // Handle back button press - modern approach
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-                if (drawerLayout != null && drawerLayout.isDrawerOpen(GravityCompat.START)) {
-                    drawerLayout.closeDrawer(GravityCompat.START);
-                } else {
-                    finish();
-                }
-            }
-        });
-    }
-
-    private void setupDrawer() {
-        toolbar = findViewById(R.id.toolbar);
+        // תפריט צד
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawerLayout = findViewById(R.id.drawer_layout);
@@ -101,10 +102,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
 
-        // Always show hamburger menu for all users
-        menuIcon.setVisibility(View.VISIBLE);
-
-        // Setup hamburger menu click
+        // פתיחת תפריט בלחיצה על האייקון
         menuIcon.setOnClickListener(v -> {
             if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -112,61 +110,115 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+        // כפתור התנתקות
+        btnLogout = findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(v -> logout());
+
+        // כפתור למשחק
+        btnRanks = findViewById(R.id.btnRanks);
+        btnRanks.setOnClickListener(v ->
+                startActivity(new Intent(this, RanksActivity.class))
+        );
+
+        // כפתור ללוח תוצאות
+        btnLeaderboard = findViewById(R.id.btnLeaderboard);
+        btnLeaderboard.setOnClickListener(v ->
+                startActivity(new Intent(this, LeaderboardActivity.class))
+        );
+
+        // כפתור ל-Wordle
+        btnWordle = findViewById(R.id.WordleButton);
+        btnWordle.setOnClickListener(v ->
+                startActivity(new Intent(this, WordleActivity.class))
+        );
     }
 
-    private void setupMenuForUser() {
-        Menu menu = navigationView.getMenu();
+    // ========== חלק 4: תפריט צד ==========
 
+    /**
+     * הגדרת תפריט לפי סוג משתמש
+     */
+    private void setupMenu() {
+        // אם המשתמש לא אדמין - הסתר אפשרויות אדמין
         if (!user.isAdmin()) {
-            // Hide admin-only menu items for regular users
-            menu.findItem(R.id.nav_users_table).setVisible(false);
-            menu.findItem(R.id.nav_add_word).setVisible(false);
-            menu.findItem(R.id.nav_manage_words).setVisible(false);
-            // Keep only "Change Details" visible
-            menu.findItem(R.id.nav_change_details).setVisible(true);
+            navigationView.getMenu().findItem(R.id.nav_users_table).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_add_word).setVisible(false);
+            navigationView.getMenu().findItem(R.id.nav_manage_words).setVisible(false);
         }
     }
 
+    /**
+     * טיפול בבחירת פריט מהתפריט
+     */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        // מעבר למסך המתאים
         if (id == R.id.nav_users_table) {
-            startActivity(new Intent(MainActivity.this, UserListActivity.class));
+            startActivity(new Intent(this, UserListActivity.class));
         } else if (id == R.id.nav_add_word) {
-            startActivity(new Intent(MainActivity.this, AdminAddWordActivity.class));
+            startActivity(new Intent(this, AdminAddWordActivity.class));
         } else if (id == R.id.nav_manage_words) {
-            startActivity(new Intent(MainActivity.this, AdminManageWordsActivity.class));
+            startActivity(new Intent(this, AdminManageWordsActivity.class));
         } else if (id == R.id.nav_change_details) {
-            startActivity(new Intent(MainActivity.this, ChangeDetailsActivity.class));
+            startActivity(new Intent(this, ChangeDetailsActivity.class));
         }
 
+        // סגירת התפריט
         drawerLayout.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    // ========== חלק 5: פונקציות עזר ==========
+
+    /**
+     * טעינת מילים פעם ראשונה
+     */
     private void importVocabularyIfNeeded() {
         SharedPreferences prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         boolean imported = prefs.getBoolean(KEY_VOCABULARY_IMPORTED, false);
 
         if (!imported) {
-            Toast.makeText(this, "Importing vocabulary... This may take a moment.",
+            Toast.makeText(this, "טוען מילים לפעם הראשונה...",
                     Toast.LENGTH_LONG).show();
 
+            // טעינת המילים
             VocabularyImporter.importVocabularyFromAssets(this);
 
-            // Mark as imported
+            // סימון שטענו
             prefs.edit().putBoolean(KEY_VOCABULARY_IMPORTED, true).apply();
 
-            Toast.makeText(this, "Vocabulary imported successfully!",
+            Toast.makeText(this, "המילים נטענו בהצלחה!",
                     Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * התנתקות מהמערכת
+     */
     private void logout() {
-        SharedPreferencesUtils.signOutUser(MainActivity.this);
-        Intent intent = new Intent(MainActivity.this, StartPageActivity.class);
+        // מחיקת נתוני המשתמש
+        SharedPreferencesUtils.signOutUser(this);
+
+        // חזרה למסך התחלה
+        Intent intent = new Intent(this, StartPageActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+    }
+
+    /**
+     * טיפול בלחיצה על כפתור "חזרה"
+     */
+    @Override
+    public void onBackPressed() {
+        // אם התפריט פתוח - סגור אותו
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            // אחרת - צא מהאפליקציה
+            super.onBackPressed();
+        }
     }
 }

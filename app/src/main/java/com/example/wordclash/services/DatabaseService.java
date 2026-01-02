@@ -1,50 +1,35 @@
 package com.example.wordclash.services;
 
-import android.util.Log;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
 import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.MutableData;
-import com.google.firebase.database.Transaction;
-import com.google.firebase.database.ValueEventListener;
-
-import org.jetbrains.annotations.NotNull;
-
+import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.function.UnaryOperator;
 
+/**
+ * שירות לניהול Firebase Database
+ * כל הפעולות על המשתמשים, מילים וסטטיסטיקות
+ */
 public class DatabaseService {
 
-    private static final String TAG = "DatabaseService";
-    private static final String USERS_PATH = "users";
-    private static final String STATS_PATH = "stats";
-    private static final String WORDS_PATH = "vocabulary";
-    private static final String RANK_PROGRESS_PATH = "rank_progress";
+    // ========== חלק 1: הגדרות בסיסיות ==========
 
-    public interface DatabaseCallback<T> {
-        public void onCompleted(T object);
-        public void onFailed(Exception e);
-    }
+    private static final String USERS_PATH = "users";           // נתיב למשתמשים
+    private static final String STATS_PATH = "stats";           // נתיב לסטטיסטיקות
+    private static final String WORDS_PATH = "vocabulary";      // נתיב למילים
+    private static final String RANK_PROGRESS = "rank_progress"; // נתיב להתקדמות
 
-    private static DatabaseService instance;
-    private final DatabaseReference databaseReference;
+    private static DatabaseService instance;                    // סינגלטון
+    private final DatabaseReference db;                         // חיבור ל-Firebase
 
+    // קונסטרוקטור פרטי (סינגלטון)
     private DatabaseService() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
-        databaseReference = firebaseDatabase.getReference();
+        db = FirebaseDatabase.getInstance().getReference();
     }
 
+    // קבלת המופע היחיד של השירות
     public static DatabaseService getInstance() {
         if (instance == null) {
             instance = new DatabaseService();
@@ -52,131 +37,108 @@ public class DatabaseService {
         return instance;
     }
 
-    // region private generic methods
+    // ========== חלק 2: ממשק Callback ==========
 
-    private void writeData(@NotNull final String path, @NotNull final Object data, final @Nullable DatabaseCallback<Void> callback) {
-        readData(path).setValue(data, (error, ref) -> {
-            if (error != null) {
-                if (callback == null) return;
-                callback.onFailed(error.toException());
-            } else {
-                if (callback == null) return;
-                callback.onCompleted(null);
-            }
-        });
+    /**
+     * ממשק לטיפול בתגובות מהדאטהבייס
+     */
+    public interface DatabaseCallback<T> {
+        void onCompleted(T result);  // הצלחה
+        void onFailed(Exception e);   // כשל
     }
 
-    private void deleteData(@NotNull final String path, @Nullable final DatabaseCallback<Void> callback) {
-        readData(path).removeValue((error, ref) -> {
-            if (error != null) {
-                if (callback == null) return;
-                callback.onFailed(error.toException());
-            } else {
-                if (callback == null) return;
-                callback.onCompleted(null);
-            }
-        });
-    }
+    // ========== חלק 3: משתמשים (Users) ==========
 
-    private DatabaseReference readData(@NotNull final String path) {
-        return databaseReference.child(path);
-    }
-
-    private <T> void getData(@NotNull final String path, @NotNull final Class<T> clazz, @NotNull final DatabaseCallback<T> callback) {
-        readData(path).get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e(TAG, "Error getting data", task.getException());
-                callback.onFailed(task.getException());
-                return;
-            }
-            T data = task.getResult().getValue(clazz);
-            callback.onCompleted(data);
-        });
-    }
-
-    private <T> void getDataList(@NotNull final String path, @NotNull final Class<T> clazz, @NotNull final DatabaseCallback<List<T>> callback) {
-        readData(path).get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                Log.e(TAG, "Error getting data", task.getException());
-                callback.onFailed(task.getException());
-                return;
-            }
-            List<T> tList = new ArrayList<>();
-            task.getResult().getChildren().forEach(dataSnapshot -> {
-                T t = dataSnapshot.getValue(clazz);
-                tList.add(t);
-            });
-            callback.onCompleted(tList);
-        });
-    }
-
-    private String generateNewId(@NotNull final String path) {
-        return databaseReference.child(path).push().getKey();
-    }
-
-    private <T> void runTransaction(@NotNull final String path, @NotNull final Class<T> clazz, @NotNull UnaryOperator<T> function, @NotNull final DatabaseCallback<T> callback) {
-        readData(path).runTransaction(new Transaction.Handler() {
-            @NonNull
-            @Override
-            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                T currentValue = currentData.getValue(clazz);
-                if (currentValue == null) {
-                    currentValue = function.apply(null);
-                } else {
-                    currentValue = function.apply(currentValue);
-                }
-                currentData.setValue(currentValue);
-                return Transaction.success(currentData);
-            }
-
-            @Override
-            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot currentData) {
-                if (error != null) {
-                    Log.e(TAG, "Transaction failed", error.toException());
-                    callback.onFailed(error.toException());
-                    return;
-                }
-                T result = currentData != null ? currentData.getValue(clazz) : null;
-                callback.onCompleted(result);
-            }
-        });
-    }
-
-    // endregion
-
-    // region User Section
-
+    /**
+     * יצירת מזהה חדש למשתמש
+     */
     public String generateUserId() {
-        return generateNewId(USERS_PATH);
+        return db.child(USERS_PATH).push().getKey();
     }
 
-    public void createNewUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(USERS_PATH + "/" + user.getId(), user, callback);
+    /**
+     * יצירת משתמש חדש
+     */
+    public void createNewUser(User user, DatabaseCallback<Void> callback) {
+        db.child(USERS_PATH).child(user.getId()).setValue(user)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
     }
 
-    public void getUser(@NotNull final String uid, @NotNull final DatabaseCallback<User> callback) {
-        getData(USERS_PATH + "/" + uid, User.class, callback);
+    /**
+     * קבלת משתמש לפי ID
+     */
+    public void getUser(String userId, DatabaseCallback<User> callback) {
+        db.child(USERS_PATH).child(userId).get()
+                .addOnSuccessListener(snapshot -> {
+                    User user = snapshot.getValue(User.class);
+                    callback.onCompleted(user);
+                })
+                .addOnFailureListener(callback::onFailed);
     }
 
-    public void getUserList(@NotNull final DatabaseCallback<List<User>> callback) {
-        getDataList(USERS_PATH, User.class, callback);
+    /**
+     * קבלת כל המשתמשים
+     */
+    public void getUserList(DatabaseCallback<List<User>> callback) {
+        db.child(USERS_PATH).get()
+                .addOnSuccessListener(snapshot -> {
+                    List<User> users = new ArrayList<>();
+                    for (DataSnapshot child : snapshot.getChildren()) {
+                        User user = child.getValue(User.class);
+                        if (user != null) users.add(user);
+                    }
+                    callback.onCompleted(users);
+                })
+                .addOnFailureListener(callback::onFailed);
     }
 
-    public void deleteUser(@NotNull final String uid, @Nullable final DatabaseCallback<Void> callback) {
-        deleteData(USERS_PATH + "/" + uid, callback);
+    /**
+     * עדכון משתמש
+     */
+    public void updateUser(User user, DatabaseCallback<Void> callback) {
+        db.child(USERS_PATH).child(user.getId()).setValue(user)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
     }
 
-    public void login(@NotNull final String email, @NotNull final String password, @NotNull final DatabaseCallback<User> callback) {
+    /**
+     * מחיקת משתמש
+     */
+    public void deleteUser(String userId, DatabaseCallback<Void> callback) {
+        db.child(USERS_PATH).child(userId).removeValue()
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
+    }
+
+    /**
+     * התחברות למערכת
+     */
+    public void login(String email, String password, DatabaseCallback<User> callback) {
         getUserList(new DatabaseCallback<List<User>>() {
             @Override
             public void onCompleted(List<User> users) {
+                // חיפוש משתמש עם אימייל וסיסמה תואמים
                 for (User user : users) {
-                    if (Objects.equals(user.getEmail(), email) && Objects.equals(user.getPassword(), password)) {
+                    if (user.getEmail().equals(email) &&
+                            user.getPassword().equals(password)) {
                         callback.onCompleted(user);
                         return;
                     }
                 }
-                callback.onCompleted(null);
+                callback.onCompleted(null); // לא נמצא
             }
 
             @Override
@@ -186,12 +148,15 @@ public class DatabaseService {
         });
     }
 
-    public void checkIfEmailExists(@NotNull final String email, @NotNull final DatabaseCallback<Boolean> callback) {
+    /**
+     * בדיקה אם אימייל קיים
+     */
+    public void checkIfEmailExists(String email, DatabaseCallback<Boolean> callback) {
         getUserList(new DatabaseCallback<List<User>>() {
             @Override
             public void onCompleted(List<User> users) {
                 for (User user : users) {
-                    if (Objects.equals(user.getEmail(), email)) {
+                    if (user.getEmail().equals(email)) {
                         callback.onCompleted(true);
                         return;
                     }
@@ -206,54 +171,156 @@ public class DatabaseService {
         });
     }
 
-    public void updateUser(@NotNull final User user, @Nullable final DatabaseCallback<Void> callback) {
-        runTransaction(USERS_PATH + "/" + user.getId(), User.class, currentUser -> user, new DatabaseCallback<User>() {
-            @Override
-            public void onCompleted(User object) {
-                if (callback != null) {
-                    callback.onCompleted(null);
-                }
-            }
+    // ========== חלק 4: סטטיסטיקות (Stats) ==========
 
-            @Override
-            public void onFailed(Exception e) {
-                if (callback != null) {
-                    callback.onFailed(e);
-                }
-            }
-        });
-    }
-
-    // endregion
-
-    // region Stats Section
-
-    public void getStats(@NotNull final String userId, @NotNull final DatabaseCallback<Stats> callback) {
-        getData(STATS_PATH + "/" + userId, Stats.class, callback);
-    }
-
-    public void createStats(@NotNull final Stats stats, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(STATS_PATH + "/" + stats.getUserId(), stats, callback);
-    }
-
-    public void updateStats(@NotNull final Stats stats, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(STATS_PATH + "/" + stats.getUserId(), stats, callback);
+    /**
+     * יצירת סטטיסטיקה חדשה למשתמש
+     */
+    public void createStats(Stats stats, DatabaseCallback<Void> callback) {
+        db.child(STATS_PATH).child(stats.getUserId()).setValue(stats)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
     }
 
     /**
-     * SAFE: If stats node was deleted, recreate defaults and return it.
+     * קבלת סטטיסטיקות של משתמש
      */
-    public void getStatsSafe(@NotNull final String userId, @NotNull final DatabaseCallback<Stats> callback) {
-        getStats(userId, new DatabaseCallback<Stats>() {
+    public void getStats(String userId, DatabaseCallback<Stats> callback) {
+        db.child(STATS_PATH).child(userId).get()
+                .addOnSuccessListener(snapshot -> {
+                    Stats stats = snapshot.getValue(Stats.class);
+                    callback.onCompleted(stats);
+                })
+                .addOnFailureListener(callback::onFailed);
+    }
+
+    /**
+     * עדכון סטטיסטיקות
+     */
+    public void updateStats(Stats stats, DatabaseCallback<Void> callback) {
+        db.child(STATS_PATH).child(stats.getUserId()).setValue(stats)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
+    }
+
+    // ========== חלק 5: מילים (Words) ==========
+
+    /**
+     * יצירת מזהה חדש למילה
+     */
+    public String generateWordId(int rank) {
+        return db.child(WORDS_PATH).child("level" + rank).push().getKey();
+    }
+
+    /**
+     * הוספת מילה חדשה
+     */
+    public void createWord(Word word, DatabaseCallback<Void> callback) {
+        HashMap<String, String> wordData = new HashMap<>();
+        wordData.put("en", word.getEnglish());
+        wordData.put("he", word.getHebrew());
+
+        String path = WORDS_PATH + "/level" + word.getRank() + "/" + word.getId();
+        db.child(path).setValue(wordData)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
+    }
+
+    /**
+     * קבלת מילים לפי דרגה
+     */
+    public void getWordsByRank(int rank, DatabaseCallback<List<Word>> callback) {
+        db.child(WORDS_PATH).child("level" + rank).get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Word> words = new ArrayList<>();
+                    for (DataSnapshot child : snapshot.getChildren()) {
+                        String id = child.getKey();
+                        String en = child.child("en").getValue(String.class);
+                        String he = child.child("he").getValue(String.class);
+
+                        if (id != null && en != null && he != null) {
+                            Word word = new Word(id, en, he, rank);
+                            words.add(word);
+                        }
+                    }
+                    callback.onCompleted(words);
+                })
+                .addOnFailureListener(callback::onFailed);
+    }
+
+    /**
+     * קבלת כל המילים
+     */
+    public void getAllWords(DatabaseCallback<List<Word>> callback) {
+        db.child(WORDS_PATH).get()
+                .addOnSuccessListener(snapshot -> {
+                    List<Word> allWords = new ArrayList<>();
+
+                    // עבור על כל הרמות (level1, level2, ...)
+                    for (DataSnapshot levelSnapshot : snapshot.getChildren()) {
+                        String levelKey = levelSnapshot.getKey();
+                        if (levelKey == null) continue;
+
+                        // חילוץ מספר הדרגה
+                        int rank = Integer.parseInt(levelKey.replace("level", ""));
+
+                        // עבור על כל המילים ברמה
+                        for (DataSnapshot wordSnapshot : levelSnapshot.getChildren()) {
+                            String id = wordSnapshot.getKey();
+                            String en = wordSnapshot.child("en").getValue(String.class);
+                            String he = wordSnapshot.child("he").getValue(String.class);
+
+                            if (id != null && en != null && he != null) {
+                                Word word = new Word(id, en, he, rank);
+                                allWords.add(word);
+                            }
+                        }
+                    }
+                    callback.onCompleted(allWords);
+                })
+                .addOnFailureListener(callback::onFailed);
+    }
+
+    /**
+     * מחיקת מילה
+     */
+    public void deleteWord(Word word, DatabaseCallback<Void> callback) {
+        String path = WORDS_PATH + "/level" + word.getRank() + "/" + word.getId();
+        db.child(path).removeValue()
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
+    }
+
+    /**
+     * קבלת מילים בעלות 5 אותיות (למשחק Wordle)
+     */
+    public void getAllFiveLetterWords(DatabaseCallback<List<Word>> callback) {
+        getAllWords(new DatabaseCallback<List<Word>>() {
             @Override
-            public void onCompleted(Stats loaded) {
-                if (loaded == null) {
-                    Stats s = new Stats(userId, 1, 0);
-                    createStats(s, null);
-                    callback.onCompleted(s);
-                } else {
-                    callback.onCompleted(loaded);
+            public void onCompleted(List<Word> allWords) {
+                List<Word> fiveLetterWords = new ArrayList<>();
+                for (Word word : allWords) {
+                    if (word.getEnglish().trim().length() == 5) {
+                        fiveLetterWords.add(word);
+                    }
                 }
+                callback.onCompleted(fiveLetterWords);
             }
 
             @Override
@@ -263,175 +330,14 @@ public class DatabaseService {
         });
     }
 
-    /**
-     * Update rank in: stats/{userId}/rank
-     */
-    public void updateCurrentRank(@NotNull final String userId, int newRank, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(STATS_PATH + "/" + userId + "/rank", newRank, callback);
-    }
+    // ========== חלק 6: התקדמות בדרגות (Rank Progress) ==========
 
     /**
-     * Update totalScore in: stats/{userId}/totalScore
-     */
-    public void updateTotalScore(@NotNull final String userId, int newTotalScore, @Nullable final DatabaseCallback<Void> callback) {
-        writeData(STATS_PATH + "/" + userId + "/totalScore", newTotalScore, callback);
-    }
-
-    // endregion
-
-    // region Words Section
-
-    public void getWordsByRank(int rank, @NotNull final DatabaseCallback<List<Word>> callback) {
-        String levelPath = WORDS_PATH + "/level" + rank;
-
-        readData(levelPath).get().addOnCompleteListener(task -> {
-            if (!task.isSuccessful()) {
-                callback.onFailed(task.getException());
-                return;
-            }
-
-            List<Word> list = new ArrayList<>();
-
-            for (DataSnapshot s : task.getResult().getChildren()) {
-
-                String id = s.getKey();
-                String en = s.child("en").getValue(String.class);
-                String he = s.child("he").getValue(String.class);
-
-                if (id != null && en != null && he != null) {
-                    Word w = new Word();
-                    w.setId(id);
-                    w.setEnglish(en);
-                    w.setHebrew(he);
-                    w.setRank(rank);
-                    list.add(w);
-                }
-            }
-
-            callback.onCompleted(list);
-        });
-    }
-
-    public void createWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
-        // Create a map with only en and he fields to match Firebase structure
-        HashMap<String, String> wordData = new HashMap<>();
-        wordData.put("en", word.getEnglish());
-        wordData.put("he", word.getHebrew());
-
-        String path = WORDS_PATH + "/level" + word.getRank() + "/" + word.getId();
-        writeData(path, wordData, callback);
-    }
-
-
-    /**
-     * Delete a word from the vocabulary
-     */
-    public void deleteWord(@NotNull final Word word, @Nullable final DatabaseCallback<Void> callback) {
-        String path = WORDS_PATH + "/level" + word.getRank() + "/" + word.getId();
-        deleteData(path, callback);
-    }
-
-    /**
-     * Get all words from all ranks (for admin management)
-     */
-    public void getAllWords(@NotNull final DatabaseCallback<List<Word>> callback) {
-        DatabaseReference wordsRef = databaseReference.child(WORDS_PATH);
-
-        wordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Word> allWords = new ArrayList<>();
-
-                for (DataSnapshot levelSnapshot : snapshot.getChildren()) {
-                    // Extract rank from "level1", "level2", etc.
-                    String levelKey = levelSnapshot.getKey();
-                    if (levelKey == null) continue;
-
-                    int rank = 1;
-                    try {
-                        rank = Integer.parseInt(levelKey.replace("level", ""));
-                    } catch (NumberFormatException e) {
-                        continue;
-                    }
-
-                    for (DataSnapshot wordSnapshot : levelSnapshot.getChildren()) {
-                        String id = wordSnapshot.getKey();
-                        String en = wordSnapshot.child("en").getValue(String.class);
-                        String he = wordSnapshot.child("he").getValue(String.class);
-
-                        if (id != null && en != null && he != null) {
-                            Word w = new Word();
-                            w.setId(id);
-                            w.setEnglish(en);
-                            w.setHebrew(he);
-                            w.setRank(rank);
-                            allWords.add(w);
-                        }
-                    }
-                }
-
-                callback.onCompleted(allWords);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                callback.onFailed(error.toException());
-            }
-        });
-    }
-    /**
-     * Public helper for admin add-word: generates a key under vocabulary/level{rank}
-     */
-    public String generateWordId(int rank) {
-        return generateNewId(WORDS_PATH + "/level" + rank);
-    }
-
-    /**
-     * Get all 5-letter words from ALL ranks for Wordle game
-     */
-    public void getAllFiveLetterWords(@NotNull final DatabaseCallback<List<Word>> callback) {
-        DatabaseReference wordsRef = databaseReference.child(WORDS_PATH);
-
-        wordsRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<Word> fiveLetterWords = new ArrayList<>();
-
-                for (DataSnapshot levelSnapshot : snapshot.getChildren()) {
-                    for (DataSnapshot wordSnapshot : levelSnapshot.getChildren()) {
-
-                        String en = wordSnapshot.child("en").getValue(String.class);
-                        if (en != null) {
-                            en = en.trim();
-                            if (en.length() == 5) {
-                                Word w = new Word();
-                                w.setEnglish(en);
-                                fiveLetterWords.add(w);
-                            }
-                        }
-                    }
-                }
-
-                callback.onCompleted(fiveLetterWords);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                callback.onFailed(error.toException());
-            }
-        });
-    }
-
-    // endregion
-
-    // region Rank Progress Section
-
-    /**
-     * Simple data holder for rank-specific progress
+     * מחלקה לנתוני התקדמות
      */
     public static class RankProgressData {
-        public int practiceCount;
-        public boolean hasReviewedWords;
+        public int practiceCount;         // כמה פעמים תרגל
+        public boolean hasReviewedWords;  // האם סקר את המילים
 
         public RankProgressData() {
             this.practiceCount = 0;
@@ -440,105 +346,109 @@ public class DatabaseService {
     }
 
     /**
-     * Get progress for specific rank
+     * קבלת התקדמות לדרגה מסוימת
      */
-    public void getRankProgress(@NotNull final String userId, int rank, @NotNull final DatabaseCallback<RankProgressData> callback) {
-        String path = RANK_PROGRESS_PATH + "/" + userId + "/rank_" + rank;
-        getData(path, RankProgressData.class, callback);
-    }
-
-    /**
-     * SAFE: If rank node was deleted, recreate defaults and return it.
-     */
-    public void getRankProgressSafe(@NotNull final String userId, int rank, @NotNull final DatabaseCallback<RankProgressData> callback) {
-        getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
-            @Override
-            public void onCompleted(RankProgressData data) {
-                if (data == null) {
-                    RankProgressData d = new RankProgressData();
-                    updateRankProgress(userId, rank, d, null);
-                    callback.onCompleted(d);
-                } else {
+    public void getRankProgress(String userId, int rank, DatabaseCallback<RankProgressData> callback) {
+        String path = RANK_PROGRESS + "/" + userId + "/rank_" + rank;
+        db.child(path).get()
+                .addOnSuccessListener(snapshot -> {
+                    RankProgressData data = snapshot.getValue(RankProgressData.class);
                     callback.onCompleted(data);
-                }
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                callback.onFailed(e);
-            }
-        });
+                })
+                .addOnFailureListener(callback::onFailed);
     }
 
     /**
-     * Update progress for specific rank
+     * קבלת התקדמות בצורה בטוחה (יוצר אם לא קיים)
      */
-    public void updateRankProgress(@NotNull final String userId, int rank, @NotNull final RankProgressData progress, @Nullable final DatabaseCallback<Void> callback) {
-        String path = RANK_PROGRESS_PATH + "/" + userId + "/rank_" + rank;
-        writeData(path, progress, callback);
-    }
-
-    /**
-     * Mark words as reviewed for specific rank
-     */
-    public void markWordsReviewedForRank(@NotNull final String userId, int rank, @Nullable final DatabaseCallback<Void> callback) {
+    public void getRankProgressSafe(String userId, int rank, DatabaseCallback<RankProgressData> callback) {
         getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
             @Override
             public void onCompleted(RankProgressData data) {
                 if (data == null) {
                     data = new RankProgressData();
+                    updateRankProgress(userId, rank, data, null);
                 }
+                callback.onCompleted(data);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                // במקרה של שגיאה, החזר ערכים ברירת מחדל
+                callback.onCompleted(new RankProgressData());
+            }
+        });
+    }
+
+    /**
+     * עדכון התקדמות
+     */
+    public void updateRankProgress(String userId, int rank, RankProgressData data, DatabaseCallback<Void> callback) {
+        String path = RANK_PROGRESS + "/" + userId + "/rank_" + rank;
+        db.child(path).setValue(data)
+                .addOnSuccessListener(v -> {
+                    if (callback != null) callback.onCompleted(null);
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) callback.onFailed(e);
+                });
+    }
+
+    /**
+     * סימון שהמשתמש סקר את המילים
+     */
+    public void markWordsReviewedForRank(String userId, int rank, DatabaseCallback<Void> callback) {
+        getRankProgressSafe(userId, rank, new DatabaseCallback<RankProgressData>() {
+            @Override
+            public void onCompleted(RankProgressData data) {
                 data.hasReviewedWords = true;
                 updateRankProgress(userId, rank, data, callback);
             }
 
             @Override
             public void onFailed(Exception e) {
-                RankProgressData data = new RankProgressData();
-                data.hasReviewedWords = true;
-                updateRankProgress(userId, rank, data, callback);
+                if (callback != null) callback.onFailed(e);
             }
         });
     }
 
     /**
-     * Increment practice count for specific rank
+     * הוספה למספר התרגולים
      */
-    public void incrementPracticeForRank(@NotNull final String userId, int rank, @Nullable final DatabaseCallback<Void> callback) {
-        getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
+    public void incrementPracticeForRank(String userId, int rank, DatabaseCallback<Void> callback) {
+        getRankProgressSafe(userId, rank, new DatabaseCallback<RankProgressData>() {
             @Override
             public void onCompleted(RankProgressData data) {
-                if (data == null) {
-                    data = new RankProgressData();
-                }
                 data.practiceCount++;
                 updateRankProgress(userId, rank, data, callback);
             }
 
             @Override
             public void onFailed(Exception e) {
-                if (callback != null) {
-                    callback.onFailed(e);
-                }
+                if (callback != null) callback.onFailed(e);
             }
         });
     }
 
-    // endregion
+    // ========== חלק 7: פונקציות עזר ==========
 
-    // region Helpers (used by UI)
-
+    /**
+     * כמה תרגולים נדרשים לעבור דרגה
+     */
     public static int getRequiredPracticeCount(int rank) {
         switch (rank) {
             case 1: return 15;
             case 2: return 25;
             case 3: return 40;
             case 4: return 60;
-            case 5: return Integer.MAX_VALUE;
+            case 5: return Integer.MAX_VALUE; // אין עוד דרגה אחרי 5
             default: return 15;
         }
     }
 
+    /**
+     * כמה שאלות בכל תרגול
+     */
     public static int getQuestionsPerPractice(int rank) {
         switch (rank) {
             case 1: return 10;
@@ -549,11 +459,4 @@ public class DatabaseService {
             default: return 10;
         }
     }
-
-    // endregion
-
-
-
-
-
 }
