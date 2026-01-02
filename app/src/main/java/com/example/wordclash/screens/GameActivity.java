@@ -17,6 +17,7 @@ import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
+import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
@@ -43,14 +44,22 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        user = SharedPreferencesUtils.getUser(this);
+        if (user != null) {
+            LanguageUtils.applyLanguageSettings(this, user);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        if (user != null) {
+            LanguageUtils.setLayoutDirection(this, user);
+        }
+
         currentRank = getIntent().getIntExtra("RANK", 1);
-        user = SharedPreferencesUtils.getUser(this);
 
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -82,7 +91,7 @@ public class GameActivity extends AppCompatActivity {
             public void onCompleted(Stats loadedStats) {
                 stats = loadedStats;
                 if (stats == null) {
-                    Toast.makeText(GameActivity.this, "Stats not found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -93,7 +102,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(GameActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -115,7 +124,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(GameActivity.this, "No words available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameActivity.this, getString(R.string.no_words_found), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -127,7 +136,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(GameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(GameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -152,22 +161,27 @@ public class GameActivity extends AppCompatActivity {
         answerSelected = false;
         Word currentWord = gameWords.get(currentQuestionIndex);
 
-        Random random = new Random();
-        boolean showEnglish = random.nextBoolean();
+        // Determine question language based on user's learning preference
+        String learningLanguage = user.getLearningLanguage();
+        if (learningLanguage == null) learningLanguage = "english";
 
-        if (showEnglish) {
-            tvQuestion.setText(currentWord.getEnglish());
-            setupOptions(currentWord, false);
-        } else {
+        // If learning English: Show Hebrew question, choose English answer
+        // If learning Hebrew: Show English question, choose Hebrew answer
+        boolean showHebrewQuestion = learningLanguage.equals("english");
+
+        if (showHebrewQuestion) {
             tvQuestion.setText(currentWord.getHebrew());
-            setupOptions(currentWord, true);
+            setupOptions(currentWord, false); // answers in English
+        } else {
+            tvQuestion.setText(currentWord.getEnglish());
+            setupOptions(currentWord, true); // answers in Hebrew
         }
 
         updateProgress();
         startTimer();
     }
 
-    private void setupOptions(Word correctWord, boolean showEnglish) {
+    private void setupOptions(Word correctWord, boolean showHebrew) {
         List<Word> options = new ArrayList<>();
         options.add(correctWord);
 
@@ -184,7 +198,7 @@ public class GameActivity extends AppCompatActivity {
         Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
         for (int i = 0; i < buttons.length && i < options.size(); i++) {
             Word word = options.get(i);
-            String text = showEnglish ? word.getEnglish() : word.getHebrew();
+            String text = showHebrew ? word.getHebrew() : word.getEnglish();
             buttons[i].setText(text);
             buttons[i].setTag(word);
             buttons[i].setBackgroundColor(Color.parseColor("#2196F3"));
@@ -267,11 +281,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void updateProgress() {
-        tvProgress.setText("Question " + (currentQuestionIndex + 1) + " / " + gameWords.size());
+        tvProgress.setText(getString(R.string.question_progress,
+                currentQuestionIndex + 1, gameWords.size()));
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
+        tvScore.setText(getString(R.string.score, score));
     }
 
     private void endGame() {
@@ -290,7 +305,7 @@ public class GameActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(Exception e) {
-                    Toast.makeText(GameActivity.this, "Failed to save rank progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
                     showResultDialog();
                 }
             });
@@ -303,7 +318,7 @@ public class GameActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(Exception e) {
-                    Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
                     showResultDialog();
                 }
             });
@@ -329,7 +344,7 @@ public class GameActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailed(Exception e) {
-                        Toast.makeText(GameActivity.this, "Failed to save progress", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(GameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
                         showResultDialog();
                     }
                 });
@@ -366,15 +381,17 @@ public class GameActivity extends AppCompatActivity {
     private void showResultDialog() {
         String message;
         if (score >= 80) {
-            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n🎉 Congratulations!";
+            message = getString(R.string.your_score, score, gameWords.size() * 10)
+                    + "\n\n" + getString(R.string.congratulations);
         } else {
-            message = "Score: " + score + " / " + (gameWords.size() * 10) + "\n\n❌ You failed.\nYou need at least 80 points to pass.";
+            message = getString(R.string.your_score, score, gameWords.size() * 10)
+                    + "\n\n" + getString(R.string.you_failed);
         }
 
         new AlertDialog.Builder(this)
-                .setTitle("Practice Complete!")
+                .setTitle(getString(R.string.practice_complete))
                 .setMessage(message)
-                .setPositiveButton("OK", (dialog, which) -> finish())
+                .setPositiveButton(getString(R.string.ok), (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
     }

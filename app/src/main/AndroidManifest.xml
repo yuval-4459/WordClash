@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <!-- Add Internet Permission for Email Service -->
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -13,6 +13,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
+        <activity
+            android:name=".screens.LanguageSelectionActivity"
+            android:exported="false" />
         <activity
             android:name=".screens.LeaderboardActivity"
             android:exported="false" />
@@ -30,13 +33,13 @@
             android:exported="false" />
         <activity
             android:name=".screens.WordsListActivity"
-            android:exported="false" /> <!-- NEW ACTIVITIES -->
+            android:exported="false" />
         <activity
             android:name=".screens.LevelActivity"
             android:exported="false" />
         <activity
             android:name=".screens.GameActivity"
-            android:exported="false" /> <!-- EXISTING ACTIVITIES -->
+            android:exported="false" />
         <activity
             android:name=".screens.RanksActivity"
             android:exported="false" />
@@ -48,7 +51,7 @@
             android:exported="false" />
         <activity
             android:name=".screens.admin_users_Activity"
-            android:exported="false" /> <!-- MAIN screen (first screen that opens) -->
+            android:exported="false" />
         <activity
             android:name=".screens.SplashActivity"
             android:exported="true">
@@ -57,7 +60,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Other screens -->
+        </activity>
         <activity
             android:name=".screens.SignUpActivity"
             android:exported="false" />

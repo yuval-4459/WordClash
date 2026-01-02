@@ -24,9 +24,7 @@ import java.util.ArrayList;
 public class SignUpActivity extends AppCompatActivity {
 
     // Firebase
-
     private DatabaseService db;
-
 
     // views from the XML
     private EditText etEmail, etPassword, etPassword2, etUserName;
@@ -39,7 +37,6 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
 
-
         // UI Components
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
@@ -48,11 +45,6 @@ public class SignUpActivity extends AppCompatActivity {
         genderSpinner = findViewById(R.id.Gender);
         btnConfirm = findViewById(R.id.ConfirmsignUpButton);
 
-
-        // the reason i don't use "new" in
-        // db = DatabaseService.getInstance(); --- i don't "new" ---
-        // is that the "DatabaseService" is Singleton - which means it's a private method
-        // that cannot be created again - because it can only exist once!!!
         db = DatabaseService.getInstance();
 
         // Gender Spinner
@@ -80,7 +72,6 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        // כפתור הרשמה
         btnConfirm.setOnClickListener(v -> registerUser());
     }
 
@@ -107,6 +98,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         String id = db.generateUserId();
+        // Create user WITHOUT language preference (will be set in next screen)
         User user = new User(id, email, password, userName, selectedGender, false);
 
         db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<Boolean>() {
@@ -118,15 +110,16 @@ public class SignUpActivity extends AppCompatActivity {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<Void>() {
                         @Override
                         public void onCompleted(Void v) {
-                            // Create initial stats with ONLY rank and totalScore
+                            // Create initial stats
                             Stats initialStats = new Stats(user.getId(), 1, 0);
                             db.createStats(initialStats, null);
 
                             Toast.makeText(SignUpActivity.this, "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
 
                             SharedPreferencesUtils.saveUser(SignUpActivity.this, user);
-                            // מעבר למסך MainActivity
-                            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+
+                            // Go to language selection screen
+                            Intent intent = new Intent(SignUpActivity.this, LanguageSelectionActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
@@ -151,7 +144,5 @@ public class SignUpActivity extends AppCompatActivity {
                         .show();
             }
         });
-
-
     }
 }

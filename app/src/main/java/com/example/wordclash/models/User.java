@@ -1,11 +1,10 @@
 package com.example.wordclash.models;
 
-
 import java.io.Serializable;
 
 /// Model class for the user
 /// This class represents a user in the application
-/// It contains the user's information
+/// It contains the user's information including learning language preference
 /// @see Serializable
 public class User implements Serializable {
 
@@ -17,7 +16,13 @@ public class User implements Serializable {
     private String gender;
     private boolean isAdmin;
 
+    // Language the user wants to LEARN (not UI language)
+    // "english" = learning English (UI in Hebrew)
+    // "hebrew" = learning Hebrew (UI in English)
+    private String learningLanguage;
+
     public User() {
+        this.learningLanguage = "english"; // Default
     }
 
     public User(String id, String email, String password, String userName, String gender, boolean isAdmin) {
@@ -27,6 +32,17 @@ public class User implements Serializable {
         this.userName = userName;
         this.gender = gender;
         this.isAdmin = isAdmin;
+        this.learningLanguage = "english"; // Default
+    }
+
+    public User(String id, String email, String password, String userName, String gender, boolean isAdmin, String learningLanguage) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.userName = userName;
+        this.gender = gender;
+        this.isAdmin = isAdmin;
+        this.learningLanguage = learningLanguage;
     }
 
     public String getId() {
@@ -77,6 +93,14 @@ public class User implements Serializable {
         isAdmin = admin;
     }
 
+    public String getLearningLanguage() {
+        return learningLanguage;
+    }
+
+    public void setLearningLanguage(String learningLanguage) {
+        this.learningLanguage = learningLanguage;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -86,6 +110,7 @@ public class User implements Serializable {
                 ", userName='" + userName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", isAdmin=" + isAdmin +
+                ", learningLanguage='" + learningLanguage + '\'' +
                 '}';
     }
 }

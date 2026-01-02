@@ -1,3 +1,102 @@
 <resources>
     <string name="app_name">WordClash</string>
+
+    <!-- Main Screen -->
+    <string name="welcome">ברוך הבא!</string>
+    <string name="hello">שלום</string>
+    <string name="logout">יציאה</string>
+    <string name="start_playing">🎮 התחל לשחק</string>
+    <string name="leaderboard">🏆\nלוח מובילים</string>
+    <string name="wordle">🎯\nWordle</string>
+
+    <!-- Ranks Screen -->
+    <string name="choose_level">בחר את הרמה שלך</string>
+    <string name="players_online">🟢 %d שחקנים מחוברים</string>
+    <string name="level">דרגה %d</string>
+    <string name="unlocked">פתוח</string>
+    <string name="locked">🔒 נעול</string>
+    <string name="play_level">שחק דרגה %d</string>
+    <string name="complete_previous">השלם דרגה %d כדי לפתוח!</string>
+    <string name="back">← חזרה</string>
+
+    <!-- Level Screen -->
+    <string name="rank">דרגה %d</string>
+    <string name="practice_progress">תרגול: %d / %d</string>
+    <string name="practice_infinite">תרגול: %d (אינסופי)</string>
+    <string name="words">📚 מילים</string>
+    <string name="practice">🎮 תרגול</string>
+    <string name="review_words_first">אנא עיין במילים תחילה!</string>
+
+    <!-- Words List -->
+    <string name="vocabulary">אוצר מילים דרגה %d</string>
+    <string name="search_words">חפש אנגלית או עברית…</string>
+    <string name="ready">✓ אני מוכן</string>
+    <string name="ready_to_practice">אתה מוכן לתרגל דרגה %d!</string>
+    <string name="no_words_found">לא נמצאו מילים לדרגה זו</string>
+    <string name="sort_random">אקראי</string>
+    <string name="sort_english">A-Z (אנגלית)</string>
+    <string name="sort_hebrew">א-ב (עברית)</string>
+
+    <!-- Game Screen -->
+    <string name="score">ניקוד: %d</string>
+    <string name="question_progress">שאלה %d / %d</string>
+    <string name="congratulations">🎉 כל הכבוד!</string>
+    <string name="you_failed">❌ נכשלת.\nאתה צריך לפחות 80 נקודות כדי לעבור.</string>
+    <string name="practice_complete">התרגול הושלם!</string>
+    <string name="your_score">הציון שלך: %d / %d</string>
+
+    <!-- Leaderboard -->
+    <string name="leaderboard_title">🏆 לוח מובילים</string>
+    <string name="top_10_players">10 השחקנים המובילים</string>
+    <string name="your_ranking">הדירוג שלך</string>
+    <string name="points">%d נק\'</string>
+
+    <!-- Wordle -->
+    <string name="wordle_title">🎮 WORDLE</string>
+    <string name="wordle_instructions">נחש את המילה בת 5 אותיות!\n🟩 = מיקום נכון\n🟨 = מיקום שגוי\n⬜ = לא במילה</string>
+    <string name="wordle_type_instruction">הקש על הרשת והתחל להקליד</string>
+    <string name="submit_guess">שלח ניחוש</string>
+    <string name="new_game">🔄 משחק חדש</string>
+    <string name="word_was">המילה הייתה: %s</string>
+    <string name="attempts">ניסיונות: %d/%d</string>
+    <string name="game_over">המשחק נגמר</string>
+
+    <!-- Settings & Change Details -->
+    <string name="settings_management">ניהול הגדרות</string>
+    <string name="manage_your_app">נהל את האפליקציה שלך</string>
+    <string name="change_details">⚙️ שנה פרטים</string>
+    <string name="table_of_users">📊 טבלת משתמשים</string>
+    <string name="add_new_word">➕ הוסף מילה חדשה</string>
+    <string name="manage_words">📝 נהל מילים</string>
+    <string name="update_details">עדכן פרטים</string>
+    <string name="details_updated">הפרטים עודכנו בהצלחה!</string>
+
+    <!-- Language -->
+    <string name="learning_language">שפת לימוד: %s</string>
+    <string name="english">אנגלית</string>
+    <string name="hebrew">עברית</string>
+    <string name="change_learning_language">שנה שפת לימוד</string>
+    <string name="language_question">איזו שפה תרצה ללמוד</string>
+
+    <string name="app_ok">אישור</string>
+    <string name="app_cancel">ביטול</string>
+    <!-- Common -->
+    <string name="ok">אישור</string>
+    <string name="cancel">ביטול</string>
+    <string name="delete">מחק</string>
+    <string name="update">עדכן</string>
+    <string name="confirm">אשר</string>
+    <string name="email">אימייל</string>
+    <string name="password">סיסמה</string>
+    <string name="username">שם משתמש</string>
+    <string name="gender">מגדר</string>
+    <string name="male">זכר</string>
+    <string name="female">נקבה</string>
+    <string name="other">אחר</string>
+
+    <!-- Errors -->
+    <string name="error_fill_fields">נא למלא את כל השדות</string>
+    <string name="error_loading">שגיאה בטעינת נתונים</string>
+    <string name="error_saving">שגיאה בשמירת נתונים</string>
+    <string name="user_not_found">משתמש לא נמצא</string>
 </resources>

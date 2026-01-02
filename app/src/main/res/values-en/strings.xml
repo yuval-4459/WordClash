@@ -1,0 +1,102 @@
+<resources>
+    <string name="app_name">WordClash</string>
+
+    <!-- Main Screen -->
+    <string name="welcome">Welcome!</string>
+    <string name="hello">Hello</string>
+    <string name="logout">Logout</string>
+    <string name="start_playing">🎮 Start Playing</string>
+    <string name="leaderboard">🏆\nLeaderboard</string>
+    <string name="wordle">🎯\nWordle</string>
+
+    <!-- Ranks Screen -->
+    <string name="choose_level">Choose Your Level</string>
+    <string name="players_online">🟢 %d Players Online</string>
+    <string name="level">Level %d</string>
+    <string name="unlocked">Unlocked</string>
+    <string name="locked">🔒 Locked</string>
+    <string name="play_level">Play Level %d</string>
+    <string name="complete_previous">Complete Level %d to unlock!</string>
+    <string name="back">← Back</string>
+
+    <!-- Level Screen -->
+    <string name="rank">Rank %d</string>
+    <string name="practice_progress">Practice: %d / %d</string>
+    <string name="practice_infinite">Practice: %d (Infinite)</string>
+    <string name="words">📚 Words</string>
+    <string name="practice">🎮 Practice</string>
+    <string name="review_words_first">Please review the words first!</string>
+
+    <!-- Words List -->
+    <string name="vocabulary">Rank %d Vocabulary</string>
+    <string name="search_words">Search English or Hebrew...</string>
+    <string name="ready">✓ I\'m Ready</string>
+    <string name="ready_to_practice">You\'re ready to practice Rank %d!</string>
+    <string name="no_words_found">No words found for this rank</string>
+    <string name="sort_random">Random</string>
+    <string name="sort_english">A-Z (English)</string>
+    <string name="sort_hebrew">א-ב (Hebrew)</string>
+
+    <!-- Game Screen -->
+    <string name="score">Score: %d</string>
+    <string name="question_progress">Question %d / %d</string>
+    <string name="congratulations">🎉 Congratulations!</string>
+    <string name="you_failed">❌ You failed.\nYou need at least 80 points to pass.</string>
+    <string name="practice_complete">Practice Complete!</string>
+    <string name="your_score">Your Score: %d / %d</string>
+
+    <!-- Leaderboard -->
+    <string name="leaderboard_title">🏆 Leaderboard</string>
+    <string name="top_10_players">Top 10 Players</string>
+    <string name="your_ranking">Your Ranking</string>
+    <string name="points">%d pts</string>
+
+    <!-- Wordle -->
+    <string name="wordle_title">🎮 WORDLE</string>
+    <string name="wordle_instructions">Guess the 5-letter word!\n🟩 = Correct position\n🟨 = Wrong position\n⬜ = Not in word</string>
+    <string name="wordle_type_instruction">Tap the grid and start typing</string>
+    <string name="submit_guess">Submit Guess</string>
+    <string name="new_game">🔄 New Game</string>
+    <string name="word_was">The word was: %s</string>
+    <string name="attempts">Attempts: %d/%d</string>
+    <string name="game_over">Game Over</string>
+
+    <!-- Settings & Change Details -->
+    <string name="settings_management">Settings Management</string>
+    <string name="manage_your_app">Manage your app</string>
+    <string name="change_details">⚙️ Change Details</string>
+    <string name="table_of_users">📊 Table of Users</string>
+    <string name="add_new_word">➕ Add New Word</string>
+    <string name="manage_words">📝 Manage Words</string>
+    <string name="update_details">Update Details</string>
+    <string name="details_updated">Details updated successfully!</string>
+
+    <!-- Language -->
+    <string name="learning_language">Learning Language: %s</string>
+    <string name="english">English</string>
+    <string name="hebrew">Hebrew</string>
+    <string name="change_learning_language">Change Learning Language</string>
+    <string name="language_question">Which language would you like to learn</string>
+
+    <string name="app_ok">Confirm</string>
+    <string name="app_cancel">Cancle</string>
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="update">Update</string>
+    <string name="confirm">Confirm</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="username">Username</string>
+    <string name="gender">Gender</string>
+    <string name="male">Male</string>
+    <string name="female">Female</string>
+    <string name="other">Other</string>
+
+    <!-- Errors -->
+    <string name="error_fill_fields">Please fill all fields</string>
+    <string name="error_loading">Error loading data</string>
+    <string name="error_saving">Error saving data</string>
+    <string name="user_not_found">User not found</string>
+</resources>
