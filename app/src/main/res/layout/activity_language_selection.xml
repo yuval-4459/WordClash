@@ -1,145 +1,189 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_background"
-    android:padding="24dp">
+    android:fillViewport="true"
+    android:background="@drawable/gradient_background">
 
-    <!-- Question -->
-    <TextView
-        android:id="@+id/tvLanguageQuestion"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="איזו שפה תרצה ללמוד"
-        android:textColor="#1A237E"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:gravity="center"
-        android:layout_marginBottom="48dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.3" />
+        android:padding="24dp">
 
-    <!-- English Option -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardEnglish"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
-        app:cardBackgroundColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvLanguageQuestion">
+        <!-- Logo at top -->
+        <ImageView
+            android:id="@+id/ivLanguageLogo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/wordclash_logo"
+            android:contentDescription="WordClash Logo"
+            android:layout_marginTop="32dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <!-- App name -->
+        <TextView
+            android:id="@+id/tvAppNameLanguage"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center">
+            android:text="WordClash"
+            android:textColor="#1A237E"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivLanguageLogo" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🇬🇧"
-                android:textSize="64sp" />
+        <!-- Question -->
+        <TextView
+            android:id="@+id/tvLanguageQuestion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="איזו שפה תרצה ללמוד?"
+            android:textColor="#1A237E"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAppNameLanguage" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="אנגלית"
-                android:textColor="#1A237E"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp" />
+        <!-- English Option -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardEnglish"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLanguageQuestion">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="הממשק יהיה בעברית"
-                android:textColor="#757575"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
-
-            <Button
-                android:id="@+id/btnEnglish"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="בחר אנגלית"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:backgroundTint="#43A047" />
+                android:orientation="vertical"
+                android:padding="28dp"
+                android:gravity="center">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🇬🇧"
+                    android:textSize="80sp" />
 
-    </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="אנגלית"
+                    android:textColor="#1A237E"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp" />
 
-    <!-- Hebrew Option -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardHebrew"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
-        app:cardBackgroundColor="#FFFFFF"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cardEnglish">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="הממשק יהיה בעברית"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/btnEnglish"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="24dp"
+                    android:text="בחר אנגלית"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#43A047"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Hebrew Option -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardHebrew"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:gravity="center">
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="32dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="8dp"
+            app:cardBackgroundColor="#FFFFFF"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?android:attr/selectableItemBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardEnglish"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="🇮🇱"
-                android:textSize="64sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="עברית"
-                android:textColor="#1A237E"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:layout_marginTop="8dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="The interface will be in English"
-                android:textColor="#757575"
-                android:textSize="14sp"
-                android:layout_marginTop="4dp" />
-
-            <Button
-                android:id="@+id/btnHebrew"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="בחר עברית"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:backgroundTint="#1565C0" />
+                android:orientation="vertical"
+                android:padding="28dp"
+                android:gravity="center">
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🇮🇱"
+                    android:textSize="80sp" />
 
-    </androidx.cardview.widget.CardView>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="עברית"
+                    android:textColor="#1A237E"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="16dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="The interface will be in English"
+                    android:textColor="#757575"
+                    android:textSize="16sp"
+                    android:layout_marginTop="8dp" />
+
+                <Button
+                    android:id="@+id/btnHebrew"
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginTop="24dp"
+                    android:text="בחר עברית"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="#1565C0"
+                    android:textColor="#FFFFFF" />
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

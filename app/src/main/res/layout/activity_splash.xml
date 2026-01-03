@@ -6,68 +6,86 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
-    <!-- Logo Container with Shadow -->
+    <!-- Logo Container with Shadow and Beautiful Presentation -->
     <androidx.cardview.widget.CardView
         android:id="@+id/logoCard"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        app:cardCornerRadius="100dp"
-        app:cardElevation="12dp"
+        android:layout_width="280dp"
+        android:layout_height="280dp"
+        app:cardCornerRadius="140dp"
+        app:cardElevation="24dp"
         app:cardBackgroundColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.4">
+        app:layout_constraintVertical_bias="0.35">
 
-        <!-- YOUR LOGO IMAGE HERE -->
-        <ImageView
-            android:id="@+id/ivLogo"
+        <!-- Inner shadow effect -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="32dp"
-            android:src="@drawable/wordclash_logo"
-            android:contentDescription="WordClash Logo"
-            android:scaleType="fitCenter" />
+            android:padding="20dp">
+
+            <!-- YOUR BEAUTIFUL LOGO HERE -->
+            <ImageView
+                android:id="@+id/ivLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/wordclash_logo"
+                android:contentDescription="WordClash Logo"
+                android:scaleType="centerCrop"
+                android:adjustViewBounds="true" />
+
+        </FrameLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- App Name -->
+    <!-- App Name with Beautiful Typography -->
     <TextView
         android:id="@+id/tvAppName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="48dp"
         android:text="WordClash"
-        android:textColor="#1A237E"
-        android:textSize="36sp"
+        android:textColor="#FFFFFF"
+        android:textSize="48sp"
         android:textStyle="bold"
-        android:letterSpacing="0.05"
+        android:letterSpacing="0.08"
+        android:shadowColor="#000000"
+        android:shadowDx="0"
+        android:shadowDy="4"
+        android:shadowRadius="12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logoCard" />
 
-    <!-- Loading Indicator -->
+    <!-- Elegant Loading Indicator -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
-        android:indeterminateTint="#1A237E"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="56dp"
+        android:indeterminateTint="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvAppName" />
 
-    <!-- Tagline -->
+    <!-- Tagline with Fade Effect -->
     <TextView
+        android:id="@+id/tvTagline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="48dp"
         android:text="Master English Vocabulary"
-        android:textColor="#1A237E"
-        android:textSize="16sp"
-        android:alpha="0.7"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:alpha="0.9"
+        android:letterSpacing="0.05"
+        android:shadowColor="#000000"
+        android:shadowDx="0"
+        android:shadowDy="2"
+        android:shadowRadius="8"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

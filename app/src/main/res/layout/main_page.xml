@@ -182,7 +182,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/cardPlay">
 
-                <!-- כפתור לוח תוצאות -->
+                <!-- כפתור לוח תוצאות - FIXED -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -195,17 +195,20 @@
                     <Button
                         android:id="@+id/btnLeaderboard"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="100dp"
                         android:background="@android:color/transparent"
-                        android:text="🏆\nלוח מובילים"
+                        android:text="@string/leaderboard"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp" />
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- כפתור Wordle -->
+                <!-- כפתור Wordle - FIXED -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -218,13 +221,16 @@
                     <Button
                         android:id="@+id/WordleButton"
                         android:layout_width="match_parent"
-                        android:layout_height="80dp"
+                        android:layout_height="100dp"
                         android:background="@android:color/transparent"
-                        android:text="🎯\nWordle"
+                        android:text="@string/wordle"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold"
-                        android:gravity="center" />
+                        android:gravity="center"
+                        android:lineSpacingMultiplier="1.2"
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp" />
 
                 </androidx.cardview.widget.CardView>
 
