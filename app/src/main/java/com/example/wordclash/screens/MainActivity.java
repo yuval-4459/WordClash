@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity
 
     private Button btnLogout;
     private Button btnRanks;
-    private Button btnWordle;
+    private Button btnMiniGames; // CHANGED: was btnWordle
     private Button btnLeaderboard;
 
     private TextView tvHelloUser;
@@ -46,10 +46,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Get user first
         user = SharedPreferencesUtils.getUser(this);
 
-        // Apply language settings BEFORE setContentView
         if (user != null) {
             LanguageUtils.applyLanguageSettings(this, user);
         }
@@ -63,7 +61,6 @@ public class MainActivity extends AppCompatActivity
             return;
         }
 
-        // Set layout direction
         LanguageUtils.setLayoutDirection(this, user);
 
         setupUI();
@@ -76,11 +73,9 @@ public class MainActivity extends AppCompatActivity
         tvHelloUser = findViewById(R.id.tvHelloUser);
         tvHelloUser.setText(getString(R.string.hello) + " " + user.getUserName());
 
-        // Profile picture views
         ivUserAvatar = findViewById(R.id.ivUserAvatar);
         tvUserInitial = findViewById(R.id.tvUserInitial);
 
-        // Make avatar clickable
         View avatarContainer = findViewById(R.id.avatarContainer);
         if (avatarContainer != null) {
             avatarContainer.setOnClickListener(v -> {
@@ -122,10 +117,11 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, LeaderboardActivity.class))
         );
 
-        btnWordle = findViewById(R.id.WordleButton);
-        btnWordle.setText(R.string.wordle);
-        btnWordle.setOnClickListener(v ->
-                startActivity(new Intent(this, WordleActivity.class))
+        // CHANGED: Mini Games button instead of Wordle
+        btnMiniGames = findViewById(R.id.MiniGamesButton);
+        btnMiniGames.setText(R.string.mini_games);
+        btnMiniGames.setOnClickListener(v ->
+                startActivity(new Intent(this, MiniGamesActivity.class))
         );
     }
 
@@ -171,11 +167,9 @@ public class MainActivity extends AppCompatActivity
         String profilePictureUrl = user.getProfilePictureUrl();
 
         if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-            // Show profile picture
             ivUserAvatar.setVisibility(View.VISIBLE);
             tvUserInitial.setVisibility(View.GONE);
 
-            // Load from base64
             try {
                 byte[] decodedString = Base64.decode(profilePictureUrl, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
@@ -202,7 +196,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        // Reload user data to get updated profile picture
         user = SharedPreferencesUtils.getUser(this);
         if (user != null) {
             loadProfilePicture();

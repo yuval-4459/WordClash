@@ -19,6 +19,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.WordClash">
+        <!-- MINI GAMES ACTIVITIES (NEW) -->
+        <activity
+            android:name=".screens.MiniGamesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.MatchGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.TrueFalseGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.WordBuilderGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.FillGapsGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.SpeedQuizGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.ListenGuessGameActivity"
+            android:exported="false" />
+        <activity
+            android:name=".screens.MemoryCardsGameActivity"
+            android:exported="false" />
+        <!-- EXISTING ACTIVITIES -->
         <activity
             android:name=".screens.ProfilePictureActivity"
             android:exported="false" />

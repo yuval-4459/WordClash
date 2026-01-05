@@ -8,6 +8,7 @@
     <string name="start_playing">🎮 התחל לשחק</string>
     <string name="leaderboard">🏆\nלוח מובילים</string>
     <string name="wordle">🎯\nWordle</string>
+    <string name="mini_games">🎮\nמשחקונים</string> <!-- NEW -->
 
     <!-- Ranks Screen -->
     <string name="choose_level">בחר את הרמה שלך</string>
