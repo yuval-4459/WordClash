@@ -23,7 +23,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -39,6 +38,8 @@ public class GameActivity extends AppCompatActivity {
     private int currentQuestionIndex = 0;
     private int score = 0;
     private int totalQuestions;
+    private int pointsPerQuestion; // NEW: Dynamic points per question
+    private int passingScore; // NEW: Dynamic passing score
     private CountDownTimer timer;
     private boolean answerSelected = false;
 
@@ -97,6 +98,13 @@ public class GameActivity extends AppCompatActivity {
                 }
 
                 totalQuestions = getQuestionsForRank(currentRank);
+
+                // NEW: Calculate points per question to make total = 100
+                pointsPerQuestion = 100 / totalQuestions;
+
+                // NEW: Passing score is always 80% of total (80 points)
+                passingScore = 80;
+
                 loadWords();
             }
 
@@ -110,11 +118,11 @@ public class GameActivity extends AppCompatActivity {
 
     private int getQuestionsForRank(int rank) {
         switch (rank) {
-            case 1: return 10;
-            case 2: return 13;
-            case 3: return 16;
-            case 4: return 20;
-            case 5: return 25;
+            case 1: return 10;  // 10 points each
+            case 2: return 13;  // ~7.7 points each
+            case 3: return 16;  // 6.25 points each
+            case 4: return 20;  // 5 points each
+            case 5: return 25;  // 4 points each
             default: return 10;
         }
     }
@@ -161,20 +169,17 @@ public class GameActivity extends AppCompatActivity {
         answerSelected = false;
         Word currentWord = gameWords.get(currentQuestionIndex);
 
-        // Determine question language based on user's learning preference
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
-        // If learning English: Show Hebrew question, choose English answer
-        // If learning Hebrew: Show English question, choose Hebrew answer
         boolean showHebrewQuestion = learningLanguage.equals("english");
 
         if (showHebrewQuestion) {
             tvQuestion.setText(currentWord.getHebrew());
-            setupOptions(currentWord, false); // answers in English
+            setupOptions(currentWord, false);
         } else {
             tvQuestion.setText(currentWord.getEnglish());
-            setupOptions(currentWord, true); // answers in Hebrew
+            setupOptions(currentWord, true);
         }
 
         updateProgress();
@@ -244,7 +249,7 @@ public class GameActivity extends AppCompatActivity {
 
         if (selectedWord.getId().equals(correctWord.getId())) {
             selectedButton.setBackgroundColor(Color.GREEN);
-            score += 10;
+            score += pointsPerQuestion; // NEW: Use dynamic points
             updateScore();
         } else {
             selectedButton.setBackgroundColor(Color.RED);
@@ -296,7 +301,8 @@ public class GameActivity extends AppCompatActivity {
 
         stats.setTotalScore(stats.getTotalScore() + score);
 
-        if (score >= 80) {
+        // NEW: Check if passed with 80 points threshold
+        if (score >= passingScore) {
             DatabaseService.getInstance().incrementPracticeForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
                 public void onCompleted(Void unused) {
@@ -380,11 +386,12 @@ public class GameActivity extends AppCompatActivity {
 
     private void showResultDialog() {
         String message;
-        if (score >= 80) {
-            message = getString(R.string.your_score, score, gameWords.size() * 10)
+        // NEW: Always show score out of 100
+        if (score >= passingScore) {
+            message = getString(R.string.your_score, score, 100)
                     + "\n\n" + getString(R.string.congratulations);
         } else {
-            message = getString(R.string.your_score, score, gameWords.size() * 10)
+            message = getString(R.string.your_score, score, 100)
                     + "\n\n" + getString(R.string.you_failed);
         }
 

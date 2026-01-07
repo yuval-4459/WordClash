@@ -15,13 +15,13 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 /**
  * Mini Games selection screen
- * Shows all available vocabulary-based mini games
+ * Shows all available vocabulary-based mini games INCLUDING Wordle
  */
 public class MiniGamesActivity extends AppCompatActivity {
 
     private Button btnBack;
     private CardView cardMatchGame, cardFillGaps, cardListenGuess, cardWordBuilder;
-    private CardView cardTrueFalse, cardMemoryCards, cardSpeedQuiz;
+    private CardView cardTrueFalse, cardMemoryCards, cardWordle;
 
     private User user;
 
@@ -56,7 +56,7 @@ public class MiniGamesActivity extends AppCompatActivity {
         cardWordBuilder = findViewById(R.id.cardWordBuilder);
         cardTrueFalse = findViewById(R.id.cardTrueFalse);
         cardMemoryCards = findViewById(R.id.cardMemoryCards);
-        cardSpeedQuiz = findViewById(R.id.cardSpeedQuiz);
+        cardWordle = findViewById(R.id.cardWordle);
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -96,9 +96,9 @@ public class MiniGamesActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Speed Quiz
-        cardSpeedQuiz.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SpeedQuizGameActivity.class);
+        // Wordle
+        cardWordle.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WordleActivity.class);
             startActivity(intent);
         });
     }
