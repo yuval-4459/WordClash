@@ -207,7 +207,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             showCorrectAnswer();
         }
 
-        disableAllButtons();
+        disableAllButtons();  // ← THIS IS THE PROBLEM!
         new Handler().postDelayed(() -> nextQuestion(), 1500);
     }
 

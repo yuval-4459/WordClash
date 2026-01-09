@@ -104,21 +104,13 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/welcome"
-                            android:textColor="#757575"
-                            android:textSize="14sp" />
-
-                        <TextView
                             android:id="@+id/tvHelloUser"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Hello"
                             android:textColor="#1565C0"
                             android:textSize="22sp"
-                            android:textStyle="bold"
-                            android:layout_marginTop="4dp" />
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 
@@ -199,7 +191,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- CHANGED: Mini Games button (was Wordle) -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"

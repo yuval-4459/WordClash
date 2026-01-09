@@ -23,13 +23,14 @@ import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.example.wordclash.utils.VocabularyImporter;
 import com.google.android.material.navigation.NavigationView;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private Button btnLogout;
     private Button btnRanks;
-    private Button btnMiniGames; // CHANGED: was btnWordle
+    private Button btnMiniGames;
     private Button btnLeaderboard;
 
     private TextView tvHelloUser;
@@ -69,9 +70,24 @@ public class MainActivity extends AppCompatActivity
         loadProfilePicture();
     }
 
+    private String getGreetingByTime() {
+        Calendar calendar = Calendar.getInstance();
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        if (hour >= 5 && hour < 12) {
+            return getString(R.string.good_morning);
+        } else if (hour >= 12 && hour < 17) {
+            return getString(R.string.good_afternoon);
+        } else if (hour >= 17 && hour < 21) {
+            return getString(R.string.good_evening);
+        } else {
+            return getString(R.string.good_night);
+        }
+    }
+
     private void setupUI() {
         tvHelloUser = findViewById(R.id.tvHelloUser);
-        tvHelloUser.setText(getString(R.string.hello) + " " + user.getUserName());
+        tvHelloUser.setText(getGreetingByTime() + ", " + user.getUserName());
 
         ivUserAvatar = findViewById(R.id.ivUserAvatar);
         tvUserInitial = findViewById(R.id.tvUserInitial);
@@ -117,7 +133,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, LeaderboardActivity.class))
         );
 
-        // CHANGED: Mini Games button instead of Wordle
         btnMiniGames = findViewById(R.id.MiniGamesButton);
         btnMiniGames.setText(R.string.mini_games);
         btnMiniGames.setOnClickListener(v ->
@@ -199,6 +214,7 @@ public class MainActivity extends AppCompatActivity
         user = SharedPreferencesUtils.getUser(this);
         if (user != null) {
             loadProfilePicture();
+            tvHelloUser.setText(getGreetingByTime() + ", " + user.getUserName());
         }
     }
 

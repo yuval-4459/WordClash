@@ -189,11 +189,11 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void addLetter(Button button) {
-        if (button.getAlpha() == 0.3f) return;
+        if (button.getTag() != null && button.getTag().equals("used")) return;
 
         builtWord.append(button.getText());
-        button.setAlpha(0.3f);
-        button.setEnabled(false);
+        button.setTag("used");
+        button.setBackgroundColor(Color.GRAY);  // Change color instead
         updateBuiltWord();
     }
 
@@ -202,8 +202,8 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         updateBuiltWord();
 
         for (Button btn : letterButtons) {
-            btn.setAlpha(1.0f);
-            btn.setEnabled(true);
+            btn.setTag(null);
+            btn.setBackgroundColor(Color.parseColor("#2196F3"));  // Reset to blue
         }
     }
 

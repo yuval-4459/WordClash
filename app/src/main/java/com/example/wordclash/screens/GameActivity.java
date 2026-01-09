@@ -241,7 +241,7 @@ public class GameActivity extends AppCompatActivity {
     private void checkAnswer(Button selectedButton) {
         if (answerSelected) return;
 
-        answerSelected = true;
+        answerSelected = true;  // This already prevents multiple clicks
         timer.cancel();
 
         Word selectedWord = (Word) selectedButton.getTag();
@@ -249,14 +249,16 @@ public class GameActivity extends AppCompatActivity {
 
         if (selectedWord.getId().equals(correctWord.getId())) {
             selectedButton.setBackgroundColor(Color.GREEN);
-            score += pointsPerQuestion; // NEW: Use dynamic points
+            score += pointsPerQuestion;
             updateScore();
         } else {
             selectedButton.setBackgroundColor(Color.RED);
             showCorrectAnswer();
         }
 
-        disableAllButtons();
+        // REMOVE THIS LINE:
+        // disableAllButtons();
+
         new Handler().postDelayed(() -> nextQuestion(), 2000);
     }
 
@@ -273,12 +275,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    private void disableAllButtons() {
-        btnOption1.setEnabled(false);
-        btnOption2.setEnabled(false);
-        btnOption3.setEnabled(false);
-        btnOption4.setEnabled(false);
-    }
+
 
     private void nextQuestion() {
         currentQuestionIndex++;
