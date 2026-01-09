@@ -76,7 +76,7 @@
     <string name="change_details">⚙️ Change Details</string>
     <string name="table_of_users">📊 Table of Users</string>
     <string name="add_new_word">➕ Add New Word</string>
-    <string name="manage_words">📝 Manage Words</string>
+    <string name="manage_words">📝 Delete Words</string>
     <string name="update_details">Update Details</string>
     <string name="details_updated">Details updated successfully!</string>
 

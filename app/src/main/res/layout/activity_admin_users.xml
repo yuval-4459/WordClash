@@ -52,9 +52,9 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Main Form Card -->
+        <!-- Main Form Card (זה ה-mainCard שה-Java מחפש) -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/formCard"
+            android:id="@+id/mainCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:cardCornerRadius="20dp"
@@ -70,19 +70,20 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Email Input -->
+                <!-- Email -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:hint="Email Address"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E"
-                    android:hint="Email Address">
+                    app:hintTextColor="#1A237E">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/Email"
@@ -91,14 +92,15 @@
                         android:inputType="textEmailAddress"
                         android:textSize="16sp"
                         android:padding="16dp" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password Input -->
+                <!-- Password -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:hint="Password"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
@@ -106,8 +108,7 @@
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#1A237E"
-                    app:passwordToggleEnabled="true"
-                    android:hint="Password">
+                    app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/Password"
@@ -116,22 +117,22 @@
                         android:inputType="textPassword"
                         android:textSize="16sp"
                         android:padding="16dp" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Username Input -->
+                <!-- Username -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/usernameLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:hint="Username"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E"
-                    android:hint="Username">
+                    app:hintTextColor="#1A237E">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/UserName"
@@ -139,10 +140,9 @@
                         android:layout_height="wrap_content"
                         android:textSize="16sp"
                         android:padding="16dp" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Gender Spinner -->
+                <!-- Gender -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -168,7 +168,7 @@
                         android:paddingEnd="16dp" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- Rank Spinner (NEW) -->
+                <!-- Rank -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -194,19 +194,20 @@
                         android:paddingEnd="16dp" />
                 </androidx.cardview.widget.CardView>
 
-                <!-- Total Score Input (NEW) -->
+                <!-- Total Score -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/scoreLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:hint="Total Score"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E"
-                    android:hint="Total Score">
+                    app:hintTextColor="#1A237E">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/TotalScore"
@@ -215,7 +216,6 @@
                         android:inputType="number"
                         android:textSize="16sp"
                         android:padding="16dp" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Admin Checkbox -->
@@ -241,7 +241,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="2">
+                    android:weightSum="3">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/updateUserBtn"
@@ -265,6 +265,7 @@
                         android:layout_width="0dp"
                         android:layout_height="56dp"
                         android:layout_marginStart="8dp"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:text="Delete User"
                         android:textColor="#FFFFFF"
@@ -277,11 +278,35 @@
                         app:iconGravity="textStart"
                         app:iconTint="#FFFFFF" />
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/cancelBtn"
+                        android:layout_width="0dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:text="Cancel"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        app:backgroundTint="#757575"
+                        app:cornerRadius="12dp"
+                        app:elevation="4dp" />
                 </LinearLayout>
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
+
+        <!-- ProgressBar שה-Java מחפש -->
+        <ProgressBar
+            android:id="@+id/loadingProgress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
