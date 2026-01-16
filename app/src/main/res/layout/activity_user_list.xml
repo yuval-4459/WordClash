@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="#EEDEC5"
     tools:context=".screens.UserListActivity">
 
     <!-- Search Filters Card -->
@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp"
+            android:background="@color/primary">
 
             <!-- Title with Back Button -->
             <LinearLayout
@@ -32,24 +33,27 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="16dp">
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Search Users"
-                    android:textSize="18sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"
-                    android:textColor="#333333" />
+                    android:textColor="#222" />
 
                 <Button
                     android:id="@+id/btnBackToMain"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Back"
-                    android:textSize="14sp"
-                    android:padding="8dp" />
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:backgroundTint="@color/info"
+                    android:padding="12dp"
+                    android:minHeight="48dp" />
 
             </LinearLayout>
 
@@ -58,55 +62,67 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Username"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:layout_marginBottom="4dp" />
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
             <EditText
                 android:id="@+id/searchUsername"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/edit_text"
+                android:background="@drawable/rounded_bg"
                 android:hint="Search by username..."
                 android:inputType="text"
                 android:maxLines="1"
-                android:padding="12dp"
-                android:layout_marginBottom="12dp" />
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textColorHint="#666666"
+                android:padding="16dp"
+                android:minHeight="56dp"
+                android:layout_marginBottom="16dp" />
 
             <!-- Email Search -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:layout_marginBottom="4dp" />
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
             <EditText
                 android:id="@+id/searchEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:drawable/edit_text"
+                android:background="@drawable/rounded_bg"
                 android:hint="Search by email..."
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
-                android:padding="12dp"
-                android:layout_marginBottom="12dp" />
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textColorHint="#666666"
+                android:padding="16dp"
+                android:minHeight="56dp"
+                android:layout_marginBottom="16dp" />
 
             <!-- Gender Filter -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Gender"
-                android:textSize="14sp"
-                android:textColor="#666666"
-                android:layout_marginBottom="4dp" />
+                android:textSize="18sp"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
 
             <Spinner
                 android:id="@+id/searchGender"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp"
+                android:padding="16dp"
+                android:minHeight="56dp"
                 android:background="@android:drawable/btn_dropdown" />
 
         </LinearLayout>

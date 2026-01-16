@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     app:cardCornerRadius="16dp"
-    app:cardElevation="6dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardBackgroundColor="@color/primary_light">
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -20,8 +20,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             app:cardCornerRadius="28dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="#1A237E"
+            app:cardBackgroundColor="@color/primary"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -70,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="email@example.com"
-                android:textColor="#757575"
+                android:textColor="#D1D5DB"
                 android:textSize="14sp"
                 android:ellipsize="end"
                 android:maxLines="1" />
@@ -83,7 +82,6 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@android:drawable/ic_menu_more"
-            android:tint="#BDBDBD"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

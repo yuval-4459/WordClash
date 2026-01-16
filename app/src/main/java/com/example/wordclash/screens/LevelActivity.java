@@ -35,7 +35,14 @@ public class LevelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_level);
 
         currentRank = getIntent().getIntExtra("RANK", 1);
+
+        // this = המסך הונכחי (הactivity הזה).
+        // מעבירים אותו כ־Context כדי ש־SharedPreferences ידע מאיזו מסך
+        // לקרוא את המשתמש השמור בזיכרון של הטלפון
+
+        // context - מידע שאומר לאנדרואיד באיזו אפליקציה ואיפה הקוד רץ.
         user = SharedPreferencesUtils.getUser(this);
+
 
         if (user == null) {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();

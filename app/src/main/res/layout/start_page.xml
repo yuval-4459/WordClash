@@ -8,13 +8,20 @@
     android:background="@drawable/gradient_background"
     tools:context=".screens.StartPageActivity">
 
+
     <!-- Logo Container -->
+    <!--
+        ה־cornerRadius מעגל רק את הפינות, ולא את כל הצורה.
+        אבל כאשר רדיוס הפינות שווה לחצי מהגובה והרוחב של ה־CardView,
+        ארבעת הפינות המעוגלות מתחברות יחד ויוצרות עיגול מלא.
+    -->
     <androidx.cardview.widget.CardView
         android:id="@+id/logoCard"
         android:layout_width="160dp"
         android:layout_height="160dp"
+
         app:cardCornerRadius="80dp"
-        app:cardElevation="12dp"
+        app:cardElevation="10dp"
         app:cardBackgroundColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -91,8 +98,7 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
+            app:cardCornerRadius="15dp"
             app:cardBackgroundColor="#43A047">
 
             <Button
@@ -111,9 +117,8 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
+            android:layout_marginTop="15dp"
+            app:cardCornerRadius="15dp"
             app:cardBackgroundColor="#1565C0">
 
             <Button

@@ -36,14 +36,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Profile Picture"
-                    android:textColor="#1A237E"
-                    android:textSize="24sp"
+                    android:textColor="#000000"
+                    android:textSize="32sp"
                     android:textStyle="bold" />
 
                 <View
-                    android:layout_width="60dp"
-                    android:layout_height="3dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_width="80dp"
+                    android:layout_height="4dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/accent_line" />
 
             </LinearLayout>
@@ -75,8 +75,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Username"
-                    android:textColor="#1A237E"
-                    android:textSize="20sp"
+                    android:textColor="#000000"
+                    android:textSize="26sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="24dp" />
 
@@ -128,10 +128,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnChooseFromGallery"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="64dp"
                     android:layout_marginBottom="12dp"
                     android:text="📁 Choose from Gallery"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:backgroundTint="#1A237E"
                     app:cornerRadius="12dp"
@@ -140,10 +140,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnTakePhoto"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="64dp"
                     android:layout_marginBottom="12dp"
                     android:text="📷 Take Photo"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:backgroundTint="#43A047"
                     app:cornerRadius="12dp"
@@ -153,10 +153,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRotate"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="64dp"
                     android:layout_marginBottom="12dp"
                     android:text="🔄 Rotate 90°"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     android:visibility="gone"
                     app:backgroundTint="#FF6F00"
@@ -166,10 +166,10 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDeletePicture"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="64dp"
                     android:layout_marginBottom="12dp"
                     android:text="🗑️ Delete Picture"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:backgroundTint="#D32F2F"
                     app:cornerRadius="12dp"
@@ -178,9 +178,9 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnBack"
                     android:layout_width="match_parent"
-                    android:layout_height="60dp"
+                    android:layout_height="64dp"
                     android:text="← Back"
-                    android:textSize="16sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
                     app:backgroundTint="#757575"
                     app:cornerRadius="12dp"

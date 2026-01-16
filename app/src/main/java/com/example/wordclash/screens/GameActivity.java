@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.wordclash.R;
 import com.example.wordclash.models.Stats;
@@ -38,10 +39,16 @@ public class GameActivity extends AppCompatActivity {
     private int currentQuestionIndex = 0;
     private int score = 0;
     private int totalQuestions;
-    private int pointsPerQuestion; // NEW: Dynamic points per question
-    private int passingScore; // NEW: Dynamic passing score
+    private int pointsPerQuestion;
+    private int passingScore;
     private CountDownTimer timer;
     private boolean answerSelected = false;
+
+    // Define better colors
+    private int colorCorrect;
+    private int colorWrong;
+    private int colorNeutral;
+    private int colorDefault;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,12 @@ public class GameActivity extends AppCompatActivity {
             finish();
             return;
         }
+
+        // Initialize colors from resources
+        colorCorrect = ContextCompat.getColor(this, R.color.game_correct);
+        colorWrong = ContextCompat.getColor(this, R.color.game_wrong);
+        colorNeutral = ContextCompat.getColor(this, R.color.info);
+        colorDefault = ContextCompat.getColor(this, R.color.info);
 
         initializeViews();
         loadStatsAndWords();
@@ -98,11 +111,7 @@ public class GameActivity extends AppCompatActivity {
                 }
 
                 totalQuestions = getQuestionsForRank(currentRank);
-
-                // NEW: Calculate points per question to make total = 100
                 pointsPerQuestion = 100 / totalQuestions;
-
-                // NEW: Passing score is always 80% of total (80 points)
                 passingScore = 80;
 
                 loadWords();
@@ -118,11 +127,11 @@ public class GameActivity extends AppCompatActivity {
 
     private int getQuestionsForRank(int rank) {
         switch (rank) {
-            case 1: return 10;  // 10 points each
-            case 2: return 13;  // ~7.7 points each
-            case 3: return 16;  // 6.25 points each
-            case 4: return 20;  // 5 points each
-            case 5: return 25;  // 4 points each
+            case 1: return 10;
+            case 2: return 13;
+            case 3: return 16;
+            case 4: return 20;
+            case 5: return 25;
             default: return 10;
         }
     }
@@ -206,7 +215,7 @@ public class GameActivity extends AppCompatActivity {
             String text = showHebrew ? word.getHebrew() : word.getEnglish();
             buttons[i].setText(text);
             buttons[i].setTag(word);
-            buttons[i].setBackgroundColor(Color.parseColor("#2196F3"));
+            buttons[i].setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.info));
             buttons[i].setEnabled(true);
         }
     }
@@ -241,23 +250,20 @@ public class GameActivity extends AppCompatActivity {
     private void checkAnswer(Button selectedButton) {
         if (answerSelected) return;
 
-        answerSelected = true;  // This already prevents multiple clicks
+        answerSelected = true;
         timer.cancel();
 
         Word selectedWord = (Word) selectedButton.getTag();
         Word correctWord = gameWords.get(currentQuestionIndex);
 
         if (selectedWord.getId().equals(correctWord.getId())) {
-            selectedButton.setBackgroundColor(Color.GREEN);
+            selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.game_correct));
             score += pointsPerQuestion;
             updateScore();
         } else {
-            selectedButton.setBackgroundColor(Color.RED);
+            selectedButton.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.game_wrong));
             showCorrectAnswer();
         }
-
-        // REMOVE THIS LINE:
-        // disableAllButtons();
 
         new Handler().postDelayed(() -> nextQuestion(), 2000);
     }
@@ -269,13 +275,11 @@ public class GameActivity extends AppCompatActivity {
         for (Button button : buttons) {
             Word word = (Word) button.getTag();
             if (word != null && word.getId().equals(correctWord.getId())) {
-                button.setBackgroundColor(Color.GREEN);
+                button.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.game_correct));
                 break;
             }
         }
     }
-
-
 
     private void nextQuestion() {
         currentQuestionIndex++;
@@ -298,7 +302,6 @@ public class GameActivity extends AppCompatActivity {
 
         stats.setTotalScore(stats.getTotalScore() + score);
 
-        // NEW: Check if passed with 80 points threshold
         if (score >= passingScore) {
             DatabaseService.getInstance().incrementPracticeForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
@@ -383,7 +386,6 @@ public class GameActivity extends AppCompatActivity {
 
     private void showResultDialog() {
         String message;
-        // NEW: Always show score out of 100
         if (score >= passingScore) {
             message = getString(R.string.your_score, score, 100)
                     + "\n\n" + getString(R.string.congratulations);

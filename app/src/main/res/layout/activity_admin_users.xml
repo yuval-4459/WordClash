@@ -37,13 +37,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Admin Panel"
-                    android:textColor="#1A237E"
-                    android:textSize="28sp"
+                    android:textColor="#000000"
+                    android:textSize="32sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.02" />
 
                 <View
-                    android:layout_width="60dp"
+                    android:layout_width="80dp"
                     android:layout_height="4dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/accent_line" />
@@ -52,7 +52,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Main Form Card (זה ה-mainCard שה-Java מחפש) -->
+        <!-- Main Form Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/mainCard"
             android:layout_width="0dp"
@@ -83,14 +83,15 @@
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E">
+                    app:hintTextColor="#000000">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/Email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
+                        android:textColor="#000000"
                         android:padding="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -107,7 +108,7 @@
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E"
+                    app:hintTextColor="#000000"
                     app:passwordToggleEnabled="true">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -115,7 +116,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
+                        android:textColor="#000000"
                         android:padding="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,13 +134,14 @@
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E">
+                    app:hintTextColor="#000000">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/UserName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
+                        android:textColor="#000000"
                         android:padding="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -147,10 +150,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Gender"
-                    android:textSize="14sp"
-                    android:textColor="#1A237E"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
                     android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -163,7 +166,7 @@
                     <Spinner
                         android:id="@+id/Gender"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="60dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp" />
                 </androidx.cardview.widget.CardView>
@@ -173,10 +176,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Current Rank"
-                    android:textSize="14sp"
-                    android:textColor="#1A237E"
+                    android:textSize="18sp"
+                    android:textColor="#000000"
                     android:textStyle="bold"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="8dp" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -189,7 +192,7 @@
                     <Spinner
                         android:id="@+id/RankSpinner"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="60dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp" />
                 </androidx.cardview.widget.CardView>
@@ -207,14 +210,15 @@
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#1A237E">
+                    app:hintTextColor="#000000">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/TotalScore"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:textSize="16sp"
+                        android:textSize="18sp"
+                        android:textColor="#000000"
                         android:padding="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -232,8 +236,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Admin User"
-                        android:textSize="16sp"
-                        android:padding="8dp" />
+                        android:textSize="18sp"
+                        android:textColor="#000000"
+                        android:padding="12dp" />
                 </androidx.cardview.widget.CardView>
 
                 <!-- Action Buttons -->
@@ -246,7 +251,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/updateUserBtn"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
+                        android:layout_height="60dp"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:text="Update User"
@@ -263,7 +268,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/deleteUserBtn"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
+                        android:layout_height="60dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_weight="1"
@@ -281,7 +286,7 @@
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/cancelBtn"
                         android:layout_width="0dp"
-                        android:layout_height="56dp"
+                        android:layout_height="60dp"
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:text="Cancel"
@@ -297,7 +302,7 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- ProgressBar שה-Java מחפש -->
+        <!-- ProgressBar -->
         <ProgressBar
             android:id="@+id/loadingProgress"
             android:layout_width="wrap_content"

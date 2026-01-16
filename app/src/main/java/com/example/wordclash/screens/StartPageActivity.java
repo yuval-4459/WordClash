@@ -1,6 +1,5 @@
 package com.example.wordclash.screens;
 
-import static com.example.wordclash.R.*;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,15 +36,19 @@ public class StartPageActivity extends AppCompatActivity {
 
 
         if (SharedPreferencesUtils.isUserLoggedIn(StartPageActivity.this)) {
-            // old user is the connected saved user
+
+            // oldUser = user saved locally (used only to get the userId)
             User oldUser = SharedPreferencesUtils.getUser(this);
+
             DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<User>() {
                 @Override
+                // בשורה הזאת - לאחר שהdb בדק אם המשתמש קיים, או שהוא Null, או שהוא user.
                 public void onCompleted(User newUser) {
                     if (newUser == null) {
                         SharedPreferencesUtils.signOutUser(StartPageActivity.this);
                         return;
                     }
+                    // רואה שהמשתמש אכן קיים, אז תעדכן את הפרטים העדכניים שלו
                     SharedPreferencesUtils.saveUser(StartPageActivity.this, newUser);
                     Intent intent = new Intent(StartPageActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -60,10 +63,14 @@ public class StartPageActivity extends AppCompatActivity {
         }
 
         btnSignUp = findViewById(R.id.signUpButton);
-        btnSignUp.setOnClickListener(view -> startActivity(new Intent(StartPageActivity.this, SignUpActivity.class)));
+        btnSignUp.setOnClickListener(view ->
+                startActivity(new Intent
+                        (StartPageActivity.this, SignUpActivity.class)));
 
         btnLogin = findViewById(R.id.LoginButton);
-        btnLogin.setOnClickListener(view -> startActivity(new Intent(StartPageActivity.this, LoginActivity.class)));
+        btnLogin.setOnClickListener(view ->
+                startActivity(new Intent
+                        (StartPageActivity.this, LoginActivity.class)));
 
         }
 }
