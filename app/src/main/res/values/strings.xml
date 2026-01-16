@@ -1,3 +1,4 @@
+<!-- app/src/main/res/values/strings.xml -->
 <resources>
     <string name="app_name">WordClash</string>
 
@@ -11,7 +12,14 @@
     <string name="start_playing">🎮 התחל לשחק</string>
     <string name="leaderboard">🏆\nלוח מובילים</string>
     <string name="wordle">🎯\nWordle</string>
-    <string name="mini_games">🎮\nמשחקונים</string> <!-- NEW -->
+    <string name="mini_games">🎮\nמשחקונים</string>
+
+    <!-- Navigation Menu (Hamburger) -->
+    <string name="nav_users_table">📊 טבלת משתמשים</string>
+    <string name="nav_add_word">➕ הוסף מילה חדשה</string>
+    <string name="nav_manage_words">📝 מחק מילים</string>
+    <string name="nav_profile_picture">🖼️ תמונת פרופיל</string>
+    <string name="nav_change_details">⚙️ שנה פרטים</string>
 
     <!-- Ranks Screen -->
     <string name="choose_level">בחר את הרמה שלך</string>
@@ -84,6 +92,7 @@
 
     <string name="app_ok">אישור</string>
     <string name="app_cancel">ביטול</string>
+
     <!-- Common -->
     <string name="ok">אישור</string>
     <string name="cancel">ביטול</string>

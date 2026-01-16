@@ -4,26 +4,26 @@
         <item
             android:id="@+id/nav_users_table"
             android:icon="@android:drawable/ic_menu_sort_by_size"
-            android:title="📊 Table of Users" />
+            android:title="@string/nav_users_table" />
 
         <item
             android:id="@+id/nav_add_word"
             android:icon="@android:drawable/ic_input_add"
-            android:title="➕ Add New Word" />
+            android:title="@string/nav_add_word" />
 
         <item
             android:id="@+id/nav_manage_words"
             android:icon="@android:drawable/ic_menu_edit"
-            android:title="📝 Delete Words" />
+            android:title="@string/nav_manage_words" />
 
         <item
             android:id="@+id/nav_profile_picture"
             android:icon="@android:drawable/ic_menu_gallery"
-            android:title="🖼️ Profile Picture" />
+            android:title="@string/nav_profile_picture" />
 
         <item
             android:id="@+id/nav_change_details"
             android:icon="@android:drawable/ic_menu_preferences"
-            android:title="⚙️ Change Details" />
+            android:title="@string/nav_change_details" />
     </group>
 </menu>

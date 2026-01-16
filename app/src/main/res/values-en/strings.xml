@@ -1,3 +1,4 @@
+<!-- app/src/main/res/values-en/strings.xml -->
 <resources>
     <string name="app_name">WordClash</string>
 
@@ -12,6 +13,13 @@
     <string name="leaderboard">🏆\nLeaderboard</string>
     <string name="wordle">🎯\nWordle</string>
     <string name="mini_games">🎮\nMini Games</string>
+
+    <!-- Navigation Menu (Hamburger) -->
+    <string name="nav_users_table">📊 Table of Users</string>
+    <string name="nav_add_word">➕ Add New Word</string>
+    <string name="nav_manage_words">📝 Delete Words</string>
+    <string name="nav_profile_picture">🖼️ Profile Picture</string>
+    <string name="nav_change_details">⚙️ Change Details</string>
 
     <!-- Ranks Screen -->
     <string name="choose_level">Choose Your Level</string>
@@ -34,7 +42,7 @@
     <!-- Words List -->
     <string name="vocabulary">Rank %d Vocabulary</string>
     <string name="search_words">Search English or Hebrew...</string>
-    <string name="ready">✓ Im Ready</string>
+    <string name="ready">✓ I\'m Ready</string>
     <string name="ready_to_practice">You are ready to practice Rank %d!</string>
     <string name="no_words_found">No words found for this rank</string>
     <string name="sort_random">Random</string>
@@ -57,12 +65,7 @@
 
     <!-- Wordle -->
     <string name="wordle_title">🎮 WORDLE</string>
-    <string name="wordle_instructions">
-        Guess the 5-letter word!
-        \n🟩 = Correct position
-        \n🟨 = Wrong position
-        \n⬜ = Not in word
-    </string>
+    <string name="wordle_instructions">Guess the 5-letter word!\n🟩 = Correct position\n🟨 = Wrong position\n⬜ = Not in word</string>
     <string name="wordle_type_instruction">Tap the grid and start typing</string>
     <string name="submit_guess">Submit Guess</string>
     <string name="new_game">🔄 New Game</string>
@@ -87,7 +90,6 @@
     <string name="change_learning_language">Change Learning Language</string>
     <string name="language_question">Which language would you like to learn?</string>
 
-    <!-- Dialog -->
     <string name="app_ok">Confirm</string>
     <string name="app_cancel">Cancel</string>
 

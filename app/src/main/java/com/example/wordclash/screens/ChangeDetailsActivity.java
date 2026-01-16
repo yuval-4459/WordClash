@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.LanguageUtils;
@@ -24,14 +26,18 @@ import java.util.ArrayList;
 
 public class ChangeDetailsActivity extends AppCompatActivity {
 
-    private EditText etUserName, etEmail, etPassword;
-    private Spinner genderSpinner, languageSpinner;
+    private EditText etUserName, etEmail, etPassword, etTotalScore;
+    private Spinner genderSpinner, languageSpinner, rankSpinner;
     private Button btnUpdateDetails;
-    private TextView tvCurrentLanguage;
+    private TextView tvCurrentLanguage, tvAdminControlsTitle;
+    private CheckBox isAdminCheckBox;
+
     private String selectedGender = "";
     private String selectedLanguage = "";
 
     private User currentUser;
+    private Stats userStats;
+    private boolean isAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +59,25 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             return;
         }
 
+        isAdmin = currentUser.isAdmin();
+
+        initializeViews();
+        setupGenderSpinner();
+        setupLanguageSpinner();
+
+        if (isAdmin) {
+            setupRankSpinner();
+            loadUserStats();
+        }
+
+        setupFieldsBasedOnRole();
+        populateFields();
+
+        btnUpdateDetails.setText(R.string.update_details);
+        btnUpdateDetails.setOnClickListener(v -> updateDetails());
+    }
+
+    private void initializeViews() {
         etUserName = findViewById(R.id.UserName);
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
@@ -61,13 +86,11 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
         tvCurrentLanguage = findViewById(R.id.tvCurrentLanguage);
 
-        setupGenderSpinner();
-        setupLanguageSpinner();
-        setupFieldsBasedOnRole();
-        populateFields();
-
-        btnUpdateDetails.setText(R.string.update_details);
-        btnUpdateDetails.setOnClickListener(v -> updateDetails());
+        // Admin-only fields
+        etTotalScore = findViewById(R.id.TotalScore);
+        rankSpinner = findViewById(R.id.RankSpinner);
+        isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
+        tvAdminControlsTitle = findViewById(R.id.tvAdminControlsTitle);
     }
 
     private void setupGenderSpinner() {
@@ -123,19 +146,79 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         });
     }
 
+    private void setupRankSpinner() {
+        String[] ranks = {"Rank 1", "Rank 2",
+                "Rank 3", "Rank 4", "Rank 5"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+                android.R.layout.simple_spinner_item, ranks);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        rankSpinner.setAdapter(adapter);
+    }
+
+    private void loadUserStats() {
+        DatabaseService.getInstance().getStats(currentUser.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats != null) {
+                    userStats = stats;
+                    rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
+                    etTotalScore.setText(String.valueOf(stats.getTotalScore()));
+                } else {
+                    // Create default stats if none exist
+                    userStats = new Stats(currentUser.getId(), 1, 0);
+                    rankSpinner.setSelection(0);
+                    etTotalScore.setText("0");
+                }
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+                // Create default stats on error
+                userStats = new Stats(currentUser.getId(), 1, 0);
+                rankSpinner.setSelection(0);
+                etTotalScore.setText("0");
+            }
+        });
+    }
+
     private void setupFieldsBasedOnRole() {
-        if (currentUser.isAdmin()) {
+        if (isAdmin) {
+            // Admin can edit everything
             etEmail.setEnabled(true);
             etPassword.setEnabled(true);
             etUserName.setEnabled(true);
             genderSpinner.setEnabled(true);
             languageSpinner.setEnabled(true);
+            etTotalScore.setEnabled(true);
+            rankSpinner.setEnabled(true);
+            isAdminCheckBox.setEnabled(true);
+
+            // Show admin controls
+            etTotalScore.setVisibility(View.VISIBLE);
+            rankSpinner.setVisibility(View.VISIBLE);
+            isAdminCheckBox.setVisibility(View.VISIBLE);
+            tvAdminControlsTitle.setVisibility(View.VISIBLE);
+            findViewById(R.id.tvRankLabel).setVisibility(View.VISIBLE);
+            findViewById(R.id.tvScoreLabel).setVisibility(View.VISIBLE);
+            findViewById(R.id.rankCard).setVisibility(View.VISIBLE);
+            findViewById(R.id.scoreLayout).setVisibility(View.VISIBLE);
         } else {
+            // Regular user - limited editing
             etEmail.setEnabled(false);
             etPassword.setEnabled(false);
             etUserName.setEnabled(true);
             genderSpinner.setEnabled(true);
             languageSpinner.setEnabled(true);
+
+            // Hide admin controls
+            etTotalScore.setVisibility(View.GONE);
+            rankSpinner.setVisibility(View.GONE);
+            isAdminCheckBox.setVisibility(View.GONE);
+            tvAdminControlsTitle.setVisibility(View.GONE);
+            findViewById(R.id.tvRankLabel).setVisibility(View.GONE);
+            findViewById(R.id.tvScoreLabel).setVisibility(View.GONE);
+            findViewById(R.id.rankCard).setVisibility(View.GONE);
+            findViewById(R.id.scoreLayout).setVisibility(View.GONE);
         }
     }
 
@@ -170,6 +253,11 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         // Show current language
         tvCurrentLanguage.setText(getString(R.string.learning_language,
                 LanguageUtils.getLearningLanguageDisplayName(this, currentUser)));
+
+        // Admin-only fields
+        if (isAdmin) {
+            isAdminCheckBox.setChecked(currentUser.isAdmin());
+        }
     }
 
     private void updateDetails() {
@@ -202,7 +290,8 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             currentUser.setLearningLanguage(selectedLanguage);
         }
 
-        if (currentUser.isAdmin()) {
+        if (isAdmin) {
+            // Admin can change email, password, rank, score, and admin status
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
@@ -213,6 +302,20 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
             currentUser.setEmail(email);
             currentUser.setPassword(password);
+            currentUser.setAdmin(isAdminCheckBox.isChecked());
+
+            // Update stats
+            if (userStats != null) {
+                int newRank = rankSpinner.getSelectedItemPosition() + 1;
+                int newScore;
+                try {
+                    newScore = Integer.parseInt(etTotalScore.getText().toString().trim());
+                } catch (NumberFormatException e) {
+                    newScore = 0;
+                }
+                userStats.setRank(newRank);
+                userStats.setTotalScore(newScore);
+            }
         }
 
         if (languageChanged) {
@@ -239,17 +342,25 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void v) {
-                SharedPreferencesUtils.saveUser(ChangeDetailsActivity.this, currentUser);
+                // If admin, also update stats
+                if (isAdmin && userStats != null) {
+                    DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<Void>() {
+                        @Override
+                        public void onCompleted(Void unused) {
+                            finalizeUpdate();
+                        }
 
-                Toast.makeText(ChangeDetailsActivity.this,
-                        getString(R.string.details_updated),
-                        Toast.LENGTH_SHORT).show();
-
-                // Restart app to apply language changes
-                Intent intent = new Intent(ChangeDetailsActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                        @Override
+                        public void onFailed(Exception e) {
+                            Toast.makeText(ChangeDetailsActivity.this,
+                                    "Failed to update stats: " + e.getMessage(),
+                                    Toast.LENGTH_SHORT).show();
+                            finalizeUpdate();
+                        }
+                    });
+                } else {
+                    finalizeUpdate();
+                }
             }
 
             @Override
@@ -259,5 +370,19 @@ public class ChangeDetailsActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void finalizeUpdate() {
+        SharedPreferencesUtils.saveUser(ChangeDetailsActivity.this, currentUser);
+
+        Toast.makeText(ChangeDetailsActivity.this,
+                getString(R.string.details_updated),
+                Toast.LENGTH_SHORT).show();
+
+        // Restart app to apply language changes
+        Intent intent = new Intent(ChangeDetailsActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

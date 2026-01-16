@@ -6,13 +6,13 @@
     android:gravity="bottom"
     android:orientation="vertical"
     android:padding="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+    >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Settings Managment"
+        android:text="@string/settings_management"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
@@ -22,7 +22,7 @@
         android:id="@+id/nav_header_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Manage your app"
+        android:text="@string/manage_your_app"
         android:textColor="#B3E5FC"
         android:textSize="14sp" />
 

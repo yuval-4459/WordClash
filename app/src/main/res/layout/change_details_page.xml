@@ -215,6 +215,111 @@
 
         </androidx.cardview.widget.CardView>
 
+        <!-- ADMIN CONTROLS SECTION -->
+        <TextView
+            android:id="@+id/tvAdminControlsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Admin Controls"
+            android:textSize="18sp"
+            android:textColor="#D32F2F"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/languageCard" />
+
+        <!-- Rank Spinner (Admin Only) -->
+        <TextView
+            android:id="@+id/tvRankLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Current Rank"
+            android:textSize="14sp"
+            android:textColor="#1A237E"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAdminControlsTitle" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/rankCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="#F5F5F5"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvRankLabel">
+
+            <Spinner
+                android:id="@+id/RankSpinner"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp" />
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Total Score (Admin Only) -->
+        <TextView
+            android:id="@+id/tvScoreLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Total Score"
+            android:textSize="14sp"
+            android:textColor="#1A237E"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/rankCard" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/scoreLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:boxBackgroundMode="outline"
+            app:boxCornerRadiusTopStart="12dp"
+            app:boxCornerRadiusTopEnd="12dp"
+            app:boxCornerRadiusBottomStart="12dp"
+            app:boxCornerRadiusBottomEnd="12dp"
+            app:boxStrokeColor="#1A237E"
+            app:hintTextColor="#1A237E"
+            android:hint="Total Score"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvScoreLabel">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/TotalScore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:textSize="16sp"
+                android:padding="16dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Admin Checkbox (Admin Only) -->
+        <CheckBox
+            android:id="@+id/isAdminCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Admin User"
+            android:textSize="16sp"
+            android:textColor="#1A237E"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scoreLayout" />
+
         <!-- Update Button -->
         <Button
             android:id="@+id/btnUpdateDetails"
@@ -227,7 +332,7 @@
             android:backgroundTint="#1A237E"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/languageCard" />
+            app:layout_constraintTop_toBottomOf="@id/isAdminCheckBox" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
