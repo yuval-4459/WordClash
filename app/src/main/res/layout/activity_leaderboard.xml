@@ -111,7 +111,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         app:cardCornerRadius="12dp"
-        app:cardElevation="8dp"
         app:cardBackgroundColor="#FFF3E0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -128,9 +127,9 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="56dp"
                 android:layout_height="56dp"
+                app:cardBackgroundColor="#FF6F00"
                 app:cardCornerRadius="28dp"
-                app:cardElevation="4dp"
-                app:cardBackgroundColor="#FF6F00">
+                app:cardElevation="0dp">
 
                 <TextView
                     android:id="@+id/tvYourPosition"

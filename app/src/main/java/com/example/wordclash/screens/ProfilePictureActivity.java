@@ -1,7 +1,6 @@
 package com.example.wordclash.screens;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +8,6 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Base64;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -31,7 +29,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class ProfilePictureActivity extends AppCompatActivity {

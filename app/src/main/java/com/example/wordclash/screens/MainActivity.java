@@ -11,18 +11,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.example.wordclash.R;
 import com.example.wordclash.models.User;
 import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.example.wordclash.utils.VocabularyImporter;
 import com.google.android.material.navigation.NavigationView;
+
 import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity

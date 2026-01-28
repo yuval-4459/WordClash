@@ -12,18 +12,18 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
-import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import com.google.android.material.textfield.TextInputLayout;
-import com.google.android.material.snackbar.Snackbar;
 
 import com.example.wordclash.R;
 import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
-import androidx.activity.OnBackPressedCallback;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 
 

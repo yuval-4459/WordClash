@@ -3,7 +3,10 @@ package com.example.wordclash.services;
 import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
-import com.google.firebase.database.*;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

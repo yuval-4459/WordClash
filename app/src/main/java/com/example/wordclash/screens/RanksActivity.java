@@ -2,7 +2,6 @@ package com.example.wordclash.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,13 +12,13 @@ import androidx.cardview.widget.CardView;
 import com.example.wordclash.R;
 import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
+import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.example.wordclash.services.DatabaseService;
 
 /**
  * Ranks activity displaying available game levels and online player count

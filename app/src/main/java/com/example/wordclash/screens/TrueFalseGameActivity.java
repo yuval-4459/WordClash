@@ -17,7 +17,6 @@ import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;

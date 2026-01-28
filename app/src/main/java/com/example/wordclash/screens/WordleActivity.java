@@ -39,6 +39,7 @@ public class WordleActivity extends AppCompatActivity {
     private Button btnSubmit, btnNewGame, btnBack;
     private TextView tvInstructions, tvTitle;
     private EditText hiddenInput;
+    private String learningLanguage = "english";
 
     private User user;
     private String targetWord;
@@ -64,10 +65,12 @@ public class WordleActivity extends AppCompatActivity {
             LanguageUtils.setLayoutDirection(this, user);
         }
 
-        // Determine Wordle language based on learning preference
-        String learningLanguage = user != null ? user.getLearningLanguage() : "english";
-        if (learningLanguage == null) learningLanguage = "english";
-        isHebrewWordle = learningLanguage.equals("hebrew"); // Learning Hebrew = Hebrew Wordle
+
+        if (user != null && user.getLearningLanguage() != null) {
+            learningLanguage = user.getLearningLanguage();
+        }
+
+        isHebrewWordle = learningLanguage.equals("hebrew");
 
         initializeViews();
         loadWords();
@@ -159,7 +162,9 @@ public class WordleActivity extends AppCompatActivity {
     private boolean isValidLetter(char c) {
         if (isHebrewWordle) {
             // Hebrew letters
-            return (c >= 'א' && c <= 'ת') || (c >= 'ا' && c <= 'ي');
+            return (c >= 'א' && c <= 'ת')
+                  //  || (c >= 'ا' && c <= 'ي')
+                    ;
         } else {
             // English letters
             return Character.isLetter(c) && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));

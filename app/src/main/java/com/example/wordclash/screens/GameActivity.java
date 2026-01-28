@@ -1,6 +1,5 @@
 package com.example.wordclash.screens;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
@@ -244,7 +243,8 @@ public class GameActivity extends AppCompatActivity {
                     new Handler().postDelayed(() -> nextQuestion(), 2000);
                 }
             }
-        }.start();
+        }
+        .start();
     }
 
     private void checkAnswer(Button selectedButton) {
@@ -315,7 +315,9 @@ public class GameActivity extends AppCompatActivity {
                     showResultDialog();
                 }
             });
-        } else {
+        }
+
+        else {
             DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
                 public void onCompleted(Void unused) {

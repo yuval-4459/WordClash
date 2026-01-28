@@ -20,7 +20,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -148,12 +147,8 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     private void displayLeaderboard() {
         // Sort by total score (descending)
-        Collections.sort(allEntries, new Comparator<LeaderboardEntry>() {
-            @Override
-            public int compare(LeaderboardEntry e1, LeaderboardEntry e2) {
-                return Integer.compare(e2.totalScore, e1.totalScore);
-            }
-        });
+        Collections.sort(allEntries, (e1, e2) ->
+                Integer.compare(e2.totalScore, e1.totalScore));
 
         // Assign positions
         for (int i = 0; i < allEntries.size(); i++) {
