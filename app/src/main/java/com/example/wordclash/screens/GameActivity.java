@@ -126,12 +126,18 @@ public class GameActivity extends AppCompatActivity {
 
     private int getQuestionsForRank(int rank) {
         switch (rank) {
-            case 1: return 10;
-            case 2: return 13;
-            case 3: return 16;
-            case 4: return 20;
-            case 5: return 25;
-            default: return 10;
+            case 1:
+                return 10;
+            case 2:
+                return 13;
+            case 3:
+                return 16;
+            case 4:
+                return 20;
+            case 5:
+                return 25;
+            default:
+                return 10;
         }
     }
 
@@ -244,7 +250,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
         }
-        .start();
+                .start();
     }
 
     private void checkAnswer(Button selectedButton) {
@@ -315,9 +321,7 @@ public class GameActivity extends AppCompatActivity {
                     showResultDialog();
                 }
             });
-        }
-
-        else {
+        } else {
             DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
                 @Override
                 public void onCompleted(Void unused) {
@@ -377,12 +381,18 @@ public class GameActivity extends AppCompatActivity {
 
     private int getRequiredPracticeForRank(int rank) {
         switch (rank) {
-            case 1: return 15;
-            case 2: return 25;
-            case 3: return 40;
-            case 4: return 60;
-            case 5: return Integer.MAX_VALUE;
-            default: return 15;
+            case 1:
+                return 15;
+            case 2:
+                return 25;
+            case 3:
+                return 40;
+            case 4:
+                return 60;
+            case 5:
+                return Integer.MAX_VALUE;
+            default:
+                return 15;
         }
     }
 

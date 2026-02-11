@@ -30,22 +30,19 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String PREFS_NAME = "WordClashPrefs";
+    private static final String KEY_VOCABULARY_IMPORTED = "vocabulary_imported";
     private Button btnLogout;
     private Button btnRanks;
     private Button btnMiniGames;
     private Button btnLeaderboard;
-
     private TextView tvHelloUser;
     private ImageView ivUserAvatar;
     private TextView tvUserInitial;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private ImageView menuIcon;
-
     private User user;
-
-    private static final String PREFS_NAME = "WordClashPrefs";
-    private static final String KEY_VOCABULARY_IMPORTED = "vocabulary_imported";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

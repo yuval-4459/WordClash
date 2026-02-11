@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@drawable/gradient_background">
+    android:background="@drawable/gradient_background"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -17,22 +16,22 @@
             android:id="@+id/logoCard"
             android:layout_width="140dp"
             android:layout_height="140dp"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="70dp"
             app:cardElevation="12dp"
-            app:cardBackgroundColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.15">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="24dp"
-                android:src="@drawable/wordclash_logo"
                 android:contentDescription="WordClash Logo"
-                android:scaleType="fitCenter" />
+                android:padding="24dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/wordclash_logo" />
 
         </androidx.cardview.widget.CardView>
 
@@ -42,11 +41,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:letterSpacing="0.05"
             android:text="WordClash"
             android:textColor="#1A237E"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:letterSpacing="0.05"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/logoCard" />
@@ -57,10 +56,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:alpha="0.8"
             android:text="ברוך שובך!"
             android:textColor="#1A237E"
             android:textSize="20sp"
-            android:alpha="0.8"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAppName" />
@@ -71,9 +70,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="20dp"
             app:cardElevation="12dp"
-            app:cardBackgroundColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvWelcomeBack">
@@ -88,12 +87,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="8dp"
                     android:text="התחברות"
                     android:textColor="#1A237E"
                     android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp"
-                    android:layout_gravity="center_horizontal" />
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="50dp"
@@ -107,24 +106,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    android:hint="Email"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#1A237E"
                     app:startIconDrawable="@android:drawable/ic_dialog_email"
-                    app:startIconTint="#1A237E"
-                    android:hint="Email">
+                    app:startIconTint="#1A237E">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/Email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:textSize="16sp"
-                        android:padding="16dp" />
+                        android:padding="16dp"
+                        android:textSize="16sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -133,25 +132,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
+                    android:hint="Password"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#1A237E"
                     app:passwordToggleEnabled="true"
                     app:startIconDrawable="@android:drawable/ic_lock_idle_lock"
-                    app:startIconTint="#1A237E"
-                    android:hint="Password">
+                    app:startIconTint="#1A237E">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/Password"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:textSize="16sp"
-                        android:padding="16dp" />
+                        android:padding="16dp"
+                        android:textSize="16sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

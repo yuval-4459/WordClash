@@ -24,16 +24,14 @@ import java.util.List;
 
 public class FillGapsGameActivity extends AppCompatActivity {
 
+    private final int TOTAL_WORDS = 10;
     private TextView tvHint, tvWord, tvProgress, tvScore;
     private LinearLayout lettersContainer;
     private Button btnBack, btnSkip;
-
     private User user;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
     private int score = 0;
-    private final int TOTAL_WORDS = 10;
-
     private String targetWord;
     private String displayWord;
     private List<Integer> missingIndices;

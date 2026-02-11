@@ -33,17 +33,14 @@ import java.io.InputStream;
 
 public class ProfilePictureActivity extends AppCompatActivity {
 
+    private static final int CAMERA_PERMISSION_CODE = 100;
     private ImageView ivProfilePicture;
     private TextView tvUserInitial, tvUserName;
     private Button btnChooseFromGallery, btnTakePhoto, btnDeletePicture, btnRotate, btnBack;
-
     private User currentUser;
     private Uri photoUri;
     private Bitmap currentBitmap; // Hold the current bitmap for rotation
     private int currentRotation = 0; // Track rotation angle
-
-    private static final int CAMERA_PERMISSION_CODE = 100;
-
     // Activity result launchers
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),

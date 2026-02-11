@@ -27,20 +27,18 @@ import java.util.List;
  */
 public class MatchGameActivity extends AppCompatActivity {
 
+    private final int TOTAL_PAIRS = 6;
     private TextView tvScore, tvMatches;
     private LinearLayout leftColumn, rightColumn;
     private Button btnBack, btnNewGame;
-
     private User user;
     private List<Word> gameWords;
     private List<Button> leftButtons;
     private List<Button> rightButtons;
-
     private Button selectedLeft = null;
     private Button selectedRight = null;
     private int matchesFound = 0;
     private int score = 0;
-    private final int TOTAL_PAIRS = 6;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

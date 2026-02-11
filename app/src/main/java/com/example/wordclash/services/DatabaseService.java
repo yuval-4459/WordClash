@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * שירות לניהול Firebase Database
@@ -23,14 +24,30 @@ public class DatabaseService {
     private static final String STATS_PATH = "stats";           // נתיב לסטטיסטיקות
     private static final String WORDS_PATH = "vocabulary";      // נתיב למילים
     private static final String RANK_PROGRESS = "rank_progress"; // נתיב להתקדמות
-
+    /**
+     * כמה תרגולים נדרשים לעבור דרגה
+     */
+    private static final Map<Integer, Integer> RANK_REQUIREMENTS = new HashMap<>();
     private static DatabaseService instance;                    // סינגלטון
+
+    static {
+        RANK_REQUIREMENTS.put(1, 15);
+        RANK_REQUIREMENTS.put(2, 25);
+        RANK_REQUIREMENTS.put(3, 40);
+        RANK_REQUIREMENTS.put(4, 60);
+        RANK_REQUIREMENTS.put(5, Integer.MAX_VALUE);
+    }
+
     private final DatabaseReference db;                         // חיבור ל-Firebase
+
+    // ========== חלק 2: ממשק Callback ==========
 
     // קונסטרוקטור פרטי (סינגלטון)
     private DatabaseService() {
         db = FirebaseDatabase.getInstance().getReference();
     }
+
+    // ========== חלק 3: משתמשים (Users) ==========
 
     // קבלת המופע היחיד של השירות
     public static DatabaseService getInstance() {
@@ -40,17 +57,29 @@ public class DatabaseService {
         return instance;
     }
 
-    // ========== חלק 2: ממשק Callback ==========
-
-    /**
-     * ממשק לטיפול בתגובות מהדאטהבייס
-     */
-    public interface DatabaseCallback<T> {
-        void onCompleted(T result);  // הצלחה
-        void onFailed(Exception e);   // כשל
+    public static int getRequiredPracticeCount(int rank) {
+        return RANK_REQUIREMENTS.getOrDefault(rank, 15);
     }
 
-    // ========== חלק 3: משתמשים (Users) ==========
+    /**
+     * כמה שאלות בכל תרגול
+     */
+    public static int getQuestionsCount(int rank) {
+        switch (rank) {
+            case 1:
+                return 10;
+            case 2:
+                return 13;
+            case 3:
+                return 16;
+            case 4:
+                return 20;
+            case 5:
+                return 25;
+            default:
+                return 10;
+        }
+    }
 
     /**
      * יצירת מזהה חדש למשתמש
@@ -113,6 +142,8 @@ public class DatabaseService {
                 });
     }
 
+    // ========== חלק 4: סטטיסטיקות (Stats) ==========
+
     /**
      * מחיקת משתמש
      */
@@ -174,7 +205,7 @@ public class DatabaseService {
         });
     }
 
-    // ========== חלק 4: סטטיסטיקות (Stats) ==========
+    // ========== חלק 5: מילים (Words) ==========
 
     /**
      * יצירת סטטיסטיקה חדשה למשתמש
@@ -213,8 +244,6 @@ public class DatabaseService {
                     if (callback != null) callback.onFailed(e);
                 });
     }
-
-    // ========== חלק 5: מילים (Words) ==========
 
     /**
      * יצירת מזהה חדש למילה
@@ -262,6 +291,8 @@ public class DatabaseService {
                 })
                 .addOnFailureListener(callback::onFailed);
     }
+
+    // ========== חלק 6: התקדמות בדרגות (Rank Progress) ==========
 
     /**
      * קבלת כל המילים
@@ -333,21 +364,6 @@ public class DatabaseService {
         });
     }
 
-    // ========== חלק 6: התקדמות בדרגות (Rank Progress) ==========
-
-    /**
-     * מחלקה לנתוני התקדמות
-     */
-    public static class RankProgressData {
-        public int practiceCount;         // כמה פעמים תרגל
-        public boolean hasReviewedWords;  // האם סקר את המילים
-
-        public RankProgressData() {
-            this.practiceCount = 0;
-            this.hasReviewedWords = false;
-        }
-    }
-
     /**
      * קבלת התקדמות לדרגה מסוימת
      */
@@ -397,6 +413,8 @@ public class DatabaseService {
                 });
     }
 
+    // ========== חלק 7: פונקציות עזר ==========
+
     /**
      * סימון שהמשתמש סקר את המילים
      */
@@ -433,33 +451,25 @@ public class DatabaseService {
         });
     }
 
-    // ========== חלק 7: פונקציות עזר ==========
-
     /**
-     * כמה תרגולים נדרשים לעבור דרגה
+     * ממשק לטיפול בתגובות מהדאטהבייס
      */
-    public static int getRequiredPracticeCount(int rank) {
-        switch (rank) {
-            case 1: return 15;
-            case 2: return 25;
-            case 3: return 40;
-            case 4: return 60;
-            case 5: return Integer.MAX_VALUE; // אין עוד דרגה אחרי 5
-            default: return 15;
-        }
+    public interface DatabaseCallback<T> {
+        void onCompleted(T result);  // הצלחה
+
+        void onFailed(Exception e);   // כשל
     }
 
     /**
-     * כמה שאלות בכל תרגול
+     * מחלקה לנתוני התקדמות
      */
-    public static int getQuestionsPerPractice(int rank) {
-        switch (rank) {
-            case 1: return 10;
-            case 2: return 13;
-            case 3: return 16;
-            case 4: return 20;
-            case 5: return 25;
-            default: return 10;
+    public static class RankProgressData {
+        public int practiceCount;         // כמה פעמים תרגל
+        public boolean hasReviewedWords;  // האם סקר את המילים
+
+        public RankProgressData() {
+            this.practiceCount = 0;
+            this.hasReviewedWords = false;
         }
     }
 }

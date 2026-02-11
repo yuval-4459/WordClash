@@ -25,15 +25,14 @@ import java.util.Locale;
 
 public class ListenGuessGameActivity extends AppCompatActivity {
 
+    private final int TOTAL_QUESTIONS = 10;
     private TextView tvInstruction, tvProgress, tvScore;
     private Button btnListen, btnOption1, btnOption2, btnOption3, btnOption4, btnBack;
-
     private User user;
     private List<Word> allWords;
     private List<Word> gameWords;
     private int currentQuestionIndex = 0;
     private int score = 0;
-    private final int TOTAL_QUESTIONS = 10;
     private boolean answerSelected = false;
 
     private TextToSpeech tts;

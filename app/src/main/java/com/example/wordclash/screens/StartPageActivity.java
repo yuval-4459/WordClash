@@ -21,7 +21,6 @@ public class StartPageActivity extends AppCompatActivity {
     Button btnLogin;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,7 +31,6 @@ public class StartPageActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-
 
 
         if (SharedPreferencesUtils.isUserLoggedIn(StartPageActivity.this)) {
@@ -72,5 +70,5 @@ public class StartPageActivity extends AppCompatActivity {
                 startActivity(new Intent
                         (StartPageActivity.this, LoginActivity.class)));
 
-        }
+    }
 }

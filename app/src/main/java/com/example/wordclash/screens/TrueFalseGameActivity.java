@@ -26,14 +26,13 @@ import java.util.Random;
  */
 public class TrueFalseGameActivity extends AppCompatActivity {
 
+    private final int TOTAL_QUESTIONS = 15;
     private TextView tvQuestion, tvProgress, tvScore;
     private Button btnTrue, btnFalse, btnBack;
-
     private User user;
     private List<Word> allWords;
     private int currentQuestion = 0;
     private int score = 0;
-    private final int TOTAL_QUESTIONS = 15;
     private boolean answerSelected = false;
 
     // Current question data

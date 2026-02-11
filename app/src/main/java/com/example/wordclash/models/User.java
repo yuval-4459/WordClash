@@ -5,6 +5,7 @@ import java.io.Serializable;
 /// Model class for the user
 /// This class represents a user in the application
 /// It contains the user's information including learning language preference
+///
 /// @see Serializable
 public class User implements Serializable {
 

@@ -26,7 +26,6 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 
-
 public class admin_users_Activity extends AppCompatActivity {
 
     // UI Components
@@ -146,7 +145,8 @@ public class admin_users_Activity extends AppCompatActivity {
     private void setupChangeTracking() {
         TextWatcher changeWatcher = new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -154,7 +154,8 @@ public class admin_users_Activity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {}
+            public void afterTextChanged(Editable s) {
+            }
         };
 
         emailField.addTextChangedListener(changeWatcher);
@@ -169,7 +170,8 @@ public class admin_users_Activity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+            }
         });
 
         rankSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
@@ -179,7 +181,8 @@ public class admin_users_Activity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+            }
         });
 
         isAdminCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {

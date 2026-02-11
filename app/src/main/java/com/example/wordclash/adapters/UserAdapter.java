@@ -17,14 +17,8 @@ import java.util.List;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
-    public interface OnUserClickListener {
-        void onClick(User user);
-        void onLongClick(User user);
-    }
-
     private final List<User> userList;
     private final OnUserClickListener onUserClickListener;
-
     public UserAdapter(@Nullable final OnUserClickListener onUserClickListener) {
         userList = new ArrayList<>();
         this.onUserClickListener = onUserClickListener;
@@ -94,6 +88,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         if (index == -1) return;
         userList.remove(index);
         notifyItemRemoved(index);
+    }
+
+    public interface OnUserClickListener {
+        void onClick(User user);
+
+        void onLongClick(User user);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

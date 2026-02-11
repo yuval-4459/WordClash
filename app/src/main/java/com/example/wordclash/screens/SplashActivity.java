@@ -22,14 +22,13 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 public class SplashActivity extends AppCompatActivity {
 
+    private static final int SPLASH_DURATION = 3000; // 3 seconds for beautiful presentation
     private CardView logoCard;
     private ImageView ivLogo;
     private TextView tvAppName;
     private TextView tvTagline;
     private ProgressBar progressBar;
     private Handler handler = new Handler();
-
-    private static final int SPLASH_DURATION = 3000; // 3 seconds for beautiful presentation
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

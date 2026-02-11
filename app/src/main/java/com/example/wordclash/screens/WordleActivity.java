@@ -35,18 +35,17 @@ import java.util.Random;
  */
 public class WordleActivity extends AppCompatActivity {
 
+    private final int MAX_ATTEMPTS = 6;
+    private final int WORD_LENGTH = 5;
     private GridLayout gridGuesses;
     private Button btnSubmit, btnNewGame, btnBack;
     private TextView tvInstructions, tvTitle;
     private EditText hiddenInput;
     private String learningLanguage = "english";
-
     private User user;
     private String targetWord;
     private int currentAttempt = 0;
     private int currentLetterIndex = 0;
-    private final int MAX_ATTEMPTS = 6;
-    private final int WORD_LENGTH = 5;
     private List<Word> allFiveLetterWords;
     private String currentGuess = "";
     private boolean isHebrewWordle = false;
@@ -106,10 +105,12 @@ public class WordleActivity extends AppCompatActivity {
 
         hiddenInput.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -163,7 +164,7 @@ public class WordleActivity extends AppCompatActivity {
         if (isHebrewWordle) {
             // Hebrew letters
             return (c >= 'א' && c <= 'ת')
-                  //  || (c >= 'ا' && c <= 'ي')
+                    //  || (c >= 'ا' && c <= 'ي')
                     ;
         } else {
             // English letters

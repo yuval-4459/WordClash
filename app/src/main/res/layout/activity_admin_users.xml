@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,9 +17,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="16dp"
             app:cardElevation="8dp"
-            app:cardBackgroundColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
@@ -28,19 +27,19 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="vertical"
-                android:padding="20dp"
-                android:gravity="center">
+                android:padding="20dp">
 
                 <TextView
                     android:id="@+id/adminTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:letterSpacing="0.02"
                     android:text="Admin Panel"
                     android:textColor="#000000"
                     android:textSize="32sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.02" />
+                    android:textStyle="bold" />
 
                 <View
                     android:layout_width="80dp"
@@ -57,9 +56,9 @@
             android:id="@+id/mainCard"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="20dp"
             app:cardElevation="12dp"
-            app:cardBackgroundColor="#FFFFFF"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerCard">
@@ -78,10 +77,10 @@
                     android:layout_marginBottom="16dp"
                     android:hint="Email Address"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#000000">
 
@@ -90,9 +89,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
-                        android:textSize="18sp"
+                        android:padding="16dp"
                         android:textColor="#000000"
-                        android:padding="16dp" />
+                        android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Password -->
@@ -103,10 +102,10 @@
                     android:layout_marginBottom="16dp"
                     android:hint="Password"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#000000"
                     app:passwordToggleEnabled="true">
@@ -116,9 +115,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:textSize="18sp"
+                        android:padding="16dp"
                         android:textColor="#000000"
-                        android:padding="16dp" />
+                        android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Username -->
@@ -129,10 +128,10 @@
                     android:layout_marginBottom="16dp"
                     android:hint="Username"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#000000">
 
@@ -140,28 +139,28 @@
                         android:id="@+id/UserName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="18sp"
+                        android:padding="16dp"
                         android:textColor="#000000"
-                        android:padding="16dp" />
+                        android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Gender -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Gender"
-                    android:textSize="18sp"
                     android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#F5F5F5"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#F5F5F5">
+                    app:cardElevation="2dp">
 
                     <Spinner
                         android:id="@+id/Gender"
@@ -175,19 +174,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Current Rank"
-                    android:textSize="18sp"
                     android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#F5F5F5"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#F5F5F5">
+                    app:cardElevation="2dp">
 
                     <Spinner
                         android:id="@+id/RankSpinner"
@@ -205,10 +204,10 @@
                     android:layout_marginBottom="16dp"
                     android:hint="Total Score"
                     app:boxBackgroundMode="outline"
-                    app:boxCornerRadiusTopStart="12dp"
-                    app:boxCornerRadiusTopEnd="12dp"
-                    app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusBottomEnd="12dp"
+                    app:boxCornerRadiusBottomStart="12dp"
+                    app:boxCornerRadiusTopEnd="12dp"
+                    app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
                     app:hintTextColor="#000000">
 
@@ -217,9 +216,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="number"
-                        android:textSize="18sp"
+                        android:padding="16dp"
                         android:textColor="#000000"
-                        android:padding="16dp" />
+                        android:textSize="18sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Admin Checkbox -->
@@ -227,18 +226,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="24dp"
+                    app:cardBackgroundColor="#F5F5F5"
                     app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="#F5F5F5">
+                    app:cardElevation="2dp">
 
                     <CheckBox
                         android:id="@+id/isAdminCheckBox"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:padding="12dp"
                         android:text="Admin User"
-                        android:textSize="18sp"
                         android:textColor="#000000"
-                        android:padding="12dp" />
+                        android:textSize="18sp" />
                 </androidx.cardview.widget.CardView>
 
                 <!-- Action Buttons -->
@@ -308,10 +307,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

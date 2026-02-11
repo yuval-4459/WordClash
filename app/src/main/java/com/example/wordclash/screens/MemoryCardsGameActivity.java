@@ -24,19 +24,17 @@ import java.util.List;
 
 public class MemoryCardsGameActivity extends AppCompatActivity {
 
+    private final int TOTAL_PAIRS = 6;
     private TextView tvScore, tvMatches;
     private GridLayout gridCards;
     private Button btnBack, btnNewGame;
-
     private User user;
     private List<Word> gameWords;
     private List<Button> cardButtons;
-
     private Button firstCard = null;
     private Button secondCard = null;
     private int matchesFound = 0;
     private int score = 0;
-    private final int TOTAL_PAIRS = 6;
     private boolean isProcessing = false;
 
     @Override

@@ -27,16 +27,14 @@ import java.util.List;
  */
 public class WordBuilderGameActivity extends AppCompatActivity {
 
+    private final int TOTAL_WORDS = 10;
     private TextView tvHint, tvBuiltWord, tvProgress, tvScore;
     private LinearLayout lettersContainer;
     private Button btnSubmit, btnClear, btnBack, btnSkip;
-
     private User user;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
     private int score = 0;
-    private final int TOTAL_WORDS = 10;
-
     private String targetWord;
     private String targetHint;
     private StringBuilder builtWord;

@@ -38,14 +38,6 @@ public class LeaderboardActivity extends AppCompatActivity {
     private User currentUser;
     private List<LeaderboardEntry> allEntries;
 
-    public static class LeaderboardEntry {
-        public String userId;
-        public String username;
-        public int totalScore;
-        public int rank;
-        public int position;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,5 +178,13 @@ public class LeaderboardActivity extends AppCompatActivity {
         } else {
             cardYourRank.setVisibility(View.GONE);
         }
+    }
+
+    public static class LeaderboardEntry {
+        public String userId;
+        public String username;
+        public int totalScore;
+        public int rank;
+        public int position;
     }
 }

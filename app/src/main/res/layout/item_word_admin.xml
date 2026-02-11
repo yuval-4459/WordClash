@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
+    app:cardBackgroundColor="#FFFFFF"
     app:cardCornerRadius="12dp"
-    app:cardElevation="4dp"
-    app:cardBackgroundColor="#FFFFFF">
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,12 +18,12 @@
             android:id="@+id/rankBadge"
             android:layout_width="40dp"
             android:layout_height="40dp"
+            app:cardBackgroundColor="#1A237E"
             app:cardCornerRadius="20dp"
             app:cardElevation="2dp"
-            app:cardBackgroundColor="#1A237E"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/tvRankBadge"
@@ -46,22 +45,22 @@
             android:layout_marginStart="12dp"
             android:layout_marginEnd="8dp"
             android:orientation="vertical"
-            app:layout_constraintStart_toEndOf="@id/rankBadge"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btnDelete"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toEndOf="@id/rankBadge"
+            app:layout_constraintTop_toTopOf="parent">
 
             <!-- English Word -->
             <TextView
                 android:id="@+id/tvEnglish"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="Hello"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"
-                android:textStyle="bold"
-                android:ellipsize="end"
-                android:maxLines="1" />
+                android:textStyle="bold" />
 
             <!-- Separator and Hebrew -->
             <TextView
@@ -69,11 +68,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="שלום"
                 android:textColor="#757575"
-                android:textSize="16sp"
-                android:ellipsize="end"
-                android:maxLines="1" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
@@ -86,15 +85,15 @@
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
+            app:backgroundTint="#D32F2F"
+            app:cornerRadius="24dp"
             app:icon="@android:drawable/ic_menu_delete"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
             app:iconTint="#FFFFFF"
-            app:backgroundTint="#D32F2F"
-            app:cornerRadius="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -31,7 +31,6 @@ android {
     }
 
 
-
 // added this
     packaging {
         resources {

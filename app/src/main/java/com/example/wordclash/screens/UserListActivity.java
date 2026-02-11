@@ -71,7 +71,7 @@ public class UserListActivity extends AppCompatActivity {
         userAdapter = new UserAdapter(new UserAdapter.OnUserClickListener() {
             @Override
             public void onClick(User user) {
-                if(user.getId().equals("-OfhuEaP25z-o6NIsC5K")) {
+                if (user.getId().equals("-OfhuEaP25z-o6NIsC5K")) {
                     Toast.makeText(UserListActivity.this, "Can't Access this user - He is a Manager", Toast.LENGTH_LONG).show();
                 } else {
                     Intent intent = new Intent(UserListActivity.this, admin_users_Activity.class);
@@ -82,7 +82,7 @@ public class UserListActivity extends AppCompatActivity {
 
             @Override
             public void onLongClick(User user) {
-                if(user.getId().equals("-OfhuEaP25z-o6NIsC5K")) {
+                if (user.getId().equals("-OfhuEaP25z-o6NIsC5K")) {
                     Toast.makeText(UserListActivity.this, "Can't Access this user - He is a Manager", Toast.LENGTH_LONG).show();
                 } else {
                     Intent intent = new Intent(UserListActivity.this, admin_users_Activity.class);

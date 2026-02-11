@@ -17,13 +17,8 @@ import java.util.List;
 
 public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.ViewHolder> {
 
-    public interface OnWordActionListener {
-        void onDeleteClick(Word word);
-    }
-
     private final List<Word> wordList;
     private final OnWordActionListener listener;
-
     public AdminWordAdapter(OnWordActionListener listener) {
         this.wordList = new ArrayList<>();
         this.listener = listener;
@@ -68,6 +63,10 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         if (index == -1) return;
         wordList.remove(index);
         notifyItemRemoved(index);
+    }
+
+    public interface OnWordActionListener {
+        void onDeleteClick(Word word);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
