@@ -1,6 +1,9 @@
 package com.example.wordclash.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * Model class for a word
@@ -55,6 +58,7 @@ public class Word implements Serializable {
         this.rank = rank;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Word{" +
@@ -63,5 +67,17 @@ public class Word implements Serializable {
                 ", hebrew='" + hebrew + '\'' +
                 ", rank=" + rank +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Word word = (Word) o;
+        return Objects.equals(id, word.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }

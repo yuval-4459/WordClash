@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         String id = db.generateUserId();
         // Create user WITHOUT language preference (will be set in next screen)
-        User user = new User(id, email, password, userName, selectedGender, false);
+        User user = new User(id, email, password, userName, selectedGender, false, null, new ArrayList<>());
 
         db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<Boolean>() {
             @Override

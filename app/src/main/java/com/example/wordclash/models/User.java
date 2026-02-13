@@ -1,6 +1,9 @@
 package com.example.wordclash.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /// Model class for the user
 /// This class represents a user in the application
@@ -25,23 +28,16 @@ public class User implements Serializable {
     // "hebrew" = learning Hebrew (UI in English)
     private String learningLanguage;
 
+    private ArrayList<Word> words;
+
     public User() {
         this.learningLanguage = "english"; // Default
         this.profilePictureUrl = null; // Default no picture
+        this.words = new ArrayList<>();
     }
 
-    public User(String id, String email, String password, String userName, String gender, boolean isAdmin) {
-        this.id = id;
-        this.email = email;
-        this.password = password;
-        this.userName = userName;
-        this.gender = gender;
-        this.isAdmin = isAdmin;
-        this.learningLanguage = "english"; // Default
-        this.profilePictureUrl = null;
-    }
-
-    public User(String id, String email, String password, String userName, String gender, boolean isAdmin, String learningLanguage) {
+    public User(String id, String email, String password, String userName,
+                String gender, boolean isAdmin, String learningLanguage, ArrayList<Word> words) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -50,6 +46,7 @@ public class User implements Serializable {
         this.isAdmin = isAdmin;
         this.learningLanguage = learningLanguage;
         this.profilePictureUrl = null;
+        this.words = words;
     }
 
     public String getId() {
@@ -116,6 +113,16 @@ public class User implements Serializable {
         this.profilePictureUrl = profilePictureUrl;
     }
 
+    public ArrayList<Word> getWords() {
+        return words;
+    }
+
+    public void setWords(ArrayList<Word> words) {
+        this.words = words;
+    }
+
+
+    @NonNull
     @Override
     public String toString() {
         return "User{" +
@@ -125,8 +132,9 @@ public class User implements Serializable {
                 ", userName='" + userName + '\'' +
                 ", gender='" + gender + '\'' +
                 ", isAdmin=" + isAdmin +
-                ", learningLanguage='" + learningLanguage + '\'' +
                 ", profilePictureUrl='" + profilePictureUrl + '\'' +
+                ", learningLanguage='" + learningLanguage + '\'' +
+                ", words=" + words +
                 '}';
     }
 }
