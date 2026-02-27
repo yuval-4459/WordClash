@@ -9,12 +9,11 @@
     android:padding="16dp"
     tools:context=".screens.RanksActivity">
 
-
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="← Back"
+        android:text="Back"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

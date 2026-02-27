@@ -23,7 +23,7 @@
         android:theme="@style/Theme.WordClash">
         <!-- MINI GAMES ACTIVITIES (NEW) -->
         <activity
-            android:name=".screens.MiniGamesActivity"
+            android:name=".screens.GamesActivity"
             android:exported="false" />
         <activity
             android:name=".screens.MatchGameActivity"
@@ -57,25 +57,22 @@
             android:name=".screens.LeaderboardActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.StartPageActivity"
+            android:name=".screens.LandingActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.AdminManageWordsActivity"
+            android:name=".screens.AdminDeleteWordActivity"
             android:exported="false" />
         <activity
             android:name=".screens.AdminAddWordActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.WordleActivity"
+            android:name=".screens.WordleGameActivity"
             android:exported="false" />
         <activity
             android:name=".screens.WordsListActivity"
             android:exported="false" />
         <activity
             android:name=".screens.LevelActivity"
-            android:exported="false" />
-        <activity
-            android:name=".screens.GameActivity"
             android:exported="false" />
         <activity
             android:name=".screens.RanksActivity"
@@ -87,7 +84,7 @@
             android:name=".screens.UserListActivity"
             android:exported="false" />
         <activity
-            android:name=".screens.admin_users_Activity"
+            android:name=".screens.AdminUserActivity"
             android:exported="false" />
         <activity
             android:name=".screens.SplashActivity"

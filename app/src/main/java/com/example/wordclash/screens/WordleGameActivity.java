@@ -33,7 +33,7 @@ import java.util.Random;
  * If learning English -> Hebrew Wordle
  * If learning Hebrew -> English Wordle
  */
-public class WordleActivity extends AppCompatActivity {
+public class WordleGameActivity extends AppCompatActivity {
 
     private final int MAX_ATTEMPTS = 6;
     private final int WORD_LENGTH = 5;
@@ -250,14 +250,14 @@ public class WordleActivity extends AppCompatActivity {
                     }
 
                     if (allFiveLetterWords.isEmpty()) {
-                        Toast.makeText(WordleActivity.this,
+                        Toast.makeText(WordleGameActivity.this,
                                 "No 5-letter words available",
                                 Toast.LENGTH_LONG).show();
                     } else {
                         startNewGame();
                     }
                 } else {
-                    Toast.makeText(WordleActivity.this,
+                    Toast.makeText(WordleGameActivity.this,
                             "No words available",
                             Toast.LENGTH_LONG).show();
                 }
@@ -265,7 +265,7 @@ public class WordleActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(WordleActivity.this,
+                Toast.makeText(WordleGameActivity.this,
                         getString(R.string.error_loading),
                         Toast.LENGTH_LONG).show();
             }

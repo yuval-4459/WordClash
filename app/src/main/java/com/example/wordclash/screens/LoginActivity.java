@@ -2,6 +2,7 @@ package com.example.wordclash.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -17,7 +18,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
 
-    private Button btnConfirm, btnForgotPassword;
+    private Button btnConfirm, btnBack;
 
     private DatabaseService db;
 
@@ -29,6 +30,9 @@ public class LoginActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         btnConfirm = findViewById(R.id.ConfirmsignUpButton); // same button id
+
+        btnBack = findViewById(R.id.BacktostartButton);
+        btnBack.setOnClickListener(view -> finish());
 
         db = DatabaseService.getInstance();
 
@@ -71,5 +75,6 @@ public class LoginActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         });
+
     }
 }

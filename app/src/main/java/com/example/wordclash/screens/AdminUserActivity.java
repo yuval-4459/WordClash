@@ -26,7 +26,7 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
 
-public class admin_users_Activity extends AppCompatActivity {
+public class AdminUserActivity extends AppCompatActivity {
 
     // UI Components
     private Spinner genderSpinner, rankSpinner;
@@ -375,7 +375,7 @@ public class admin_users_Activity extends AppCompatActivity {
 
                             // Delay before returning to list
                             new android.os.Handler().postDelayed(() -> {
-                                Intent intent = new Intent(admin_users_Activity.this, UserListActivity.class);
+                                Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();
@@ -421,7 +421,7 @@ public class admin_users_Activity extends AppCompatActivity {
 
                     // Delay before returning to list
                     new android.os.Handler().postDelayed(() -> {
-                        Intent intent = new Intent(admin_users_Activity.this, UserListActivity.class);
+                        Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                         finish();

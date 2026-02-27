@@ -206,7 +206,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void navigateToStart() {
-        Intent intent = new Intent(SplashActivity.this, StartPageActivity.class);
+        Intent intent = new Intent(SplashActivity.this, LandingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

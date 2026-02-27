@@ -80,7 +80,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 String learningLanguage = user.getLearningLanguage();
-                if (learningLanguage == null) learningLanguage = "english";
+                if (learningLanguage == null)
+                    learningLanguage = "english";
 
                 if (learningLanguage.equals("english")) {
                     int result = tts.setLanguage(Locale.US);

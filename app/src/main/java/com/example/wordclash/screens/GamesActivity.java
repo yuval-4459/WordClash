@@ -17,11 +17,11 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
  * Mini Games selection screen
  * Shows all available vocabulary-based mini games INCLUDING Wordle
  */
-public class MiniGamesActivity extends AppCompatActivity {
+public class GamesActivity extends AppCompatActivity {
 
     private Button btnBack;
-    private CardView cardMatchGame, cardFillGaps, cardListenGuess, cardWordBuilder;
-    private CardView cardTrueFalse, cardMemoryCards, cardWordle;
+    private CardView cardMatchGame, cardFillGaps, cardListenGuess, cardWordBuilder,
+     cardTrueFalse, cardMemoryCards, cardWordle, cardSpeed;
 
     private User user;
 
@@ -98,7 +98,7 @@ public class MiniGamesActivity extends AppCompatActivity {
 
         // Wordle
         cardWordle.setOnClickListener(v -> {
-            Intent intent = new Intent(this, WordleActivity.class);
+            Intent intent = new Intent(this, WordleGameActivity.class);
             startActivity(intent);
         });
     }

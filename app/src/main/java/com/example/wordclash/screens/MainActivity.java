@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.main_page);
 
         if (user == null) {
-            startActivity(new Intent(this, StartPageActivity.class));
+            startActivity(new Intent(this, LandingActivity.class));
             finish();
             return;
         }
@@ -135,7 +135,7 @@ public class MainActivity extends AppCompatActivity
         btnMiniGames = findViewById(R.id.MiniGamesButton);
         btnMiniGames.setText(R.string.mini_games);
         btnMiniGames.setOnClickListener(v ->
-                startActivity(new Intent(this, MiniGamesActivity.class))
+                startActivity(new Intent(this, GamesActivity.class))
         );
     }
 
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_add_word) {
             startActivity(new Intent(this, AdminAddWordActivity.class));
         } else if (id == R.id.nav_manage_words) {
-            startActivity(new Intent(this, AdminManageWordsActivity.class));
+            startActivity(new Intent(this, AdminDeleteWordActivity.class));
         } else if (id == R.id.nav_change_details) {
             startActivity(new Intent(this, ChangeDetailsActivity.class));
         } else if (id == R.id.nav_profile_picture) {
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity
 
     private void logout() {
         SharedPreferencesUtils.signOutUser(this);
-        Intent intent = new Intent(this, StartPageActivity.class);
+        Intent intent = new Intent(this, LandingActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

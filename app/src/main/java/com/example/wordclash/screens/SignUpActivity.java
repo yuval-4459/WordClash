@@ -29,7 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
     // views from the XML
     private EditText etEmail, etPassword, etPassword2, etUserName;
     private Spinner genderSpinner;
-    private Button btnConfirm;
+    private Button btnConfirm, btnBack;
     private String selectedGender = "";
 
     @Override
@@ -45,11 +45,14 @@ public class SignUpActivity extends AppCompatActivity {
         genderSpinner = findViewById(R.id.Gender);
         btnConfirm = findViewById(R.id.ConfirmsignUpButton);
 
+        btnBack = findViewById(R.id.BacktoLandingButton);
+        btnBack.setOnClickListener(view -> finish());
+
         db = DatabaseService.getInstance();
 
         // Gender Spinner
         ArrayList<String> genders = new ArrayList<>();
-        genders.add("Gender");
+        genders.add("Choose");
         genders.add("Male");
         genders.add("Female");
         genders.add("Other");
@@ -92,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        if (selectedGender.equals("Gender") || selectedGender.isEmpty()) {
+        if (selectedGender.equals("Choose") || selectedGender.isEmpty()) {
             Toast.makeText(this, "You need to choose a gender", Toast.LENGTH_SHORT).show();
             return;
         }

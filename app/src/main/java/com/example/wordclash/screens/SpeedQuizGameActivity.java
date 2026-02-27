@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class GameActivity extends AppCompatActivity {
+public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private TextView tvQuestion, tvTimer, tvScore, tvProgress;
     private Button btnOption1, btnOption2, btnOption3, btnOption4;
@@ -104,7 +104,7 @@ public class GameActivity extends AppCompatActivity {
             public void onCompleted(Stats loadedStats) {
                 stats = loadedStats;
                 if (stats == null) {
-                    Toast.makeText(GameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -118,7 +118,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(GameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -146,7 +146,7 @@ public class GameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(GameActivity.this, getString(R.string.no_words_found), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.no_words_found), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -158,7 +158,7 @@ public class GameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(GameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
+                Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.error_loading), Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -317,7 +317,7 @@ public class GameActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(Exception e) {
-                    Toast.makeText(GameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
                     showResultDialog();
                 }
             });
@@ -330,7 +330,7 @@ public class GameActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(Exception e) {
-                    Toast.makeText(GameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
                     showResultDialog();
                 }
             });
@@ -356,7 +356,7 @@ public class GameActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailed(Exception e) {
-                        Toast.makeText(GameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SpeedQuizGameActivity.this, getString(R.string.error_saving), Toast.LENGTH_SHORT).show();
                         showResultDialog();
                     }
                 });

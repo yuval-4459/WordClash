@@ -27,7 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class AdminManageWordsActivity extends AppCompatActivity {
+public class AdminDeleteWordActivity extends AppCompatActivity {
 
     private RecyclerView rvWords;
     private AdminWordAdapter wordAdapter;
@@ -134,7 +134,7 @@ public class AdminManageWordsActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(AdminManageWordsActivity.this, "No words found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminDeleteWordActivity.this, "No words found", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 allWords = new ArrayList<>(words);
@@ -143,7 +143,7 @@ public class AdminManageWordsActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(AdminManageWordsActivity.this, "Failed to load words: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminDeleteWordActivity.this, "Failed to load words: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -231,7 +231,7 @@ public class AdminManageWordsActivity extends AppCompatActivity {
         DatabaseService.getInstance().deleteWord(word, new DatabaseService.DatabaseCallback<Void>() {
             @Override
             public void onCompleted(Void unused) {
-                Toast.makeText(AdminManageWordsActivity.this,
+                Toast.makeText(AdminDeleteWordActivity.this,
                         "Word deleted successfully",
                         Toast.LENGTH_SHORT).show();
 
@@ -242,7 +242,7 @@ public class AdminManageWordsActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(AdminManageWordsActivity.this,
+                Toast.makeText(AdminDeleteWordActivity.this,
                         "Failed to delete word: " + e.getMessage(),
                         Toast.LENGTH_LONG).show();
             }

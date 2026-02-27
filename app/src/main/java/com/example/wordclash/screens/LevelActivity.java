@@ -148,7 +148,7 @@ public class LevelActivity extends AppCompatActivity {
             return;
         }
 
-        Intent intent = new Intent(LevelActivity.this, GameActivity.class);
+        Intent intent = new Intent(LevelActivity.this, GamesActivity.class);
         intent.putExtra("RANK", currentRank);
         startActivity(intent);
     }
