@@ -21,7 +21,7 @@ public class GamesActivity extends AppCompatActivity {
 
     private Button btnBack;
     private CardView cardMatchGame, cardFillGaps, cardListenGuess, cardWordBuilder,
-     cardTrueFalse, cardMemoryCards, cardWordle, cardSpeed;
+     cardTrueFalse, cardMemoryCards, cardWordle, cardSpeedQuiz;
 
     private User user;
 
@@ -33,7 +33,7 @@ public class GamesActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mini_games);
+        setContentView(R.layout.activity_games);
 
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
@@ -57,6 +57,7 @@ public class GamesActivity extends AppCompatActivity {
         cardTrueFalse = findViewById(R.id.cardTrueFalse);
         cardMemoryCards = findViewById(R.id.cardMemoryCards);
         cardWordle = findViewById(R.id.cardWordle);
+        cardSpeedQuiz = findViewById(R.id.cardSpeedQuiz);
 
         btnBack.setOnClickListener(v -> finish());
 
@@ -99,6 +100,12 @@ public class GamesActivity extends AppCompatActivity {
         // Wordle
         cardWordle.setOnClickListener(v -> {
             Intent intent = new Intent(this, WordleGameActivity.class);
+            startActivity(intent);
+        });
+
+        // Speed Quiz
+        cardSpeedQuiz.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SpeedQuizGameActivity.class);
             startActivity(intent);
         });
     }

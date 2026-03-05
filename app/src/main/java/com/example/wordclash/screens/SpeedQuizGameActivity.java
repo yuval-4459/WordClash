@@ -57,7 +57,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
         }
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        setContentView(R.layout.activity_speed_quiz);
 
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
