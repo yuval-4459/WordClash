@@ -19,6 +19,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
 
     private final List<Word> wordList;
     private final OnWordActionListener listener;
+
     public AdminWordAdapter(OnWordActionListener listener) {
         this.wordList = new ArrayList<>();
         this.listener = listener;

@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -43,6 +44,7 @@ public class WordleGameActivity extends AppCompatActivity {
     private EditText hiddenInput;
     private String learningLanguage = "english";
     private User user;
+    private int rank = 1;
     private String targetWord;
     private int currentAttempt = 0;
     private int currentLetterIndex = 0;
@@ -64,6 +66,7 @@ public class WordleGameActivity extends AppCompatActivity {
             LanguageUtils.setLayoutDirection(this, user);
         }
 
+        rank = getIntent().getIntExtra("RANK", 1);
 
         if (user != null && user.getLearningLanguage() != null) {
             learningLanguage = user.getLearningLanguage();
@@ -162,12 +165,8 @@ public class WordleGameActivity extends AppCompatActivity {
 
     private boolean isValidLetter(char c) {
         if (isHebrewWordle) {
-            // Hebrew letters
-            return (c >= 'א' && c <= 'ת')
-                    //  || (c >= 'ا' && c <= 'ي')
-                    ;
+            return (c >= 'א' && c <= 'ת');
         } else {
-            // English letters
             return Character.isLetter(c) && ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'));
         }
     }
@@ -365,10 +364,16 @@ public class WordleGameActivity extends AppCompatActivity {
         btnSubmit.setEnabled(false);
         hideKeyboard();
 
+        // Score: more points for fewer attempts, scaled by rank
+        int attemptBonus = (MAX_ATTEMPTS - currentAttempt); // 5 down to 0
+        int wonScore = (10 + attemptBonus * 5) * rank;
+        saveScoreToStats(wonScore);
+
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.congratulations))
                 .setMessage(getString(R.string.word_was, targetWord) +
-                        "\n" + getString(R.string.attempts, currentAttempt + 1, MAX_ATTEMPTS))
+                        "\n" + getString(R.string.attempts, currentAttempt + 1, MAX_ATTEMPTS) +
+                        "\nScore: +" + wonScore + " (Rank " + rank + " bonus!)")
                 .setPositiveButton(getString(R.string.new_game), (dialog, which) -> startNewGame())
                 .setNegativeButton(getString(R.string.back), (dialog, which) -> finish())
                 .setCancelable(false)
@@ -386,5 +391,20 @@ public class WordleGameActivity extends AppCompatActivity {
                 .setNegativeButton(getString(R.string.back), (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats(int earnedScore) {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + earnedScore);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 }

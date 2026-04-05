@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -29,6 +30,7 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     private GridLayout gridCards;
     private Button btnBack, btnNewGame;
     private User user;
+    private int rank = 1;
     private List<Word> gameWords;
     private List<Button> cardButtons;
     private Button firstCard = null;
@@ -50,6 +52,8 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
+
+        rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
         loadWords();
@@ -171,7 +175,7 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
             secondCard.setAlpha(0.3f);
 
             matchesFound++;
-            score += 10;
+            score += 10 * rank;
             updateScore();
 
             firstCard = null;
@@ -201,13 +205,30 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     }
 
     private void showWinDialog() {
+        saveScoreToStats();
+
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Congratulations!")
-                .setMessage("You found all pairs!\nScore: " + score + " points")
+                .setMessage("You found all pairs!\nScore: " + score + " points\n(Rank " + rank + " bonus applied!)")
                 .setPositiveButton("Play Again", (dialog, which) -> loadWords())
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + score);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 
     private static class CardData {

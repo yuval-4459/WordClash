@@ -132,11 +132,7 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(this, LeaderboardActivity.class))
         );
 
-        btnMiniGames = findViewById(R.id.MiniGamesButton);
-        btnMiniGames.setText(R.string.mini_games);
-        btnMiniGames.setOnClickListener(v ->
-                startActivity(new Intent(this, GamesActivity.class))
-        );
+
     }
 
     private void setupMenu() {

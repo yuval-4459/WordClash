@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -29,6 +30,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     private TextView tvInstruction, tvProgress, tvScore;
     private Button btnListen, btnOption1, btnOption2, btnOption3, btnOption4, btnBack;
     private User user;
+    private int rank = 1;
     private List<Word> allWords;
     private List<Word> gameWords;
     private int currentQuestionIndex = 0;
@@ -51,6 +53,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
+
+        rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
         initializeTTS();
@@ -200,14 +204,14 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
         if (selectedWord.getId().equals(correctWord.getId())) {
             selectedButton.setBackgroundColor(Color.GREEN);
-            score += 10;
+            score += 10 * rank;
             updateScore();
         } else {
             selectedButton.setBackgroundColor(Color.RED);
             showCorrectAnswer();
         }
 
-        disableAllButtons();  // ← THIS IS THE PROBLEM!
+        disableAllButtons();
         new Handler().postDelayed(() -> nextQuestion(), 1500);
     }
 
@@ -245,9 +249,11 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     }
 
     private void endGame() {
-        int percentage = (score * 100) / (gameWords.size() * 10);
-        String message = "Your Score: " + score + " / " + (gameWords.size() * 10) + "\n" +
-                "Accuracy: " + percentage + "%";
+        saveScoreToStats();
+
+        int percentage = (score * 100) / (gameWords.size() * 10 * rank);
+        String message = "Your Score: " + score + " / " + (gameWords.size() * 10 * rank) + "\n" +
+                "Accuracy: " + percentage + "%\n(Rank " + rank + " bonus applied!)";
 
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Game Complete!")
@@ -261,6 +267,21 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + score);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 
     @Override

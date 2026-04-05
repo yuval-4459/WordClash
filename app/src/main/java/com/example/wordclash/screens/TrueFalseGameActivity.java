@@ -11,6 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -30,6 +31,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     private TextView tvQuestion, tvProgress, tvScore;
     private Button btnTrue, btnFalse, btnBack;
     private User user;
+    private int rank = 1;
     private List<Word> allWords;
     private int currentQuestion = 0;
     private int score = 0;
@@ -53,6 +55,8 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
+
+        rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
         loadWords();
@@ -148,7 +152,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
 
         if (userAnswer == isCorrect) {
             // Correct!
-            score += 10;
+            score += 10 * rank;
             if (userAnswer) {
                 btnTrue.setBackgroundColor(Color.GREEN);
             } else {
@@ -183,9 +187,11 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     }
 
     private void showResults() {
-        int percentage = (score * 100) / (TOTAL_QUESTIONS * 10);
-        String message = "Your Score: " + score + " / " + (TOTAL_QUESTIONS * 10) + "\n" +
-                "Accuracy: " + percentage + "%";
+        saveScoreToStats();
+
+        int percentage = (score * 100) / (TOTAL_QUESTIONS * 10 * rank);
+        String message = "Your Score: " + score + " / " + (TOTAL_QUESTIONS * 10 * rank) + "\n" +
+                "Accuracy: " + percentage + "%\n(Rank " + rank + " bonus applied!)";
 
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Game Complete!")
@@ -199,5 +205,20 @@ public class TrueFalseGameActivity extends AppCompatActivity {
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + score);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 }

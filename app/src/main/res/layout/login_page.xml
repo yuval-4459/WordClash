@@ -108,9 +108,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:padding="16dp"
-                        android:textSize="16sp"
                         android:textColor="#000000"
-                        />
+                        android:textSize="16sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -137,9 +136,8 @@
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
                         android:padding="16dp"
-                        android:textSize="16sp"
                         android:textColor="#000000"
-                        />
+                        android:textSize="16sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

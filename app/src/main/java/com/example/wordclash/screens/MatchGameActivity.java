@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -32,6 +33,7 @@ public class MatchGameActivity extends AppCompatActivity {
     private LinearLayout leftColumn, rightColumn;
     private Button btnBack, btnNewGame;
     private User user;
+    private int rank = 1;
     private List<Word> gameWords;
     private List<Button> leftButtons;
     private List<Button> rightButtons;
@@ -53,6 +55,8 @@ public class MatchGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
+
+        rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
         loadWords();
@@ -214,7 +218,7 @@ public class MatchGameActivity extends AppCompatActivity {
             selectedRight.setEnabled(false);
 
             matchesFound++;
-            score += 10;
+            score += 10 * rank;
             updateScore();
 
             selectedLeft = null;
@@ -248,12 +252,29 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void showWinDialog() {
+        saveScoreToStats();
+
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Congratulations!")
-                .setMessage("You matched all pairs!\nScore: " + score + " points")
+                .setMessage("You matched all pairs!\nScore: " + score + " points\n(Rank " + rank + " bonus applied!)")
                 .setPositiveButton("Play Again", (dialog, which) -> loadWords())
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + score);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 }

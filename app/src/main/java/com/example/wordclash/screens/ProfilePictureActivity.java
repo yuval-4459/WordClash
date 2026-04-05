@@ -39,9 +39,9 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private Button btnChooseFromGallery, btnTakePhoto, btnDeletePicture, btnRotate, btnBack;
     private User currentUser;
     private Uri photoUri;
-    private Bitmap currentBitmap; // Hold the current bitmap for rotation
-    private int currentRotation = 0; // Track rotation angle
-    // Activity result launchers
+    private Bitmap currentBitmap;
+    private int currentRotation = 0;
+
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
@@ -97,15 +97,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
         String profilePictureUrl = currentUser.getProfilePictureUrl();
 
         if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
-            // Show profile picture
             ivProfilePicture.setVisibility(ImageView.VISIBLE);
             tvUserInitial.setVisibility(TextView.GONE);
 
-            // Load from base64
             try {
                 byte[] decodedString = Base64.decode(profilePictureUrl, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                currentBitmap = decodedByte; // Store for rotation
+                currentBitmap = decodedByte;
                 ivProfilePicture.setImageBitmap(decodedByte);
             } catch (Exception e) {
                 showDefaultAvatar();
@@ -113,15 +111,11 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
             btnDeletePicture.setEnabled(true);
             btnDeletePicture.setAlpha(1.0f);
-
-            // Show rotate button since we have a picture
             showRotationControls();
         } else {
             showDefaultAvatar();
             btnDeletePicture.setEnabled(false);
             btnDeletePicture.setAlpha(0.5f);
-
-            // Hide rotate button when no picture
             hideRotationControls();
         }
     }
@@ -176,39 +170,59 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
+    // CHANGED: Sample down the bitmap before fully decoding it to avoid OutOfMemoryError
     private void handleImageSelected(Uri uri) {
         try {
-            // Load bitmap from URI
-            InputStream inputStream = getContentResolver().openInputStream(uri);
-            Bitmap originalBitmap = BitmapFactory.decodeStream(inputStream);
+            // Step 1: Read dimensions only (no memory allocated for pixels)
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inJustDecodeBounds = true;
+            try (InputStream sizeStream = getContentResolver().openInputStream(uri)) {
+                BitmapFactory.decodeStream(sizeStream, null, options);
+            }
 
-            if (originalBitmap == null) {
+            // Step 2: Calculate subsample size so we never load more than needed
+            options.inSampleSize = calculateInSampleSize(options, 512, 512);
+            options.inJustDecodeBounds = false;
+
+            // Step 3: Load the already-downscaled bitmap
+            Bitmap sampledBitmap;
+            try (InputStream inputStream = getContentResolver().openInputStream(uri)) {
+                sampledBitmap = BitmapFactory.decodeStream(inputStream, null, options);
+            }
+
+            if (sampledBitmap == null) {
                 Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            // Fix orientation from EXIF data
-            Bitmap orientedBitmap = fixImageOrientation(uri, originalBitmap);
+            // Step 4: Fix orientation using a fresh InputStream
+            Bitmap orientedBitmap;
+            try (InputStream exifStream = getContentResolver().openInputStream(uri)) {
+                orientedBitmap = fixImageOrientation(exifStream, sampledBitmap);
+            }
 
-            // Resize to reasonable size (max 512x512)
-            currentBitmap = resizeBitmap(orientedBitmap, 512, 512);
-            currentRotation = 0; // Reset rotation
+            // Step 5: Final resize and recycle intermediates
+            Bitmap resized = resizeBitmap(orientedBitmap, 512, 512);
+            if (resized != orientedBitmap) orientedBitmap.recycle();
 
-            // Convert to base64 and save IMMEDIATELY
+            if (currentBitmap != null) currentBitmap.recycle();
+            currentBitmap = resized;
+            currentRotation = 0;
+
             String base64Image = bitmapToBase64(currentBitmap);
             currentUser.setProfilePictureUrl(base64Image);
-
-            // Save to database automatically
             saveProfilePicture();
 
+        } catch (OutOfMemoryError e) {
+            Toast.makeText(this, "Image too large, please choose a smaller one", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "Error processing image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    private Bitmap fixImageOrientation(Uri uri, Bitmap bitmap) {
+    // CHANGED: Now accepts InputStream instead of Uri to avoid reopening streams
+    private Bitmap fixImageOrientation(InputStream input, Bitmap bitmap) {
         try {
-            InputStream input = getContentResolver().openInputStream(uri);
             ExifInterface exif = new ExifInterface(input);
             int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
@@ -233,12 +247,15 @@ public class ProfilePictureActivity extends AppCompatActivity {
                     return bitmap;
             }
 
-            return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle(); // CHANGED: free the pre-rotation bitmap
+            return rotated;
         } catch (Exception e) {
-            return bitmap; // Return original if we can't fix orientation
+            return bitmap;
         }
     }
 
+    // CHANGED: Recycle old bitmap before replacing to free memory
     private void rotateImage() {
         if (currentBitmap == null) {
             Toast.makeText(this, "No image to rotate", Toast.LENGTH_SHORT).show();
@@ -250,15 +267,33 @@ public class ProfilePictureActivity extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
 
-        currentBitmap = Bitmap.createBitmap(currentBitmap, 0, 0,
+        Bitmap rotated = Bitmap.createBitmap(currentBitmap, 0, 0,
                 currentBitmap.getWidth(), currentBitmap.getHeight(), matrix, true);
+
+        currentBitmap.recycle(); // CHANGED: free the old bitmap
+        currentBitmap = rotated;
 
         displayBitmap(currentBitmap);
 
-        // Save the rotated image immediately
         String base64Image = bitmapToBase64(currentBitmap);
         currentUser.setProfilePictureUrl(base64Image);
         saveProfilePicture();
+    }
+
+    // NEW: Helper to calculate the correct subsample size
+    private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        int height = options.outHeight;
+        int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+            int halfHeight = height / 2;
+            int halfWidth = width / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 
     private void displayBitmap(Bitmap bitmap) {

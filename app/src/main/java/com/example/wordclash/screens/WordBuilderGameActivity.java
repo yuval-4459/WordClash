@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -32,6 +33,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     private LinearLayout lettersContainer;
     private Button btnSubmit, btnClear, btnBack, btnSkip;
     private User user;
+    private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
     private int score = 0;
@@ -53,6 +55,8 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
+
+        rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
         loadWords();
@@ -128,12 +132,10 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         if (learningLanguage == null) learningLanguage = "english";
 
         if (learningLanguage.equals("english")) {
-            // Learning English: build English word from Hebrew hint
             targetWord = word.getEnglish().toUpperCase();
             targetHint = word.getHebrew();
             tvHint.setText("Hebrew: " + targetHint);
         } else {
-            // Learning Hebrew: build Hebrew word from English hint
             targetWord = word.getHebrew();
             targetHint = word.getEnglish();
             tvHint.setText("English: " + targetHint);
@@ -191,7 +193,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
         builtWord.append(button.getText());
         button.setTag("used");
-        button.setBackgroundColor(Color.GRAY);  // Change color instead
+        button.setBackgroundColor(Color.GRAY);
         updateBuiltWord();
     }
 
@@ -201,7 +203,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
         for (Button btn : letterButtons) {
             btn.setTag(null);
-            btn.setBackgroundColor(Color.parseColor("#2196F3"));  // Reset to blue
+            btn.setBackgroundColor(Color.parseColor("#2196F3"));
         }
     }
 
@@ -214,7 +216,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
         if (answer.equals(targetWord)) {
             // Correct!
-            score += 10;
+            score += 10 * rank;
             updateScore();
 
             tvBuiltWord.setTextColor(Color.GREEN);
@@ -256,9 +258,11 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void showResults() {
+        saveScoreToStats();
+
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Game Complete!")
-                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10))
+                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10 * rank) + "\n(Rank " + rank + " bonus applied!)")
                 .setPositiveButton("Play Again", (dialog, which) -> {
                     currentWordIndex = 0;
                     score = 0;
@@ -268,5 +272,20 @@ public class WordBuilderGameActivity extends AppCompatActivity {
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + score);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 }

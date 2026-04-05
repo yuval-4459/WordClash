@@ -12,6 +12,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.wordclash.R;
+import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.models.Word;
 import com.example.wordclash.services.DatabaseService;
@@ -29,6 +30,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private LinearLayout lettersContainer;
     private Button btnBack, btnSkip;
     private User user;
+    private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
     private int score = 0;
@@ -50,6 +52,8 @@ public class FillGapsGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
+
+        rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
         loadWords();
@@ -165,7 +169,6 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
         for (int i = 0; i < missingLetters.size(); i++) {
             final char letter = missingLetters.get(i);
-            final int position = i;
 
             Button btn = new Button(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -221,7 +224,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
         String answer = currentGuess.toString();
 
         if (answer.equals(targetWord)) {
-            score += 10;
+            score += 10 * rank;
             updateScore();
 
             tvWord.setTextColor(Color.GREEN);
@@ -264,9 +267,11 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void showResults() {
+        saveScoreToStats();
+
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Game Complete!")
-                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10))
+                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10 * rank) + "\n(Rank " + rank + " bonus applied!)")
                 .setPositiveButton("Play Again", (dialog, which) -> {
                     currentWordIndex = 0;
                     score = 0;
@@ -276,5 +281,20 @@ public class FillGapsGameActivity extends AppCompatActivity {
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void saveScoreToStats() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            @Override
+            public void onCompleted(Stats stats) {
+                if (stats == null) stats = new Stats(user.getId(), 1, 0);
+                stats.setTotalScore(stats.getTotalScore() + score);
+                DatabaseService.getInstance().updateStats(stats, null);
+            }
+
+            @Override
+            public void onFailed(Exception e) {
+            }
+        });
     }
 }

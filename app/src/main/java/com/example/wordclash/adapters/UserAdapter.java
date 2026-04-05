@@ -19,6 +19,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     private final List<User> userList;
     private final OnUserClickListener onUserClickListener;
+
     public UserAdapter(@Nullable final OnUserClickListener onUserClickListener) {
         userList = new ArrayList<>();
         this.onUserClickListener = onUserClickListener;
