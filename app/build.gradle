@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.example.wordclash'
-    compileSdk 36
+    compileSdk = 36
 
     defaultConfig {
         applicationId "com.example.wordclash"
@@ -40,11 +40,11 @@ android {
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.10.1'
+    implementation libs.gson
 
     // JavaMail for sending emails
-    implementation 'com.sun.mail:android-mail:1.6.7'
-    implementation 'com.sun.mail:android-activation:1.6.7'
+    implementation libs.android.mail
+    implementation libs.android.activation
 
     // AndroidX basics
     implementation libs.appcompat
@@ -55,7 +55,7 @@ dependencies {
     implementation libs.recyclerview
 
     // DrawerLayout (ADD THIS)
-    implementation 'androidx.drawerlayout:drawerlayout:1.2.0'
+    implementation libs.drawerlayout
 
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

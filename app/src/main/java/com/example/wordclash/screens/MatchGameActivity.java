@@ -31,7 +31,6 @@ public class MatchGameActivity extends AppCompatActivity {
     private final int TOTAL_PAIRS = 6;
     private TextView tvScore, tvMatches;
     private LinearLayout leftColumn, rightColumn;
-    private Button btnBack, btnNewGame;
     private User user;
     private int rank = 1;
     private List<Word> gameWords;
@@ -67,8 +66,8 @@ public class MatchGameActivity extends AppCompatActivity {
         tvMatches = findViewById(R.id.tvMatches);
         leftColumn = findViewById(R.id.leftColumn);
         rightColumn = findViewById(R.id.rightColumn);
-        btnBack = findViewById(R.id.btnBack);
-        btnNewGame = findViewById(R.id.btnNewGame);
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnNewGame = findViewById(R.id.btnNewGame);
 
         btnBack.setOnClickListener(v -> finish());
         btnNewGame.setOnClickListener(v -> loadWords());
@@ -78,7 +77,7 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -226,7 +225,7 @@ public class MatchGameActivity extends AppCompatActivity {
 
             // Check if game complete
             if (matchesFound == TOTAL_PAIRS) {
-                new Handler().postDelayed(() -> showWinDialog(), 500);
+                new Handler().postDelayed(this::showWinDialog, 500);
             }
         } else {
             // Wrong match
@@ -264,7 +263,7 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void saveScoreToStats() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats == null) stats = new Stats(user.getId(), 1, 0);

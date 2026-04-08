@@ -209,7 +209,7 @@ public class AdminUserActivity extends AppCompatActivity {
     }
 
     private void loadUserStats() {
-        DatabaseService.getInstance().getStats(selectedUser.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(selectedUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 runOnUiThread(() -> {
@@ -361,11 +361,11 @@ public class AdminUserActivity extends AppCompatActivity {
         userStats.setTotalScore(newScore);
 
         // Save user
-        DatabaseService.getInstance().updateUser(selectedUser, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().updateUser(selectedUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
                 // Save stats
-                DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<Void>() {
+                DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(Void unused) {
                         runOnUiThread(() -> {
@@ -411,7 +411,7 @@ public class AdminUserActivity extends AppCompatActivity {
         showLoading(true);
         setButtonsEnabled(false);
 
-        DatabaseService.getInstance().deleteUser(selectedUser.getId(), new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().deleteUser(selectedUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
                 runOnUiThread(() -> {

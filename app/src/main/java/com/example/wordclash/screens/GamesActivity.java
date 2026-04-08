@@ -19,16 +19,11 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
  */
 public class GamesActivity extends AppCompatActivity {
 
-    private Button btnBack;
-    private CardView cardMatchGame, cardFillGaps, cardListenGuess, cardWordBuilder,
-            cardTrueFalse, cardMemoryCards, cardWordle, cardSpeedQuiz;
-
-    private User user;
     private int rank = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        user = SharedPreferencesUtils.getUser(this);
+        User user = SharedPreferencesUtils.getUser(this);
         if (user != null) {
             LanguageUtils.applyLanguageSettings(this, user);
         }
@@ -52,15 +47,15 @@ public class GamesActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
-        cardMatchGame = findViewById(R.id.cardMatchGame);
-        cardFillGaps = findViewById(R.id.cardFillGaps);
-        cardListenGuess = findViewById(R.id.cardListenGuess);
-        cardWordBuilder = findViewById(R.id.cardWordBuilder);
-        cardTrueFalse = findViewById(R.id.cardTrueFalse);
-        cardMemoryCards = findViewById(R.id.cardMemoryCards);
-        cardWordle = findViewById(R.id.cardWordle);
-        cardSpeedQuiz = findViewById(R.id.cardSpeedQuiz);
+        Button btnBack = findViewById(R.id.btnBack);
+        CardView cardMatchGame = findViewById(R.id.cardMatchGame);
+        CardView cardFillGaps = findViewById(R.id.cardFillGaps);
+        CardView cardListenGuess = findViewById(R.id.cardListenGuess);
+        CardView cardWordBuilder = findViewById(R.id.cardWordBuilder);
+        CardView cardTrueFalse = findViewById(R.id.cardTrueFalse);
+        CardView cardMemoryCards = findViewById(R.id.cardMemoryCards);
+        CardView cardWordle = findViewById(R.id.cardWordle);
+        CardView cardSpeedQuiz = findViewById(R.id.cardSpeedQuiz);
 
         btnBack.setOnClickListener(v -> finish());
 

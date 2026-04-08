@@ -67,7 +67,7 @@ public class VocabularyImporter {
 
                 Word word = new Word(entry.getKey(), english, hebrew, rank);
 
-                DatabaseService.getInstance().createWord(word, new DatabaseService.DatabaseCallback<Void>() {
+                DatabaseService.getInstance().createWord(word, new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(Void unused) {
                         Log.d(TAG, "Imported word: " + english + " (Level " + rank + ")");

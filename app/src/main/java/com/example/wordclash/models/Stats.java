@@ -1,5 +1,7 @@
 package com.example.wordclash.models;
 
+import androidx.annotation.NonNull;
+
 import java.io.Serializable;
 
 /**
@@ -45,6 +47,7 @@ public class Stats implements Serializable {
         this.totalScore = totalScore;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Stats{" +

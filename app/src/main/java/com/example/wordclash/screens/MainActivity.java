@@ -32,16 +32,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String PREFS_NAME = "WordClashPrefs";
     private static final String KEY_VOCABULARY_IMPORTED = "vocabulary_imported";
-    private Button btnLogout;
-    private Button btnRanks;
     private Button btnMiniGames;
-    private Button btnLeaderboard;
     private TextView tvHelloUser;
     private ImageView ivUserAvatar;
     private TextView tvUserInitial;
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
-    private ImageView menuIcon;
     private User user;
 
     @Override
@@ -104,7 +100,7 @@ public class MainActivity extends AppCompatActivity
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        menuIcon = findViewById(R.id.menu_icon);
+        ImageView menuIcon = findViewById(R.id.menu_icon);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -116,17 +112,17 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        btnLogout = findViewById(R.id.btnLogout);
+        Button btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setText(R.string.logout);
         btnLogout.setOnClickListener(v -> logout());
 
-        btnRanks = findViewById(R.id.btnRanks);
+        Button btnRanks = findViewById(R.id.btnRanks);
         btnRanks.setText(R.string.start_playing);
         btnRanks.setOnClickListener(v ->
                 startActivity(new Intent(this, RanksActivity.class))
         );
 
-        btnLeaderboard = findViewById(R.id.btnLeaderboard);
+        Button btnLeaderboard = findViewById(R.id.btnLeaderboard);
         btnLeaderboard.setText(R.string.leaderboard);
         btnLeaderboard.setOnClickListener(v ->
                 startActivity(new Intent(this, LeaderboardActivity.class))

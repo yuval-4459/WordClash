@@ -47,7 +47,6 @@
 
     <!-- Form Card -->
     <androidx.cardview.widget.CardView
-        android:id="@+id/formCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="#FFFFFF"

@@ -60,7 +60,9 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvPosition, tvUsername, tvScore;
+        final TextView tvPosition;
+        final TextView tvUsername;
+        final TextView tvScore;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

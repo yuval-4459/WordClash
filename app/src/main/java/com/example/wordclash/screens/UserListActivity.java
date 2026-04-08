@@ -31,13 +31,12 @@ import java.util.List;
 
 public class UserListActivity extends AppCompatActivity {
 
+    final List<User> allUsers = new ArrayList<>();
     RecyclerView rvUsers;
     UserAdapter userAdapter;
     EditText searchUsername, searchEmail;
     Spinner searchGender;
     Button btnBackToMain;
-
-    List<User> allUsers = new ArrayList<>();
     private User currentUser;
 
     @Override
@@ -127,7 +126,7 @@ public class UserListActivity extends AppCompatActivity {
             }
         });
 
-        DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<List<User>>() {
+        DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<User> users) {
                 allUsers.clear();
@@ -213,7 +212,7 @@ public class UserListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<List<User>>() {
+        DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<User> users) {
                 allUsers.clear();

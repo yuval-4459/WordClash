@@ -156,7 +156,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void loadUserStats() {
-        DatabaseService.getInstance().getStats(currentUser.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(currentUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats != null) {
@@ -339,12 +339,12 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
-        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
                 // If admin, also update stats
                 if (isAdmin && userStats != null) {
-                    DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<Void>() {
+                    DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
                         @Override
                         public void onCompleted(Void unused) {
                             finalizeUpdate();

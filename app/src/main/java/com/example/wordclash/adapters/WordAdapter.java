@@ -50,7 +50,8 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEnglish, tvHebrew;
+        final TextView tvEnglish;
+        final TextView tvHebrew;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

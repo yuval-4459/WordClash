@@ -19,7 +19,6 @@ import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,9 +28,7 @@ import java.util.Map;
  */
 public class LeaderboardActivity extends AppCompatActivity {
 
-    private RecyclerView rvLeaderboard;
     private LeaderboardAdapter leaderboardAdapter;
-    private Button btnBack;
     private CardView cardYourRank;
     private TextView tvYourPosition, tvYourUsername, tvYourScore;
 
@@ -55,8 +52,8 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        rvLeaderboard = findViewById(R.id.rvLeaderboard);
-        btnBack = findViewById(R.id.btnBack);
+        RecyclerView rvLeaderboard = findViewById(R.id.rvLeaderboard);
+        Button btnBack = findViewById(R.id.btnBack);
         cardYourRank = findViewById(R.id.cardYourRank);
         tvYourPosition = findViewById(R.id.tvYourPosition);
         tvYourUsername = findViewById(R.id.tvYourUsername);
@@ -76,7 +73,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         allEntries = new ArrayList<>();
 
         // Get all users
-        DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<List<User>>() {
+        DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<User> users) {
                 if (users == null || users.isEmpty()) {
@@ -108,7 +105,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         final int totalUsers = userMap.size();
 
         for (User user : userMap.values()) {
-            DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+            DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
                 @Override
                 public void onCompleted(Stats stats) {
                     if (stats != null) {
@@ -139,7 +136,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     private void displayLeaderboard() {
         // Sort by total score (descending)
-        Collections.sort(allEntries, (e1, e2) ->
+        allEntries.sort((e1, e2) ->
                 Integer.compare(e2.totalScore, e1.totalScore));
 
         // Assign positions

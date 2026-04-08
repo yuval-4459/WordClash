@@ -28,7 +28,6 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private final int TOTAL_WORDS = 10;
     private TextView tvHint, tvWord, tvProgress, tvScore;
     private LinearLayout lettersContainer;
-    private Button btnBack, btnSkip;
     private User user;
     private int rank = 1;
     private List<Word> gameWords;
@@ -65,15 +64,15 @@ public class FillGapsGameActivity extends AppCompatActivity {
         tvProgress = findViewById(R.id.tvProgress);
         tvScore = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
-        btnBack = findViewById(R.id.btnBack);
-        btnSkip = findViewById(R.id.btnSkip);
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnSkip = findViewById(R.id.btnSkip);
 
         btnBack.setOnClickListener(v -> finish());
         btnSkip.setOnClickListener(v -> skipWord());
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -284,7 +283,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void saveScoreToStats() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats == null) stats = new Stats(user.getId(), 1, 0);

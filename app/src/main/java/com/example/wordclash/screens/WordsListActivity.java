@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,23 +26,18 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class WordsListActivity extends AppCompatActivity {
 
-    private RecyclerView rvWords;
+    private final List<Word> filteredWords = new ArrayList<>();
     private WordAdapter wordAdapter;
     private Button btnReady;
-    private TextView tvTitle;
     private EditText etSearch;
     private Spinner spinnerSort;
-
     private User user;
     private int currentRank;
-
     private List<Word> allWords = new ArrayList<>();
-    private List<Word> filteredWords = new ArrayList<>();
     private String currentSortOption = "Random";
 
     @Override
@@ -65,8 +61,8 @@ public class WordsListActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvTitle = findViewById(R.id.tvWordsTitle);
-        rvWords = findViewById(R.id.rvWords);
+        TextView tvTitle = findViewById(R.id.tvWordsTitle);
+        RecyclerView rvWords = findViewById(R.id.rvWords);
         btnReady = findViewById(R.id.btnReady);
         etSearch = findViewById(R.id.etSearch);
         spinnerSort = findViewById(R.id.spinnerSort);
@@ -83,7 +79,7 @@ public class WordsListActivity extends AppCompatActivity {
         // This is the OPPOSITE of the previous logic where the button was at the top.
         rvWords.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
                     // Scrolling DOWN — hide the bottom button to see more list
                     if (btnReady.getVisibility() == View.VISIBLE) {
@@ -150,7 +146,7 @@ public class WordsListActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getWordsByRank(currentRank, new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getWordsByRank(currentRank, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -192,23 +188,17 @@ public class WordsListActivity extends AppCompatActivity {
                 Collections.shuffle(filteredWords);
                 break;
             case "A-Z (English)":
-                Collections.sort(filteredWords, new Comparator<Word>() {
-                    @Override
-                    public int compare(Word w1, Word w2) {
-                        String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
-                        String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
-                        return en1.compareTo(en2);
-                    }
+                filteredWords.sort((w1, w2) -> {
+                    String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
+                    String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
+                    return en1.compareTo(en2);
                 });
                 break;
             case "א-ב (Hebrew)":
-                Collections.sort(filteredWords, new Comparator<Word>() {
-                    @Override
-                    public int compare(Word w1, Word w2) {
-                        String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
-                        String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
-                        return he1.compareTo(he2);
-                    }
+                filteredWords.sort((w1, w2) -> {
+                    String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
+                    String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
+                    return he1.compareTo(he2);
                 });
                 break;
         }
@@ -217,7 +207,7 @@ public class WordsListActivity extends AppCompatActivity {
     }
 
     private void markAsReviewed() {
-        DatabaseService.getInstance().markWordsReviewedForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().markWordsReviewedForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 Toast.makeText(WordsListActivity.this, "You're ready to practice Rank " + currentRank + "!", Toast.LENGTH_SHORT).show();

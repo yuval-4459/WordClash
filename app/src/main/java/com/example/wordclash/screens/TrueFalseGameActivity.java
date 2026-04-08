@@ -29,7 +29,8 @@ public class TrueFalseGameActivity extends AppCompatActivity {
 
     private final int TOTAL_QUESTIONS = 15;
     private TextView tvQuestion, tvProgress, tvScore;
-    private Button btnTrue, btnFalse, btnBack;
+    private Button btnTrue;
+    private Button btnFalse;
     private User user;
     private int rank = 1;
     private List<Word> allWords;
@@ -37,9 +38,6 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     private int score = 0;
     private boolean answerSelected = false;
 
-    // Current question data
-    private String displayEnglish;
-    private String displayHebrew;
     private boolean isCorrect;
 
     @Override
@@ -68,7 +66,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         tvScore = findViewById(R.id.tvScore);
         btnTrue = findViewById(R.id.btnTrue);
         btnFalse = findViewById(R.id.btnFalse);
-        btnBack = findViewById(R.id.btnBack);
+        Button btnBack = findViewById(R.id.btnBack);
 
         btnBack.setOnClickListener(v -> finish());
         btnTrue.setOnClickListener(v -> checkAnswer(true));
@@ -76,7 +74,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.size() < 10) {
@@ -117,6 +115,9 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         Random random = new Random();
         isCorrect = random.nextBoolean();
 
+        String displayHebrew;
+        // Current question data
+        String displayEnglish;
         if (isCorrect) {
             // Show correct pair
             displayEnglish = correctWord.getEnglish();
@@ -208,7 +209,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     }
 
     private void saveScoreToStats() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats == null) stats = new Stats(user.getId(), 1, 0);

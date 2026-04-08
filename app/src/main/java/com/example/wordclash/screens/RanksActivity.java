@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 
@@ -22,17 +23,19 @@ import com.google.firebase.database.ValueEventListener;
 
 public class RanksActivity extends AppCompatActivity {
 
+    // Hardcoded manager ID extracted to a constant
+    private static final String MANAGER_ID = "-OfhuEaP25z-o6NIsC5K";
     private TextView tvOnlinePlayers;
     private CardView cardLevel1, cardLevel2, cardLevel3, cardLevel4, cardLevel5;
-    private Button btnLevel1, btnLevel2, btnLevel3, btnLevel4, btnLevel5, btn_Ranks_back;
+    private Button btnLevel1;
+    private Button btnLevel2;
+    private Button btnLevel3;
+    private Button btnLevel4;
+    private Button btnLevel5;
     private TextView tvLevelStatus1, tvLevelStatus2, tvLevelStatus3, tvLevelStatus4, tvLevelStatus5;
-
     private User user;
     private int currentLevel = 1;
     private int onlinePlayersCount = 0;
-
-    // Hardcoded manager ID extracted to a constant
-    private static final String MANAGER_ID = "-OfhuEaP25z-o6NIsC5K";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +47,7 @@ public class RanksActivity extends AppCompatActivity {
         loadUserStats();
         updateOnlinePlayersCount();
 
-        btn_Ranks_back = findViewById(R.id.btnBack);
+        Button btn_Ranks_back = findViewById(R.id.btnBack);
         btn_Ranks_back.setOnClickListener(v -> finish());
     }
 
@@ -81,7 +84,7 @@ public class RanksActivity extends AppCompatActivity {
     private void loadUserStats() {
         if (user == null) return;
 
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats != null) {
@@ -145,13 +148,13 @@ public class RanksActivity extends AppCompatActivity {
 
         onlineRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 onlinePlayersCount = (int) snapshot.getChildrenCount();
                 tvOnlinePlayers.setText("🟢 " + onlinePlayersCount + " Players Online");
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError error) {
                 tvOnlinePlayers.setText("🟢 -- Players Online");
             }
         });

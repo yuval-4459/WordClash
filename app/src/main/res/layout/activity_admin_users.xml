@@ -32,7 +32,6 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/adminTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.02"

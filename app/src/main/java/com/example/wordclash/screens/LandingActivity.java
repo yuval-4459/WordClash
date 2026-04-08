@@ -38,7 +38,7 @@ public class LandingActivity extends AppCompatActivity {
             // oldUser = user saved locally (used only to get the userId)
             User oldUser = SharedPreferencesUtils.getUser(this);
 
-            DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<User>() {
+            DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<>() {
                 @Override
                 // בשורה הזאת - לאחר שהdb בדק אם המשתמש קיים, או שהוא Null, או שהוא user.
                 public void onCompleted(User newUser) {

@@ -31,14 +31,12 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     private final int TOTAL_WORDS = 10;
     private TextView tvHint, tvBuiltWord, tvProgress, tvScore;
     private LinearLayout lettersContainer;
-    private Button btnSubmit, btnClear, btnBack, btnSkip;
     private User user;
     private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
     private int score = 0;
     private String targetWord;
-    private String targetHint;
     private StringBuilder builtWord;
     private List<Button> letterButtons;
 
@@ -68,10 +66,10 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         tvProgress = findViewById(R.id.tvProgress);
         tvScore = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
-        btnSubmit = findViewById(R.id.btnSubmit);
-        btnClear = findViewById(R.id.btnClear);
-        btnBack = findViewById(R.id.btnBack);
-        btnSkip = findViewById(R.id.btnSkip);
+        Button btnSubmit = findViewById(R.id.btnSubmit);
+        Button btnClear = findViewById(R.id.btnClear);
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnSkip = findViewById(R.id.btnSkip);
 
         btnSubmit.setOnClickListener(v -> checkAnswer());
         btnClear.setOnClickListener(v -> clearWord());
@@ -83,7 +81,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -131,6 +129,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
+        String targetHint;
         if (learningLanguage.equals("english")) {
             targetWord = word.getEnglish().toUpperCase();
             targetHint = word.getHebrew();
@@ -232,9 +231,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
             tvBuiltWord.setTextColor(Color.RED);
             Toast.makeText(this, "✗ Try again!", Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(() -> {
-                tvBuiltWord.setTextColor(Color.BLACK);
-            }, 500);
+            new Handler().postDelayed(() -> tvBuiltWord.setTextColor(Color.BLACK), 500);
         }
     }
 
@@ -275,7 +272,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void saveScoreToStats() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats == null) stats = new Stats(user.getId(), 1, 0);

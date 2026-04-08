@@ -17,8 +17,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
 
-    private Button btnConfirm, btnBack;
-
     private DatabaseService db;
 
     @Override
@@ -28,9 +26,9 @@ public class LoginActivity extends AppCompatActivity {
 
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
-        btnConfirm = findViewById(R.id.ConfirmsignUpButton); // same button id
+        Button btnConfirm = findViewById(R.id.ConfirmsignUpButton); // same button id
 
-        btnBack = findViewById(R.id.BacktostartButton);
+        Button btnBack = findViewById(R.id.BacktostartButton);
         btnBack.setOnClickListener(view -> finish());
 
         db = DatabaseService.getInstance();
@@ -48,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        db.login(email, password, new DatabaseService.DatabaseCallback<User>() {
+        db.login(email, password, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(User user) {
                 if (user == null) {

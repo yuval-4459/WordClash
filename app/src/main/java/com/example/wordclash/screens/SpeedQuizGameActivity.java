@@ -27,7 +27,10 @@ import java.util.List;
 public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private TextView tvQuestion, tvTimer, tvScore, tvProgress;
-    private Button btnOption1, btnOption2, btnOption3, btnOption4, btnBack;
+    private Button btnOption1;
+    private Button btnOption2;
+    private Button btnOption3;
+    private Button btnOption4;
     private ProgressBar progressBar;
 
     private User user;
@@ -42,10 +45,6 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
     private int passingScore;
     private CountDownTimer timer;
     private boolean answerSelected = false;
-
-    private int colorCorrect;
-    private int colorWrong;
-    private int colorDefault;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,9 +68,9 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
             return;
         }
 
-        colorCorrect = ContextCompat.getColor(this, R.color.game_correct);
-        colorWrong = ContextCompat.getColor(this, R.color.game_wrong);
-        colorDefault = ContextCompat.getColor(this, R.color.info);
+        int colorCorrect = ContextCompat.getColor(this, R.color.game_correct);
+        int colorWrong = ContextCompat.getColor(this, R.color.game_wrong);
+        int colorDefault = ContextCompat.getColor(this, R.color.info);
 
         initializeViews();
         loadStatsAndWords();
@@ -87,7 +86,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
         btnOption2 = findViewById(R.id.btnOption2);
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
-        btnBack = findViewById(R.id.btnBack);
+        Button btnBack = findViewById(R.id.btnBack);
 
         btnOption1.setOnClickListener(v -> checkAnswer(btnOption1));
         btnOption2.setOnClickListener(v -> checkAnswer(btnOption2));
@@ -97,7 +96,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
     }
 
     private void loadStatsAndWords() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats loadedStats) {
                 stats = loadedStats;
@@ -124,17 +123,23 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private int getQuestionsForRank(int rank) {
         switch (rank) {
-            case 1: return 10;
-            case 2: return 13;
-            case 3: return 16;
-            case 4: return 20;
-            case 5: return 25;
-            default: return 10;
+            case 1:
+                return 10;
+            case 2:
+                return 13;
+            case 3:
+                return 16;
+            case 4:
+                return 20;
+            case 5:
+                return 25;
+            default:
+                return 10;
         }
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getWordsByRank(currentRank, new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getWordsByRank(currentRank, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -262,7 +267,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
             showCorrectAnswer();
         }
 
-        new Handler().postDelayed(() -> nextQuestion(), 2000);
+        new Handler().postDelayed(this::nextQuestion, 2000);
     }
 
     private void showCorrectAnswer() {
@@ -300,7 +305,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
         stats.setTotalScore(stats.getTotalScore() + score);
 
         if (score >= passingScore) {
-            DatabaseService.getInstance().incrementPracticeForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<Void>() {
+            DatabaseService.getInstance().incrementPracticeForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<>() {
                 @Override
                 public void onCompleted(Void unused) {
                     checkAndUpdateRank();
@@ -313,7 +318,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
                 }
             });
         } else {
-            DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+            DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<>() {
                 @Override
                 public void onCompleted(Void unused) {
                     showResultDialog();
@@ -329,7 +334,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
     }
 
     private void checkAndUpdateRank() {
-        DatabaseService.getInstance().getRankProgress(user.getId(), currentRank, new DatabaseService.DatabaseCallback<DatabaseService.RankProgressData>() {
+        DatabaseService.getInstance().getRankProgress(user.getId(), currentRank, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(DatabaseService.RankProgressData progress) {
                 if (progress != null) {
@@ -339,7 +344,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
                     }
                 }
 
-                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(Void unused) {
                         showResultDialog();
@@ -355,7 +360,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<Void>() {
+                DatabaseService.getInstance().updateStats(stats, new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(Void unused) {
                         showResultDialog();
@@ -372,12 +377,18 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private int getRequiredPracticeForRank(int rank) {
         switch (rank) {
-            case 1: return 15;
-            case 2: return 25;
-            case 3: return 40;
-            case 4: return 60;
-            case 5: return Integer.MAX_VALUE;
-            default: return 15;
+            case 1:
+                return 15;
+            case 2:
+                return 25;
+            case 3:
+                return 40;
+            case 4:
+                return 60;
+            case 5:
+                return Integer.MAX_VALUE;
+            default:
+                return 15;
         }
     }
 

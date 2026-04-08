@@ -28,8 +28,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     // views from the XML
     private EditText etEmail, etPassword, etPassword2, etUserName;
-    private Spinner genderSpinner;
-    private Button btnConfirm, btnBack;
     private String selectedGender = "";
 
     @Override
@@ -42,10 +40,10 @@ public class SignUpActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.Password);
         etPassword2 = findViewById(R.id.PassswordAuthentication);
         etUserName = findViewById(R.id.UserName);
-        genderSpinner = findViewById(R.id.Gender);
-        btnConfirm = findViewById(R.id.ConfirmsignUpButton);
+        Spinner genderSpinner = findViewById(R.id.Gender);
+        Button btnConfirm = findViewById(R.id.ConfirmsignUpButton);
 
-        btnBack = findViewById(R.id.BacktoLandingButton);
+        Button btnBack = findViewById(R.id.BacktoLandingButton);
         btnBack.setOnClickListener(view -> finish());
 
         db = DatabaseService.getInstance();
@@ -104,13 +102,13 @@ public class SignUpActivity extends AppCompatActivity {
         // Create user WITHOUT language preference (will be set in next screen)
         User user = new User(id, email, password, userName, selectedGender, false, null, new ArrayList<>());
 
-        db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<Boolean>() {
+        db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Boolean exist) {
                 if (exist) {
                     Toast.makeText(SignUpActivity.this, "מייל כבר קיים", Toast.LENGTH_LONG).show();
                 } else {
-                    db.createNewUser(user, new DatabaseService.DatabaseCallback<Void>() {
+                    db.createNewUser(user, new DatabaseService.DatabaseCallback<>() {
                         @Override
                         public void onCompleted(Void v) {
                             // Create initial stats

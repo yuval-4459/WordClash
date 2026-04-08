@@ -26,9 +26,13 @@ import java.util.Locale;
 
 public class ListenGuessGameActivity extends AppCompatActivity {
 
-    private final int TOTAL_QUESTIONS = 10;
-    private TextView tvInstruction, tvProgress, tvScore;
-    private Button btnListen, btnOption1, btnOption2, btnOption3, btnOption4, btnBack;
+    private TextView tvProgress;
+    private TextView tvScore;
+    private Button btnListen;
+    private Button btnOption1;
+    private Button btnOption2;
+    private Button btnOption3;
+    private Button btnOption4;
     private User user;
     private int rank = 1;
     private List<Word> allWords;
@@ -62,7 +66,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvInstruction = findViewById(R.id.tvInstruction);
+        TextView tvInstruction = findViewById(R.id.tvInstruction);
         tvProgress = findViewById(R.id.tvProgress);
         tvScore = findViewById(R.id.tvScore);
         btnListen = findViewById(R.id.btnListen);
@@ -70,7 +74,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         btnOption2 = findViewById(R.id.btnOption2);
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
-        btnBack = findViewById(R.id.btnBack);
+        Button btnBack = findViewById(R.id.btnBack);
 
         btnListen.setOnClickListener(v -> speakWord());
         btnOption1.setOnClickListener(v -> checkAnswer(btnOption1));
@@ -103,7 +107,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -130,6 +134,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         List<Word> shuffled = new ArrayList<>(allWords);
         Collections.shuffle(shuffled);
 
+        int TOTAL_QUESTIONS = 10;
         for (int i = 0; i < Math.min(TOTAL_QUESTIONS, shuffled.size()); i++) {
             gameWords.add(shuffled.get(i));
         }
@@ -152,7 +157,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         setupOptions(currentWord, !isLearningEnglish);
         updateProgress();
 
-        btnListen.postDelayed(() -> speakWord(), 500);
+        btnListen.postDelayed(this::speakWord, 500);
     }
 
     private void setupOptions(Word correctWord, boolean showHebrew) {
@@ -212,7 +217,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         }
 
         disableAllButtons();
-        new Handler().postDelayed(() -> nextQuestion(), 1500);
+        new Handler().postDelayed(this::nextQuestion, 1500);
     }
 
     private void showCorrectAnswer() {
@@ -270,7 +275,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     }
 
     private void saveScoreToStats() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats == null) stats = new Stats(user.getId(), 1, 0);

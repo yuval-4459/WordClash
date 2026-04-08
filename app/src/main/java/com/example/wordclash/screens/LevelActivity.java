@@ -20,8 +20,9 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
  */
 public class LevelActivity extends AppCompatActivity {
 
-    private TextView tvLevelTitle, tvProgress, tvPracticeHint;
-    private Button btnWords, btnPractice, btn_level_Back;
+    private TextView tvProgress;
+    private TextView tvPracticeHint;
+    private Button btnPractice;
 
     private User user;
     private Stats stats;
@@ -49,12 +50,12 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvLevelTitle = findViewById(R.id.tvLevelTitle);
+        TextView tvLevelTitle = findViewById(R.id.tvLevelTitle);
         tvProgress = findViewById(R.id.tvProgress);
         tvPracticeHint = findViewById(R.id.tvPracticeHint);
-        btnWords = findViewById(R.id.btnWords);
+        Button btnWords = findViewById(R.id.btnWords);
         btnPractice = findViewById(R.id.btnPractice);
-        btn_level_Back = findViewById(R.id.btnBack);
+        Button btn_level_Back = findViewById(R.id.btnBack);
 
         tvLevelTitle.setText("Rank " + currentRank);
 
@@ -64,7 +65,7 @@ public class LevelActivity extends AppCompatActivity {
     }
 
     private void loadStats() {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats loadedStats) {
                 if (loadedStats == null) {
@@ -87,7 +88,7 @@ public class LevelActivity extends AppCompatActivity {
 
     private void loadRankProgress() {
         DatabaseService.getInstance().getRankProgressSafe(user.getId(), currentRank,
-                new DatabaseService.DatabaseCallback<DatabaseService.RankProgressData>() {
+                new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(DatabaseService.RankProgressData data) {
                         rankProgress = data;

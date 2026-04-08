@@ -23,12 +23,12 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 public class SplashActivity extends AppCompatActivity {
 
     private static final int SPLASH_DURATION = 3000; // 3 seconds for beautiful presentation
+    private final Handler handler = new Handler();
     private CardView logoCard;
     private ImageView ivLogo;
     private TextView tvAppName;
     private TextView tvTagline;
     private ProgressBar progressBar;
-    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,7 +170,7 @@ public class SplashActivity extends AppCompatActivity {
                 // User is logged in - fetch updated user data
                 User oldUser = SharedPreferencesUtils.getUser(SplashActivity.this);
 
-                DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<User>() {
+                DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(User newUser) {
                         if (newUser == null) {

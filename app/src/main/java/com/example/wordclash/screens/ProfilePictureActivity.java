@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -35,8 +36,9 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_CODE = 100;
     private ImageView ivProfilePicture;
-    private TextView tvUserInitial, tvUserName;
-    private Button btnChooseFromGallery, btnTakePhoto, btnDeletePicture, btnRotate, btnBack;
+    private TextView tvUserInitial;
+    private Button btnDeletePicture;
+    private Button btnRotate;
     private User currentUser;
     private Uri photoUri;
     private Bitmap currentBitmap;
@@ -77,12 +79,12 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private void initializeViews() {
         ivProfilePicture = findViewById(R.id.ivProfilePicture);
         tvUserInitial = findViewById(R.id.tvUserInitial);
-        tvUserName = findViewById(R.id.tvUserName);
-        btnChooseFromGallery = findViewById(R.id.btnChooseFromGallery);
-        btnTakePhoto = findViewById(R.id.btnTakePhoto);
+        TextView tvUserName = findViewById(R.id.tvUserName);
+        Button btnChooseFromGallery = findViewById(R.id.btnChooseFromGallery);
+        Button btnTakePhoto = findViewById(R.id.btnTakePhoto);
         btnDeletePicture = findViewById(R.id.btnDeletePicture);
         btnRotate = findViewById(R.id.btnRotate);
-        btnBack = findViewById(R.id.btnBack);
+        Button btnBack = findViewById(R.id.btnBack);
 
         tvUserName.setText(currentUser.getUserName());
 
@@ -159,7 +161,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -338,7 +340,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     private void saveProfilePicture() {
-        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(ProfilePictureActivity.this, currentUser);
@@ -369,7 +371,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private void deletePicture() {
         currentUser.setProfilePictureUrl(null);
 
-        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(ProfilePictureActivity.this, currentUser);

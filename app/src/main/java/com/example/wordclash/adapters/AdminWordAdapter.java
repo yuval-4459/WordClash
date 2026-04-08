@@ -71,8 +71,10 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvEnglish, tvHebrew, tvRankBadge;
-        Button btnDelete;
+        final TextView tvEnglish;
+        final TextView tvHebrew;
+        final TextView tvRankBadge;
+        final Button btnDelete;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -39,8 +39,7 @@ public class WordleGameActivity extends AppCompatActivity {
     private final int MAX_ATTEMPTS = 6;
     private final int WORD_LENGTH = 5;
     private GridLayout gridGuesses;
-    private Button btnSubmit, btnNewGame, btnBack;
-    private TextView tvInstructions, tvTitle;
+    private Button btnSubmit;
     private EditText hiddenInput;
     private String learningLanguage = "english";
     private User user;
@@ -81,10 +80,10 @@ public class WordleGameActivity extends AppCompatActivity {
     private void initializeViews() {
         gridGuesses = findViewById(R.id.gridGuesses);
         btnSubmit = findViewById(R.id.btnSubmit);
-        btnNewGame = findViewById(R.id.btnNewGame);
-        btnBack = findViewById(R.id.btnBack);
-        tvInstructions = findViewById(R.id.tvInstructions);
-        tvTitle = findViewById(R.id.tvTitle);
+        Button btnNewGame = findViewById(R.id.btnNewGame);
+        Button btnBack = findViewById(R.id.btnBack);
+        TextView tvInstructions = findViewById(R.id.tvInstructions);
+        TextView tvTitle = findViewById(R.id.tvTitle);
         hiddenInput = findViewById(R.id.hiddenInput);
 
         tvTitle.setText(getString(R.string.wordle_title));
@@ -119,7 +118,7 @@ public class WordleGameActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {
                 String text = s.toString();
 
-                if (text.length() > 0) {
+                if (!text.isEmpty()) {
                     for (int i = 0; i < text.length(); i++) {
                         char letter = text.charAt(i);
                         if (isValidLetter(letter)) {
@@ -236,7 +235,7 @@ public class WordleGameActivity extends AppCompatActivity {
     private void loadWords() {
         allFiveLetterWords = new ArrayList<>();
 
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words != null && !words.isEmpty()) {
@@ -288,7 +287,7 @@ public class WordleGameActivity extends AppCompatActivity {
         setupGrid();
 
         hiddenInput.requestFocus();
-        hiddenInput.postDelayed(() -> showKeyboard(), 200);
+        hiddenInput.postDelayed(this::showKeyboard, 200);
     }
 
     private void submitGuess() {
@@ -310,7 +309,7 @@ public class WordleGameActivity extends AppCompatActivity {
                 gameLost();
             } else {
                 hiddenInput.requestFocus();
-                hiddenInput.postDelayed(() -> showKeyboard(), 100);
+                hiddenInput.postDelayed(this::showKeyboard, 100);
             }
         }
     }
@@ -394,7 +393,7 @@ public class WordleGameActivity extends AppCompatActivity {
     }
 
     private void saveScoreToStats(int earnedScore) {
-        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<Stats>() {
+        DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Stats stats) {
                 if (stats == null) stats = new Stats(user.getId(), 1, 0);

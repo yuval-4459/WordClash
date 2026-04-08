@@ -161,7 +161,7 @@ public class DatabaseService {
      * התחברות למערכת
      */
     public void login(String email, String password, DatabaseCallback<User> callback) {
-        getUserList(new DatabaseCallback<List<User>>() {
+        getUserList(new DatabaseCallback<>() {
             @Override
             public void onCompleted(List<User> users) {
                 // חיפוש משתמש עם אימייל וסיסמה תואמים
@@ -186,7 +186,7 @@ public class DatabaseService {
      * בדיקה אם אימייל קיים
      */
     public void checkIfEmailExists(String email, DatabaseCallback<Boolean> callback) {
-        getUserList(new DatabaseCallback<List<User>>() {
+        getUserList(new DatabaseCallback<>() {
             @Override
             public void onCompleted(List<User> users) {
                 for (User user : users) {
@@ -345,7 +345,7 @@ public class DatabaseService {
      * קבלת מילים בעלות 5 אותיות (למשחק Wordle)
      */
     public void getAllFiveLetterWords(DatabaseCallback<List<Word>> callback) {
-        getAllWords(new DatabaseCallback<List<Word>>() {
+        getAllWords(new DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> allWords) {
                 List<Word> fiveLetterWords = new ArrayList<>();
@@ -381,7 +381,7 @@ public class DatabaseService {
      * קבלת התקדמות בצורה בטוחה (יוצר אם לא קיים)
      */
     public void getRankProgressSafe(String userId, int rank, DatabaseCallback<RankProgressData> callback) {
-        getRankProgress(userId, rank, new DatabaseCallback<RankProgressData>() {
+        getRankProgress(userId, rank, new DatabaseCallback<>() {
             @Override
             public void onCompleted(RankProgressData data) {
                 if (data == null) {
@@ -419,7 +419,7 @@ public class DatabaseService {
      * סימון שהמשתמש סקר את המילים
      */
     public void markWordsReviewedForRank(String userId, int rank, DatabaseCallback<Void> callback) {
-        getRankProgressSafe(userId, rank, new DatabaseCallback<RankProgressData>() {
+        getRankProgressSafe(userId, rank, new DatabaseCallback<>() {
             @Override
             public void onCompleted(RankProgressData data) {
                 data.hasReviewedWords = true;
@@ -437,7 +437,7 @@ public class DatabaseService {
      * הוספה למספר התרגולים
      */
     public void incrementPracticeForRank(String userId, int rank, DatabaseCallback<Void> callback) {
-        getRankProgressSafe(userId, rank, new DatabaseCallback<RankProgressData>() {
+        getRankProgressSafe(userId, rank, new DatabaseCallback<>() {
             @Override
             public void onCompleted(RankProgressData data) {
                 data.practiceCount++;

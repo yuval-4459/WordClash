@@ -20,10 +20,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
  */
 public class LanguageSelectionActivity extends AppCompatActivity {
 
-    private TextView tvQuestion;
-    private CardView cardEnglish, cardHebrew;
-    private Button btnEnglish, btnHebrew;
-
     private User user;
 
     @Override
@@ -41,11 +37,11 @@ public class LanguageSelectionActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvQuestion = findViewById(R.id.tvLanguageQuestion);
-        cardEnglish = findViewById(R.id.cardEnglish);
-        cardHebrew = findViewById(R.id.cardHebrew);
-        btnEnglish = findViewById(R.id.btnEnglish);
-        btnHebrew = findViewById(R.id.btnHebrew);
+        TextView tvQuestion = findViewById(R.id.tvLanguageQuestion);
+        CardView cardEnglish = findViewById(R.id.cardEnglish);
+        CardView cardHebrew = findViewById(R.id.cardHebrew);
+        Button btnEnglish = findViewById(R.id.btnEnglish);
+        Button btnHebrew = findViewById(R.id.btnHebrew);
 
         // Question is always in Hebrew (since this is first time)
         tvQuestion.setText("?איזו שפה תרצה ללמוד");
@@ -60,7 +56,7 @@ public class LanguageSelectionActivity extends AppCompatActivity {
     private void selectLanguage(String learningLanguage) {
         user.setLearningLanguage(learningLanguage);
 
-        DatabaseService.getInstance().updateUser(user, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().updateUser(user, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(LanguageSelectionActivity.this, user);

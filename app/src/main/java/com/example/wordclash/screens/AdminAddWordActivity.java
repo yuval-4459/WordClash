@@ -21,7 +21,6 @@ public class AdminAddWordActivity extends AppCompatActivity {
 
     private EditText etEnglish, etHebrew;
     private Spinner spinnerRank;
-    private Button btnAddWord, btnBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,8 +42,8 @@ public class AdminAddWordActivity extends AppCompatActivity {
         etEnglish = findViewById(R.id.etEnglishWord);
         etHebrew = findViewById(R.id.etHebrewWord);
         spinnerRank = findViewById(R.id.spinnerWordRank);
-        btnAddWord = findViewById(R.id.btnAddWord);
-        btnBack = findViewById(R.id.btnBack);
+        Button btnAddWord = findViewById(R.id.btnAddWord);
+        Button btnBack = findViewById(R.id.btnBack);
 
         btnAddWord.setOnClickListener(v -> addWord());
         btnBack.setOnClickListener(v -> finish());
@@ -74,7 +73,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
 
         Word word = new Word(wordId, english, hebrew, rank);
 
-        DatabaseService.getInstance().createWord(word, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().createWord(word, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 Toast.makeText(AdminAddWordActivity.this,

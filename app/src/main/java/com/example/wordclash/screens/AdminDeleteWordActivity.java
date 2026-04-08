@@ -24,19 +24,15 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AdminDeleteWordActivity extends AppCompatActivity {
 
-    private RecyclerView rvWords;
+    private final List<Word> filteredWords = new ArrayList<>();
     private AdminWordAdapter wordAdapter;
-    private Button btnBack;
     private EditText etSearch;
     private Spinner spinnerSort, spinnerRankFilter;
-
     private List<Word> allWords = new ArrayList<>();
-    private List<Word> filteredWords = new ArrayList<>();
     private String currentSortOption = "Random";
     private int currentRankFilter = 0; // 0 = All ranks
 
@@ -59,14 +55,14 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        rvWords = findViewById(R.id.rvWords);
-        btnBack = findViewById(R.id.btnBack);
+        RecyclerView rvWords = findViewById(R.id.rvWords);
+        Button btnBack = findViewById(R.id.btnBack);
         etSearch = findViewById(R.id.etSearch);
         spinnerSort = findViewById(R.id.spinnerSort);
         spinnerRankFilter = findViewById(R.id.spinnerRankFilter);
 
         rvWords.setLayoutManager(new LinearLayoutManager(this));
-        wordAdapter = new AdminWordAdapter(word -> confirmDelete(word));
+        wordAdapter = new AdminWordAdapter(this::confirmDelete);
         rvWords.setAdapter(wordAdapter);
 
         btnBack.setOnClickListener(v -> finish());
@@ -130,7 +126,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     }
 
     private void loadWords() {
-        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<List<Word>>() {
+        DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
@@ -181,34 +177,23 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 break;
 
             case "A-Z (English)":
-                Collections.sort(filteredWords, new Comparator<Word>() {
-                    @Override
-                    public int compare(Word w1, Word w2) {
-                        String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
-                        String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
-                        return en1.compareTo(en2);
-                    }
+                filteredWords.sort((w1, w2) -> {
+                    String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
+                    String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
+                    return en1.compareTo(en2);
                 });
                 break;
 
             case "א-ב (Hebrew)":
-                Collections.sort(filteredWords, new Comparator<Word>() {
-                    @Override
-                    public int compare(Word w1, Word w2) {
-                        String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
-                        String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
-                        return he1.compareTo(he2);
-                    }
+                filteredWords.sort((w1, w2) -> {
+                    String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
+                    String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
+                    return he1.compareTo(he2);
                 });
                 break;
 
             case "Rank":
-                Collections.sort(filteredWords, new Comparator<Word>() {
-                    @Override
-                    public int compare(Word w1, Word w2) {
-                        return Integer.compare(w1.getRank(), w2.getRank());
-                    }
-                });
+                filteredWords.sort((w1, w2) -> Integer.compare(w1.getRank(), w2.getRank()));
                 break;
         }
 
@@ -228,7 +213,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     }
 
     private void deleteWord(Word word) {
-        DatabaseService.getInstance().deleteWord(word, new DatabaseService.DatabaseCallback<Void>() {
+        DatabaseService.getInstance().deleteWord(word, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 Toast.makeText(AdminDeleteWordActivity.this,
