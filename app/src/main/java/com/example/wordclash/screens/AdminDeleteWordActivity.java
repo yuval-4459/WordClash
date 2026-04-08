@@ -24,15 +24,17 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AdminDeleteWordActivity extends AppCompatActivity {
 
-    private final List<Word> filteredWords = new ArrayList<>();
     private AdminWordAdapter wordAdapter;
     private EditText etSearch;
     private Spinner spinnerSort, spinnerRankFilter;
+
     private List<Word> allWords = new ArrayList<>();
+    private final List<Word> filteredWords = new ArrayList<>();
     private String currentSortOption = "Random";
     private int currentRankFilter = 0; // 0 = All ranks
 

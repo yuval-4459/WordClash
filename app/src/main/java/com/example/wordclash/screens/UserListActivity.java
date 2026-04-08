@@ -31,12 +31,13 @@ import java.util.List;
 
 public class UserListActivity extends AppCompatActivity {
 
-    final List<User> allUsers = new ArrayList<>();
     RecyclerView rvUsers;
     UserAdapter userAdapter;
     EditText searchUsername, searchEmail;
     Spinner searchGender;
     Button btnBackToMain;
+
+    final List<User> allUsers = new ArrayList<>();
     private User currentUser;
 
     @Override

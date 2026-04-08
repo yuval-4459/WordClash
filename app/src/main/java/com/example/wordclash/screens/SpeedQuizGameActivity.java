@@ -123,18 +123,12 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private int getQuestionsForRank(int rank) {
         switch (rank) {
-            case 1:
-                return 10;
-            case 2:
-                return 13;
-            case 3:
-                return 16;
-            case 4:
-                return 20;
-            case 5:
-                return 25;
-            default:
-                return 10;
+            case 1: return 10;
+            case 2: return 13;
+            case 3: return 16;
+            case 4: return 20;
+            case 5: return 25;
+            default: return 10;
         }
     }
 
@@ -377,18 +371,12 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private int getRequiredPracticeForRank(int rank) {
         switch (rank) {
-            case 1:
-                return 15;
-            case 2:
-                return 25;
-            case 3:
-                return 40;
-            case 4:
-                return 60;
-            case 5:
-                return Integer.MAX_VALUE;
-            default:
-                return 15;
+            case 1: return 15;
+            case 2: return 25;
+            case 3: return 40;
+            case 4: return 60;
+            case 5: return Integer.MAX_VALUE;
+            default: return 15;
         }
     }
 

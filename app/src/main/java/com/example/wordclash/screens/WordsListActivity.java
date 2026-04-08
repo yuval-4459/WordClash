@@ -26,18 +26,21 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class WordsListActivity extends AppCompatActivity {
 
-    private final List<Word> filteredWords = new ArrayList<>();
     private WordAdapter wordAdapter;
     private Button btnReady;
     private EditText etSearch;
     private Spinner spinnerSort;
+
     private User user;
     private int currentRank;
+
     private List<Word> allWords = new ArrayList<>();
+    private final List<Word> filteredWords = new ArrayList<>();
     private String currentSortOption = "Random";
 
     @Override

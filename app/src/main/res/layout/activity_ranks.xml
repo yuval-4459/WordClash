@@ -96,15 +96,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -135,13 +135,13 @@
                         android:id="@+id/btnLevel1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#1565C0"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="24dp"
                         android:text="Play"
-                        android:textColor="#FFFFFF"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -152,15 +152,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -191,13 +191,13 @@
                         android:id="@+id/btnLevel2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#1565C0"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="24dp"
                         android:text="Play"
-                        android:textColor="#FFFFFF"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -208,15 +208,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -247,13 +247,13 @@
                         android:id="@+id/btnLevel3"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#1565C0"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="24dp"
                         android:text="Play"
-                        android:textColor="#FFFFFF"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -264,15 +264,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -303,13 +303,13 @@
                         android:id="@+id/btnLevel4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#1565C0"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="24dp"
                         android:text="Play"
-                        android:textColor="#FFFFFF"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -320,15 +320,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="#FFFFFF">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
                     android:orientation="horizontal"
+                    android:gravity="center_vertical"
                     android:padding="16dp">
 
                     <LinearLayout
@@ -359,13 +359,13 @@
                         android:id="@+id/btnLevel5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:backgroundTint="#1565C0"
-                        android:paddingStart="24dp"
-                        android:paddingEnd="24dp"
                         android:text="Play"
-                        android:textColor="#FFFFFF"
                         android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:backgroundTint="#1565C0"
+                        android:textColor="#FFFFFF"
+                        android:paddingStart="24dp"
+                        android:paddingEnd="24dp" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

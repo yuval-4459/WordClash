@@ -23,8 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class RanksActivity extends AppCompatActivity {
 
-    // Hardcoded manager ID extracted to a constant
-    private static final String MANAGER_ID = "-OfhuEaP25z-o6NIsC5K";
     private TextView tvOnlinePlayers;
     private CardView cardLevel1, cardLevel2, cardLevel3, cardLevel4, cardLevel5;
     private Button btnLevel1;
@@ -33,9 +31,13 @@ public class RanksActivity extends AppCompatActivity {
     private Button btnLevel4;
     private Button btnLevel5;
     private TextView tvLevelStatus1, tvLevelStatus2, tvLevelStatus3, tvLevelStatus4, tvLevelStatus5;
+
     private User user;
     private int currentLevel = 1;
     private int onlinePlayersCount = 0;
+
+    // Hardcoded manager ID extracted to a constant
+    private static final String MANAGER_ID = "-OfhuEaP25z-o6NIsC5K";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

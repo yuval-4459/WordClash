@@ -7,13 +7,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.BounceInterpolator;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 
 import com.example.wordclash.R;
 import com.example.wordclash.models.User;
@@ -22,9 +20,8 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DURATION = 3000; // 3 seconds for beautiful presentation
+    private static final int SPLASH_DURATION = 3000;
     private final Handler handler = new Handler();
-    private CardView logoCard;
     private ImageView ivLogo;
     private TextView tvAppName;
     private TextView tvTagline;
@@ -36,29 +33,20 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
 
         initializeViews();
-        startBeautifulAnimations();
+        startAnimations();
         checkAuthentication();
     }
 
     private void initializeViews() {
-        logoCard = findViewById(R.id.logoCard);
         ivLogo = findViewById(R.id.ivLogo);
         tvAppName = findViewById(R.id.tvAppName);
         tvTagline = findViewById(R.id.tvTagline);
         progressBar = findViewById(R.id.progressBar);
 
-        // Initially hide views for dramatic entrance
-        logoCard.setScaleX(0f);
-        logoCard.setScaleY(0f);
-        logoCard.setAlpha(0f);
-        logoCard.setRotation(-180f);
-
+        // Initially hide for animation entrance
         ivLogo.setScaleX(0.5f);
         ivLogo.setScaleY(0.5f);
         ivLogo.setAlpha(0f);
-
-        tvAppName.setAlpha(0f);
-        tvAppName.setTranslationY(100f);
 
         tvTagline.setAlpha(0f);
         tvTagline.setTranslationY(50f);
@@ -66,72 +54,35 @@ public class SplashActivity extends AppCompatActivity {
         progressBar.setAlpha(0f);
     }
 
-    private void startBeautifulAnimations() {
-        // Animation 1: Logo Card - Dramatic entrance with rotation and bounce
-        ObjectAnimator scaleXCard = ObjectAnimator.ofFloat(logoCard, "scaleX", 0f, 1f);
-        ObjectAnimator scaleYCard = ObjectAnimator.ofFloat(logoCard, "scaleY", 0f, 1f);
-        ObjectAnimator alphaCard = ObjectAnimator.ofFloat(logoCard, "alpha", 0f, 1f);
-        ObjectAnimator rotateCard = ObjectAnimator.ofFloat(logoCard, "rotation", -180f, 0f);
+    private void startAnimations() {
+        // Logo: scale up and fade in with bounce
+        ObjectAnimator scaleXLogo = ObjectAnimator.ofFloat(ivLogo, "scaleX", 0.5f, 1f);
+        ObjectAnimator scaleYLogo = ObjectAnimator.ofFloat(ivLogo, "scaleY", 0.5f, 1f);
+        ObjectAnimator alphaLogo = ObjectAnimator.ofFloat(ivLogo, "alpha", 0f, 1f);
 
-        scaleXCard.setDuration(1000);
-        scaleYCard.setDuration(1000);
-        alphaCard.setDuration(1000);
-        rotateCard.setDuration(1000);
+        scaleXLogo.setDuration(900);
+        scaleYLogo.setDuration(900);
+        alphaLogo.setDuration(900);
 
-        scaleXCard.setInterpolator(new OvershootInterpolator(1.5f));
-        scaleYCard.setInterpolator(new OvershootInterpolator(1.5f));
-        rotateCard.setInterpolator(new AccelerateDecelerateInterpolator());
+        scaleXLogo.setInterpolator(new BounceInterpolator());
+        scaleYLogo.setInterpolator(new BounceInterpolator());
 
-        AnimatorSet logoCardSet = new AnimatorSet();
-        logoCardSet.playTogether(scaleXCard, scaleYCard, alphaCard, rotateCard);
-        logoCardSet.setStartDelay(200);
-        logoCardSet.start();
+        AnimatorSet logoSet = new AnimatorSet();
+        logoSet.playTogether(scaleXLogo, scaleYLogo, alphaLogo);
+        logoSet.setStartDelay(200);
+        logoSet.start();
 
-        // Animation 2: Logo Image - Scale and fade in
-        handler.postDelayed(() -> {
-            ObjectAnimator scaleXLogo = ObjectAnimator.ofFloat(ivLogo, "scaleX", 0.5f, 1f);
-            ObjectAnimator scaleYLogo = ObjectAnimator.ofFloat(ivLogo, "scaleY", 0.5f, 1f);
-            ObjectAnimator alphaLogo = ObjectAnimator.ofFloat(ivLogo, "alpha", 0f, 1f);
+        // Subtle pulse after logo appears
+        handler.postDelayed(this::startLogoPulseAnimation, 1200);
 
-            scaleXLogo.setDuration(800);
-            scaleYLogo.setDuration(800);
-            alphaLogo.setDuration(800);
-
-            scaleXLogo.setInterpolator(new BounceInterpolator());
-            scaleYLogo.setInterpolator(new BounceInterpolator());
-
-            AnimatorSet logoImageSet = new AnimatorSet();
-            logoImageSet.playTogether(scaleXLogo, scaleYLogo, alphaLogo);
-            logoImageSet.start();
-
-            // Continuous subtle pulse animation for logo
-            startLogoPulseAnimation();
-        }, 600);
-
-        // Animation 3: App Name - Elegant slide up and fade
-        handler.postDelayed(() -> {
-            ObjectAnimator alphaName = ObjectAnimator.ofFloat(tvAppName, "alpha", 0f, 1f);
-            ObjectAnimator translateName = ObjectAnimator.ofFloat(tvAppName, "translationY", 100f, 0f);
-
-            alphaName.setDuration(800);
-            translateName.setDuration(800);
-
-            alphaName.setInterpolator(new AccelerateDecelerateInterpolator());
-            translateName.setInterpolator(new AccelerateDecelerateInterpolator());
-
-            AnimatorSet nameSet = new AnimatorSet();
-            nameSet.playTogether(alphaName, translateName);
-            nameSet.start();
-        }, 1000);
-
-        // Animation 4: Progress Bar - Smooth fade in
+        // Progress bar fade in
         handler.postDelayed(() -> {
             ObjectAnimator alphaProgress = ObjectAnimator.ofFloat(progressBar, "alpha", 0f, 1f);
             alphaProgress.setDuration(600);
             alphaProgress.start();
-        }, 1400);
+        }, 1000);
 
-        // Animation 5: Tagline - Final touch
+        // Tagline slide up and fade in
         handler.postDelayed(() -> {
             ObjectAnimator alphaTagline = ObjectAnimator.ofFloat(tvTagline, "alpha", 0f, 0.9f);
             ObjectAnimator translateTagline = ObjectAnimator.ofFloat(tvTagline, "translationY", 50f, 0f);
@@ -145,12 +96,12 @@ public class SplashActivity extends AppCompatActivity {
             AnimatorSet taglineSet = new AnimatorSet();
             taglineSet.playTogether(alphaTagline, translateTagline);
             taglineSet.start();
-        }, 1600);
+        }, 1400);
     }
 
     private void startLogoPulseAnimation() {
-        ObjectAnimator scaleX = ObjectAnimator.ofFloat(ivLogo, "scaleX", 1f, 1.08f, 1f);
-        ObjectAnimator scaleY = ObjectAnimator.ofFloat(ivLogo, "scaleY", 1f, 1.08f, 1f);
+        ObjectAnimator scaleX = ObjectAnimator.ofFloat(ivLogo, "scaleX", 1f, 1.05f, 1f);
+        ObjectAnimator scaleY = ObjectAnimator.ofFloat(ivLogo, "scaleY", 1f, 1.05f, 1f);
 
         scaleX.setDuration(2000);
         scaleY.setDuration(2000);
@@ -167,18 +118,15 @@ public class SplashActivity extends AppCompatActivity {
     private void checkAuthentication() {
         handler.postDelayed(() -> {
             if (SharedPreferencesUtils.isUserLoggedIn(SplashActivity.this)) {
-                // User is logged in - fetch updated user data
                 User oldUser = SharedPreferencesUtils.getUser(SplashActivity.this);
 
                 DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(User newUser) {
                         if (newUser == null) {
-                            // User no longer exists in database
                             SharedPreferencesUtils.signOutUser(SplashActivity.this);
                             navigateToStart();
                         } else {
-                            // Update local user data
                             SharedPreferencesUtils.saveUser(SplashActivity.this, newUser);
                             navigateToMain();
                         }
@@ -186,12 +134,10 @@ public class SplashActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailed(Exception e) {
-                        // On error, still navigate to main with cached data
                         navigateToMain();
                     }
                 });
             } else {
-                // User is not logged in
                 navigateToStart();
             }
         }, SPLASH_DURATION);

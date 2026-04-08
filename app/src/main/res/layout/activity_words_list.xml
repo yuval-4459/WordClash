@@ -38,8 +38,8 @@
             <View
                 android:layout_width="60dp"
                 android:layout_height="3dp"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="6dp"
+                android:layout_gravity="center_horizontal"
                 android:background="@drawable/accent_line" />
 
             <!-- Search Field -->
@@ -94,9 +94,9 @@
         android:backgroundTint="#43A047"
         android:elevation="8dp"
         android:text="✓ I'm Ready"
-        android:textColor="#FFFFFF"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
