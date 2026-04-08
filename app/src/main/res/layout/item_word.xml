@@ -12,9 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:padding="16dp"
+        android:layoutDirection="locale">
 
-        <!-- English Word -->
+        <!-- English word: always LTR, always on the logical start side -->
         <TextView
             android:id="@+id/tvEnglish"
             android:layout_width="0dp"
@@ -23,9 +24,10 @@
             android:text="Hello"
             android:textColor="@android:color/black"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textDirection="ltr"
+            android:gravity="start" />
 
-        <!-- Separator -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,16 +37,17 @@
             android:textColor="@android:color/darker_gray"
             android:textSize="18sp" />
 
-        <!-- Hebrew Word -->
+        <!-- Hebrew word: always RTL, always on the logical end side -->
         <TextView
             android:id="@+id/tvHebrew"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="end"
             android:text="שלום"
             android:textColor="@android:color/black"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textDirection="rtl"
+            android:gravity="end" />
 
     </LinearLayout>
 

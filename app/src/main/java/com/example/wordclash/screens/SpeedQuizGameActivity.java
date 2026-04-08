@@ -27,7 +27,7 @@ import java.util.List;
 public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private TextView tvQuestion, tvTimer, tvScore, tvProgress;
-    private Button btnOption1, btnOption2, btnOption3, btnOption4;
+    private Button btnOption1, btnOption2, btnOption3, btnOption4, btnBack;
     private ProgressBar progressBar;
 
     private User user;
@@ -43,10 +43,8 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
     private CountDownTimer timer;
     private boolean answerSelected = false;
 
-    // Define better colors
     private int colorCorrect;
     private int colorWrong;
-    private int colorNeutral;
     private int colorDefault;
 
     @Override
@@ -71,10 +69,8 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
             return;
         }
 
-        // Initialize colors from resources
         colorCorrect = ContextCompat.getColor(this, R.color.game_correct);
         colorWrong = ContextCompat.getColor(this, R.color.game_wrong);
-        colorNeutral = ContextCompat.getColor(this, R.color.info);
         colorDefault = ContextCompat.getColor(this, R.color.info);
 
         initializeViews();
@@ -91,11 +87,13 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
         btnOption2 = findViewById(R.id.btnOption2);
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
+        btnBack = findViewById(R.id.btnBack);
 
         btnOption1.setOnClickListener(v -> checkAnswer(btnOption1));
         btnOption2.setOnClickListener(v -> checkAnswer(btnOption2));
         btnOption3.setOnClickListener(v -> checkAnswer(btnOption3));
         btnOption4.setOnClickListener(v -> checkAnswer(btnOption4));
+        btnBack.setOnClickListener(v -> finish());
     }
 
     private void loadStatsAndWords() {
@@ -126,18 +124,12 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private int getQuestionsForRank(int rank) {
         switch (rank) {
-            case 1:
-                return 10;
-            case 2:
-                return 13;
-            case 3:
-                return 16;
-            case 4:
-                return 20;
-            case 5:
-                return 25;
-            default:
-                return 10;
+            case 1: return 10;
+            case 2: return 13;
+            case 3: return 16;
+            case 4: return 20;
+            case 5: return 25;
+            default: return 10;
         }
     }
 
@@ -249,8 +241,7 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
                     new Handler().postDelayed(() -> nextQuestion(), 2000);
                 }
             }
-        }
-                .start();
+        }.start();
     }
 
     private void checkAnswer(Button selectedButton) {
@@ -381,18 +372,12 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
 
     private int getRequiredPracticeForRank(int rank) {
         switch (rank) {
-            case 1:
-                return 15;
-            case 2:
-                return 25;
-            case 3:
-                return 40;
-            case 4:
-                return 60;
-            case 5:
-                return Integer.MAX_VALUE;
-            default:
-                return 15;
+            case 1: return 15;
+            case 2: return 25;
+            case 3: return 40;
+            case 4: return 60;
+            case 5: return Integer.MAX_VALUE;
+            default: return 15;
         }
     }
 

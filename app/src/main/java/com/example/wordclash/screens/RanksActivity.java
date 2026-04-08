@@ -20,21 +20,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-/**
- * Ranks activity displaying available game levels and online player count
- */
 public class RanksActivity extends AppCompatActivity {
 
-    // UI Components
     private TextView tvOnlinePlayers;
     private CardView cardLevel1, cardLevel2, cardLevel3, cardLevel4, cardLevel5;
     private Button btnLevel1, btnLevel2, btnLevel3, btnLevel4, btnLevel5, btn_Ranks_back;
     private TextView tvLevelStatus1, tvLevelStatus2, tvLevelStatus3, tvLevelStatus4, tvLevelStatus5;
 
-    // Data
     private User user;
-    private int currentLevel = 1; // Default to level 1
+    private int currentLevel = 1;
     private int onlinePlayersCount = 0;
+
+    // Hardcoded manager ID extracted to a constant
+    private static final String MANAGER_ID = "-OfhuEaP25z-o6NIsC5K";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +48,6 @@ public class RanksActivity extends AppCompatActivity {
         btn_Ranks_back.setOnClickListener(v -> finish());
     }
 
-    /**
-     * Retrieves the current user from shared preferences
-     */
     private void initializeUser() {
         user = SharedPreferencesUtils.getUser(RanksActivity.this);
         if (user == null) {
@@ -61,27 +56,21 @@ public class RanksActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Initializes all view components
-     */
     private void initializeViews() {
         tvOnlinePlayers = findViewById(R.id.tvOnlinePlayers);
 
-        // Level cards
         cardLevel1 = findViewById(R.id.cardLevel1);
         cardLevel2 = findViewById(R.id.cardLevel2);
         cardLevel3 = findViewById(R.id.cardLevel3);
         cardLevel4 = findViewById(R.id.cardLevel4);
         cardLevel5 = findViewById(R.id.cardLevel5);
 
-        // Level buttons
         btnLevel1 = findViewById(R.id.btnLevel1);
         btnLevel2 = findViewById(R.id.btnLevel2);
         btnLevel3 = findViewById(R.id.btnLevel3);
         btnLevel4 = findViewById(R.id.btnLevel4);
         btnLevel5 = findViewById(R.id.btnLevel5);
 
-        // Level status texts
         tvLevelStatus1 = findViewById(R.id.tvLevelStatus1);
         tvLevelStatus2 = findViewById(R.id.tvLevelStatus2);
         tvLevelStatus3 = findViewById(R.id.tvLevelStatus3);
@@ -89,9 +78,6 @@ public class RanksActivity extends AppCompatActivity {
         tvLevelStatus5 = findViewById(R.id.tvLevelStatus5);
     }
 
-    /**
-     * Loads user statistics from Firebase stats database
-     */
     private void loadUserStats() {
         if (user == null) return;
 
@@ -101,7 +87,6 @@ public class RanksActivity extends AppCompatActivity {
                 if (stats != null) {
                     currentLevel = stats.getRank();
                 } else {
-                    // Create new stats for user
                     Stats newStats = new Stats(user.getId(), 1, 0);
                     DatabaseService.getInstance().createStats(newStats, null);
                     currentLevel = 1;
@@ -111,17 +96,12 @@ public class RanksActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(RanksActivity.this,
-                        "Failed to load stats",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(RanksActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
                 setupLevelButtons();
             }
         });
     }
 
-    /**
-     * Sets up level buttons with locked/unlocked states
-     */
     private void setupLevelButtons() {
         setupLevelButton(1, cardLevel1, btnLevel1, tvLevelStatus1);
         setupLevelButton(2, cardLevel2, btnLevel2, tvLevelStatus2);
@@ -130,48 +110,36 @@ public class RanksActivity extends AppCompatActivity {
         setupLevelButton(5, cardLevel5, btnLevel5, tvLevelStatus5);
     }
 
-    /**
-     * Configures individual level button based on user's progress
-     */
     private void setupLevelButton(int level, CardView card, Button button, TextView statusText) {
         boolean isUnlocked = level <= currentLevel;
 
         if (isUnlocked) {
-            // Unlocked level
             card.setAlpha(1.0f);
             button.setEnabled(true);
-            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.holo_blue_light));
-            statusText.setText("Unlocked");
-            statusText.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
-
+            // Use own color resource instead of deprecated AOSP holo_blue_light
+            button.setBackgroundTintList(getResources().getColorStateList(R.color.primary));
+            button.setText("Play");
+            statusText.setText(getString(R.string.unlocked));
+            statusText.setTextColor(getResources().getColor(R.color.success));
             button.setOnClickListener(v -> startLevel(level));
         } else {
-            // Locked level
             card.setAlpha(0.5f);
             button.setEnabled(false);
-            button.setBackgroundTintList(getResources().getColorStateList(android.R.color.darker_gray));
-            statusText.setText("🔒 Locked");
-            statusText.setTextColor(getResources().getColor(android.R.color.darker_gray));
-
-            button.setOnClickListener(v ->
-                    Toast.makeText(RanksActivity.this,
-                            "Complete Level " + (level - 1) + " to unlock!",
-                            Toast.LENGTH_SHORT).show());
+            // Use own color resource instead of deprecated AOSP darker_gray
+            button.setBackgroundTintList(getResources().getColorStateList(R.color.level_locked));
+            button.setText("🔒");
+            statusText.setText(getString(R.string.locked));
+            statusText.setTextColor(getResources().getColor(R.color.level_locked));
+            // Don't set a click listener on a disabled button — it won't fire reliably
         }
     }
 
-    /**
-     * Starts the selected level
-     */
     private void startLevel(int level) {
         Intent intent = new Intent(RanksActivity.this, LevelActivity.class);
         intent.putExtra("RANK", level);
         startActivity(intent);
     }
 
-    /**
-     * Updates and displays the count of online players
-     */
     private void updateOnlinePlayersCount() {
         DatabaseReference onlineRef = FirebaseDatabase.getInstance().getReference("online_users");
 
@@ -189,32 +157,22 @@ public class RanksActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Sets user as online in Firebase
-     */
     private void setUserOnline() {
         if (user != null) {
             DatabaseReference onlineRef = FirebaseDatabase.getInstance()
                     .getReference("online_users")
                     .child(user.getId());
-
             onlineRef.setValue(true);
-
-            // Automatically remove user from online list when they disconnect
             onlineRef.onDisconnect().removeValue();
         }
     }
 
-    /**
-     * Sets user as offline in Firebase
-     */
     private void setUserOffline() {
         if (user != null) {
-            DatabaseReference onlineRef = FirebaseDatabase.getInstance()
+            FirebaseDatabase.getInstance()
                     .getReference("online_users")
-                    .child(user.getId());
-
-            onlineRef.removeValue();
+                    .child(user.getId())
+                    .removeValue();
         }
     }
 

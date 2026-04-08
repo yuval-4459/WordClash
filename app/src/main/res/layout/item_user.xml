@@ -4,16 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    app:cardBackgroundColor="@color/primary_light"
-    app:cardCornerRadius="16dp">
-
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Avatar Circle with Initial -->
         <androidx.cardview.widget.CardView
             android:id="@+id/avatarCard"
             android:layout_width="56dp"
@@ -36,7 +35,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- User Info Container -->
         <LinearLayout
             android:id="@+id/userInfoContainer"
             android:layout_width="0dp"
@@ -49,7 +47,6 @@
             app:layout_constraintStart_toEndOf="@id/avatarCard"
             app:layout_constraintTop_toTopOf="parent">
 
-            <!-- Full Username -->
             <TextView
                 android:id="@+id/tv_item_user_name"
                 android:layout_width="wrap_content"
@@ -61,7 +58,7 @@
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
-            <!-- Email -->
+            <!-- Fixed: was #D1D5DB (light gray on light blue) — now dark gray on white -->
             <TextView
                 android:id="@+id/tv_item_user_email"
                 android:layout_width="wrap_content"
@@ -70,12 +67,11 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:text="email@example.com"
-                android:textColor="#D1D5DB"
+                android:textColor="#757575"
                 android:textSize="14sp" />
 
         </LinearLayout>
 
-        <!-- Arrow Icon -->
         <ImageView
             android:id="@+id/arrowIcon"
             android:layout_width="24dp"

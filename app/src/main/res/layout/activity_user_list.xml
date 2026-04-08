@@ -5,10 +5,9 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#EEDEC5"
+    android:background="@drawable/gradient_background"
     tools:context=".screens.UserListActivity">
 
-    <!-- Search Filters Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/searchCard"
         android:layout_width="0dp"
@@ -23,11 +22,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/primary"
+            android:background="#FFFFFF"
             android:orientation="vertical"
             android:padding="20dp">
 
-            <!-- Title with Back Button -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Search Users"
-                    android:textColor="#222"
+                    android:textColor="#1A237E"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -57,14 +55,13 @@
 
             </LinearLayout>
 
-            <!-- Username Search -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Username"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:textColor="#1A237E"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -80,16 +77,15 @@
                 android:padding="16dp"
                 android:textColor="#000000"
                 android:textColorHint="#666666"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
-            <!-- Email Search -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Email"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:textColor="#1A237E"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <EditText
@@ -105,16 +101,15 @@
                 android:padding="16dp"
                 android:textColor="#000000"
                 android:textColorHint="#666666"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
-            <!-- Gender Filter -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:text="Gender"
-                android:textColor="#000000"
-                android:textSize="18sp"
+                android:textColor="#1A237E"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Spinner
@@ -128,7 +123,6 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_user_list_list"
         android:layout_width="0dp"

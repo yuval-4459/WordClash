@@ -28,9 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-/**
- * Words list screen with filtering, sorting, and search
- */
 public class WordsListActivity extends AppCompatActivity {
 
     private RecyclerView rvWords;
@@ -45,7 +42,7 @@ public class WordsListActivity extends AppCompatActivity {
 
     private List<Word> allWords = new ArrayList<>();
     private List<Word> filteredWords = new ArrayList<>();
-    private String currentSortOption = "Random"; // Default
+    private String currentSortOption = "Random";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,27 +77,33 @@ public class WordsListActivity extends AppCompatActivity {
         wordAdapter = new WordAdapter();
         rvWords.setAdapter(wordAdapter);
 
-        // Scroll listener for floating button
+        // Button is now anchored to the BOTTOM of the screen.
+        // Hide when scrolling DOWN (user goes deeper into list, button obscures nothing important)
+        // Show when scrolling UP (user comes back toward top — ready button should reappear)
+        // This is the OPPOSITE of the previous logic where the button was at the top.
         rvWords.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    // Scrolling down - hide button
+                    // Scrolling DOWN — hide the bottom button to see more list
                     if (btnReady.getVisibility() == View.VISIBLE) {
                         btnReady.animate()
-                                .translationY(-btnReady.getHeight())
+                                .translationY(btnReady.getHeight() + 32f)
                                 .alpha(0.0f)
-                                .setDuration(300)
-                                .withEndAction(() -> btnReady.setVisibility(View.GONE));
+                                .setDuration(250)
+                                .withEndAction(() -> btnReady.setVisibility(View.GONE))
+                                .start();
                     }
                 } else if (dy < 0) {
-                    // Scrolling up - show button
+                    // Scrolling UP — show the bottom button again
                     if (btnReady.getVisibility() == View.GONE) {
                         btnReady.setVisibility(View.VISIBLE);
+                        btnReady.setTranslationY(btnReady.getHeight() + 32f);
                         btnReady.animate()
                                 .translationY(0)
                                 .alpha(1.0f)
-                                .setDuration(300);
+                                .setDuration(250)
+                                .start();
                     }
                 }
             }
@@ -168,7 +171,6 @@ public class WordsListActivity extends AppCompatActivity {
     private void applyFiltersAndSort() {
         String searchQuery = etSearch.getText().toString().trim().toLowerCase();
 
-        // Filter by search query
         filteredWords.clear();
         if (searchQuery.isEmpty()) {
             filteredWords.addAll(allWords);
@@ -185,12 +187,10 @@ public class WordsListActivity extends AppCompatActivity {
             }
         }
 
-        // Sort based on selected option
         switch (currentSortOption) {
             case "Random":
                 Collections.shuffle(filteredWords);
                 break;
-
             case "A-Z (English)":
                 Collections.sort(filteredWords, new Comparator<Word>() {
                     @Override
@@ -201,7 +201,6 @@ public class WordsListActivity extends AppCompatActivity {
                     }
                 });
                 break;
-
             case "א-ב (Hebrew)":
                 Collections.sort(filteredWords, new Comparator<Word>() {
                     @Override
@@ -214,7 +213,6 @@ public class WordsListActivity extends AppCompatActivity {
                 break;
         }
 
-        // Update adapter
         wordAdapter.setWordList(filteredWords);
     }
 

@@ -3,10 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
+    android:background="@drawable/gradient_background"
     android:padding="16dp">
 
-    <!-- Hidden EditText to capture keyboard input on mobile -->
     <EditText
         android:id="@+id/hiddenInput"
         android:layout_width="1dp"
@@ -17,7 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Back Button (top left) -->
     <Button
         android:id="@+id/btnBack"
         android:layout_width="wrap_content"
@@ -28,7 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- New Game Button (top right) -->
     <Button
         android:id="@+id/btnNewGame"
         android:layout_width="wrap_content"
@@ -39,54 +36,66 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Title -->
-    <TextView
-        android:id="@+id/tvTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:text="🎮 WORDLE"
-        android:textColor="#1565C0"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Instructions -->
-    <TextView
-        android:id="@+id/tvInstructions"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/headerCard"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Guess the 5-letter word!\n🟩 = Correct position\n🟨 = Wrong position\n⬜ = Not in word"
-        android:textColor="#424242"
-        android:textSize="12sp"
+        app:cardBackgroundColor="#FFFFFF"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+        app:layout_constraintTop_toBottomOf="@id/btnBack">
 
-    <!-- Grid for guesses -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🎮 WORDLE"
+                android:textColor="#1565C0"
+                android:textSize="28sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvInstructions"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="Guess the 5-letter word!\n🟩 = Correct position  🟨 = Wrong position  ⬜ = Not in word"
+                android:textColor="#424242"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
     <GridLayout
         android:id="@+id/gridGuesses"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:columnCount="5"
         android:focusable="true"
         android:focusableInTouchMode="true"
         android:rowCount="6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvInstructions" />
+        app:layout_constraintTop_toBottomOf="@id/headerCard" />
 
-    <!-- Instruction text -->
     <TextView
         android:id="@+id/tvTypeInstruction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Tap the grid and start typing"
         android:textColor="#757575"
         android:textSize="14sp"
@@ -95,7 +104,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/gridGuesses" />
 
-    <!-- Submit Button -->
     <Button
         android:id="@+id/btnSubmit"
         android:layout_width="0dp"

@@ -6,11 +6,23 @@
     android:background="@color/background_light"
     android:padding="16dp">
 
-    <!-- Score with better visibility -->
+    <!-- Back Button (top left) -->
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#757575"
+        android:text="← Back"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Score -->
     <TextView
         android:id="@+id/tvScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:background="@drawable/rounded_bg"
         android:backgroundTint="@color/card_background"
         android:padding="8dp"
@@ -19,13 +31,14 @@
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-    <!-- Progress with better visibility -->
+    <!-- Progress -->
     <TextView
         android:id="@+id/tvProgress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:background="@drawable/rounded_bg"
         android:backgroundTint="@color/card_background"
         android:padding="8dp"
@@ -34,9 +47,9 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/btnBack" />
 
-    <!-- Timer with better contrast -->
+    <!-- Timer -->
     <androidx.cardview.widget.CardView
         android:id="@+id/timerCard"
         android:layout_width="90dp"
@@ -61,7 +74,7 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Progress Bar with better visibility -->
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyleHorizontal"
@@ -76,7 +89,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/timerCard" />
 
-    <!-- Question Card with better readability -->
+    <!-- Question Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardQuestion"
         android:layout_width="0dp"
@@ -103,7 +116,7 @@
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Options Container with better colors -->
+    <!-- Options -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
