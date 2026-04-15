@@ -6,13 +6,13 @@ import java.io.Serializable;
 
 /**
  * Model class for user statistics
- * Tracks user's CURRENT rank and total score
+ * Tracks user's current rank and total score
  */
 public class Stats implements Serializable {
 
     private String userId;
     private int rank; // Current rank (1-5)
-    private int totalScore; // Total points earned across ALL ranks
+    private int totalScore; // Total score earned across ALL ranks
 
     public Stats() {
     }

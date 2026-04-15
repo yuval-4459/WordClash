@@ -61,7 +61,7 @@ public class UserListActivity extends AppCompatActivity {
 
         rvUsers.setLayoutManager(new LinearLayoutManager(this));
 
-        // Back button click listener
+        // back button click listener
         btnBackToMain.setOnClickListener(v -> {
             Intent intent = new Intent(UserListActivity.this, MainActivity.class);
             startActivity(intent);
@@ -94,9 +94,9 @@ public class UserListActivity extends AppCompatActivity {
 
         rvUsers.setAdapter(userAdapter);
 
-        // Setup gender spinner
+        // setup gender spinner
         setupGenderSpinner();
-        // Setup search functionality for all fields
+        // setup search functionality for all fields
         // - instead of clicking confirm to search for someone it will automaticly change
         TextWatcher searchWatcher = new TextWatcher() {
             @Override
@@ -131,11 +131,11 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<User> users) {
                 allUsers.clear();
-                // Sort users: admins first, then regular users
+                // sort users: admins first, then regular users
                 List<User> adminUsers = new ArrayList<>();
                 List<User> regularUsers = new ArrayList<>();
                 for (User user : users) {
-                    // Skip current admin user from the list
+                    // skip current admin user from the list
                     if (currentUser != null && user.getId().equals(currentUser.getId())) {
                         continue;
                     }
@@ -177,7 +177,7 @@ public class UserListActivity extends AppCompatActivity {
 
         for (User user : allUsers) {
 
-            // Check username criteria (only if field is not empty)
+            // check username criteria (only if field is not empty)
             if (!usernameQuery.isEmpty()) {
                 if (user.getUserName() == null ||
                         !user.getUserName().toLowerCase().contains(usernameQuery)) {
@@ -185,7 +185,7 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            // Check email criteria (only if field is not empty)
+            // check email criteria (only if field is not empty)
             if (!emailQuery.isEmpty()) {
                 if (user.getEmail() == null ||
                         !user.getEmail().toLowerCase().contains(emailQuery)) {
@@ -193,7 +193,7 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            // Check gender criteria (only if not "All")
+            // check gender criteria (only if not "All")
             if (!genderQuery.equals("All")) {
                 if (user.getGender() == null ||
                         !user.getGender().equalsIgnoreCase(genderQuery)) {
@@ -201,7 +201,7 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            // Add user only if ALL criteria have been continued
+            // add user only if all the criteria have been continued
             filteredList.add(user);
 
         }
@@ -217,11 +217,11 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<User> users) {
                 allUsers.clear();
-                // Sort users: admins first, then regular users
+                // sort users: admins first, then regular users
                 List<User> adminUsers = new ArrayList<>();
                 List<User> regularUsers = new ArrayList<>();
                 for (User user : users) {
-                    // Skip current admin user from the list
+                    // skip current admin user from the list
                     if (currentUser != null && user.getId().equals(currentUser.getId())) {
                         continue;
                     }

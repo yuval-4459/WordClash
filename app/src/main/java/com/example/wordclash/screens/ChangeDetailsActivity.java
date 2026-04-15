@@ -86,7 +86,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
         tvCurrentLanguage = findViewById(R.id.tvCurrentLanguage);
 
-        // Admin-only fields
+        // admin only fields
         etTotalScore = findViewById(R.id.TotalScore);
         rankSpinner = findViewById(R.id.RankSpinner);
         isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
@@ -131,7 +131,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 String selected = adapterView.getItemAtPosition(position).toString();
-                // Convert display name to language code
+                // convert display name to language code
                 if (selected.equals(getString(R.string.english))) {
                     selectedLanguage = "english";
                 } else {
@@ -173,7 +173,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                // Create default stats on error
+                // create default stats on error
                 userStats = new Stats(currentUser.getId(), 1, 0);
                 rankSpinner.setSelection(0);
                 etTotalScore.setText("0");
@@ -183,7 +183,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
     private void setupFieldsBasedOnRole() {
         if (isAdmin) {
-            // Admin can edit everything
+            // admin can edit everything
             etEmail.setEnabled(true);
             etPassword.setEnabled(true);
             etUserName.setEnabled(true);
@@ -193,7 +193,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             rankSpinner.setEnabled(true);
             isAdminCheckBox.setEnabled(true);
 
-            // Show admin controls
+            // show admin controls
             etTotalScore.setVisibility(View.VISIBLE);
             rankSpinner.setVisibility(View.VISIBLE);
             isAdminCheckBox.setVisibility(View.VISIBLE);
@@ -203,14 +203,14 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             findViewById(R.id.rankCard).setVisibility(View.VISIBLE);
             findViewById(R.id.scoreLayout).setVisibility(View.VISIBLE);
         } else {
-            // Regular user - limited editing
+            // regular user has limited editing
             etEmail.setEnabled(false);
             etPassword.setEnabled(false);
             etUserName.setEnabled(true);
             genderSpinner.setEnabled(true);
             languageSpinner.setEnabled(true);
 
-            // Hide admin controls
+            // hide admin controls for normal users
             etTotalScore.setVisibility(View.GONE);
             rankSpinner.setVisibility(View.GONE);
             isAdminCheckBox.setVisibility(View.GONE);
@@ -227,7 +227,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         etEmail.setText(currentUser.getEmail());
         etPassword.setText(currentUser.getPassword());
 
-        // Set gender
+        // set gender
         String[] genders = {getString(R.string.male), getString(R.string.female), getString(R.string.other)};
         String[] genderCodes = {"Male", "Female", "Other"};
         for (int i = 0; i < genderCodes.length; i++) {
@@ -238,7 +238,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             }
         }
 
-        // Set language
+        // set language
         String learningLanguage = currentUser.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
@@ -250,11 +250,11 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             selectedLanguage = "hebrew";
         }
 
-        // Show current language
+        // show current language
         tvCurrentLanguage.setText(getString(R.string.learning_language,
                 LanguageUtils.getLearningLanguageDisplayName(this, currentUser)));
 
-        // Admin-only fields
+        // admin only fields
         if (isAdmin) {
             isAdminCheckBox.setChecked(currentUser.isAdmin());
         }
@@ -272,7 +272,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             selectedGender = currentUser.getGender();
         }
 
-        // Convert display gender back to English code
+        // convert display gender back to English code
         String genderCode = selectedGender;
         if (selectedGender.equals(getString(R.string.male))) genderCode = "Male";
         else if (selectedGender.equals(getString(R.string.female))) genderCode = "Female";
@@ -281,7 +281,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         currentUser.setUserName(userName);
         currentUser.setGender(genderCode);
 
-        // Check if language changed
+        // check if language changed
         String oldLanguage = currentUser.getLearningLanguage();
         if (oldLanguage == null) oldLanguage = "english";
         boolean languageChanged = !selectedLanguage.isEmpty() && !selectedLanguage.equals(oldLanguage);
@@ -291,7 +291,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         }
 
         if (isAdmin) {
-            // Admin can change email, password, rank, score, and admin status
+            // admin is able to change email, password, rank, score, and admin status
             String email = etEmail.getText().toString().trim();
             String password = etPassword.getText().toString().trim();
 
@@ -304,7 +304,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             currentUser.setPassword(password);
             currentUser.setAdmin(isAdminCheckBox.isChecked());
 
-            // Update stats
+            // update stats
             if (userStats != null) {
                 int newRank = rankSpinner.getSelectedItemPosition() + 1;
                 int newScore;
@@ -342,7 +342,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
-                // If admin, also update stats
+                // if is admin, also update stats
                 if (isAdmin && userStats != null) {
                     DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
                         @Override

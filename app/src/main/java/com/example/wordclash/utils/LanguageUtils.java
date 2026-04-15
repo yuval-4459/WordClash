@@ -25,8 +25,8 @@ public class LanguageUtils {
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
-        // If learning English, UI should be in Hebrew
-        // If learning Hebrew, UI should be in English
+        // if learning English, UI should be in Hebrew
+        // if learning Hebrew, UI should be in English
         String uiLanguage = learningLanguage.equals("english") ? "he" : "en";
 
         Locale locale = new Locale(uiLanguage);
@@ -47,8 +47,8 @@ public class LanguageUtils {
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
-        // If learning English, UI is in Hebrew (RTL)
-        // If learning Hebrew, UI is in English (LTR)
+        // if learning English, UI is in Hebrew (RTL)
+        // if learning Hebrew, UI is in English (LTR)
         int direction = learningLanguage.equals("english")
                 ? View.LAYOUT_DIRECTION_RTL
                 : View.LAYOUT_DIRECTION_LTR;
@@ -86,11 +86,11 @@ public class LanguageUtils {
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
-        // Return in UI language
+        // return in UI language
         if (learningLanguage.equals("english")) {
-            return "אנגלית"; // Hebrew UI
+            return "אנגלית"; // Hebrew ui
         } else {
-            return "Hebrew"; // English UI
+            return "Hebrew"; // English ui
         }
     }
 }

@@ -35,7 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
 
-        // UI Components
+        // ui Components
         etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         etPassword2 = findViewById(R.id.PassswordAuthentication);
@@ -48,7 +48,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         db = DatabaseService.getInstance();
 
-        // Gender Spinner
+        // gender Spinner
         ArrayList<String> genders = new ArrayList<>();
         genders.add("Choose");
         genders.add("Male");
@@ -99,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
         }
 
         String id = db.generateUserId();
-        // Create user WITHOUT language preference (will be set in next screen)
+        // create user without language preference (will be set in next screen)
         User user = new User(id, email, password, userName, selectedGender, false, null, new ArrayList<>());
 
         db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<>() {
@@ -111,7 +111,7 @@ public class SignUpActivity extends AppCompatActivity {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<>() {
                         @Override
                         public void onCompleted(Void v) {
-                            // Create initial stats
+                            // create initial stats
                             Stats initialStats = new Stats(user.getId(), 1, 0);
                             db.createStats(initialStats, null);
 
@@ -119,7 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                             SharedPreferencesUtils.saveUser(SignUpActivity.this, user);
 
-                            // Go to language selection screen
+                            // go to language selection screen
                             Intent intent = new Intent(SignUpActivity.this, LanguageSelectionActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

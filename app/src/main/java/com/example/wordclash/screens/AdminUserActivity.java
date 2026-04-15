@@ -28,7 +28,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class AdminUserActivity extends AppCompatActivity {
 
-    // UI Components
+    // ui Components
     private Spinner genderSpinner, rankSpinner;
     private TextInputLayout emailLayout, passwordLayout, usernameLayout, scoreLayout;
     private EditText emailField, passwordField, usernameField, totalScoreField;
@@ -38,7 +38,7 @@ public class AdminUserActivity extends AppCompatActivity {
     private CardView mainCard;
     private View rootView;
 
-    // Data
+    // data
     private User selectedUser;
     private Stats userStats;
     private boolean isDataLoaded = false;
@@ -49,7 +49,7 @@ public class AdminUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_users);
 
-        // Enable back button in action bar
+        // enable back button in action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Edit User");
@@ -218,7 +218,7 @@ public class AdminUserActivity extends AppCompatActivity {
                         rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
                         totalScoreField.setText(String.valueOf(stats.getTotalScore()));
                     } else {
-                        // Create default stats if none exist
+                        // create default stats if none exist
                         userStats = new Stats(selectedUser.getId(), 1, 0);
                         rankSpinner.setSelection(0);
                         totalScoreField.setText("0");
@@ -234,7 +234,7 @@ public class AdminUserActivity extends AppCompatActivity {
             public void onFailed(Exception e) {
                 runOnUiThread(() -> {
                     showError("Failed to load user stats: " + e.getMessage());
-                    // Create default stats
+                    // create default stats
                     userStats = new Stats(selectedUser.getId(), 1, 0);
                     rankSpinner.setSelection(0);
                     totalScoreField.setText("0");
@@ -255,13 +255,13 @@ public class AdminUserActivity extends AppCompatActivity {
         String username = usernameField.getText().toString().trim();
         String score = totalScoreField.getText().toString().trim();
 
-        // Clear previous errors
+        // clear previous errors
         emailLayout.setError(null);
         passwordLayout.setError(null);
         usernameLayout.setError(null);
         scoreLayout.setError(null);
 
-        // Validate email
+        // validate email
         if (email.isEmpty()) {
             emailLayout.setError("Email is required");
             isValid = false;
@@ -270,7 +270,7 @@ public class AdminUserActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Validate password
+        // validate password
         if (password.isEmpty()) {
             passwordLayout.setError("Password is required");
             isValid = false;
@@ -279,7 +279,7 @@ public class AdminUserActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Validate username
+        // validate username
         if (username.isEmpty()) {
             usernameLayout.setError("Username is required");
             isValid = false;
@@ -288,7 +288,7 @@ public class AdminUserActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // Validate score
+        // validate score
         if (score.isEmpty()) {
             scoreLayout.setError("Score is required");
             isValid = false;
@@ -340,14 +340,14 @@ public class AdminUserActivity extends AppCompatActivity {
         String gender = genderSpinner.getSelectedItem().toString();
         boolean isAdmin = isAdminCheckBox.isChecked();
 
-        // Update user details
+        // update user details
         selectedUser.setEmail(email);
         selectedUser.setPassword(password);
         selectedUser.setUserName(username);
         selectedUser.setGender(gender);
         selectedUser.setAdmin(isAdmin);
 
-        // Update stats (extract rank number from "Rank X - Description" format)
+        // update stats (extract rank number from "Rank X - Description" format)
         int newRank = rankSpinner.getSelectedItemPosition() + 1;
 
         int newScore;
@@ -360,11 +360,11 @@ public class AdminUserActivity extends AppCompatActivity {
         userStats.setRank(newRank);
         userStats.setTotalScore(newScore);
 
-        // Save user
+        // save user
         DatabaseService.getInstance().updateUser(selectedUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
-                // Save stats
+                // save stats
                 DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(Void unused) {
@@ -419,7 +419,7 @@ public class AdminUserActivity extends AppCompatActivity {
                     hasUnsavedChanges = false;
                     showSuccess("User deleted successfully");
 
-                    // Delay before returning to list
+                    // a bit of a delay before returning to list
                     new android.os.Handler().postDelayed(() -> {
                         Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -90,7 +90,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Filter words (4-8 letters work best)
+                // filter words (4-8 letters work best)
                 gameWords = new ArrayList<>();
                 for (Word word : words) {
                     String english = word.getEnglish();
@@ -125,7 +125,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
         Word word = gameWords.get(currentWordIndex);
 
-        // Determine which word to build based on learning language
+        // determine which word to build based on learning language
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
@@ -149,14 +149,14 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         lettersContainer.removeAllViews();
         letterButtons.clear();
 
-        // Create scrambled letters
+        // create scrambled letters
         List<Character> letters = new ArrayList<>();
         for (char c : targetWord.toCharArray()) {
             letters.add(c);
         }
         Collections.shuffle(letters);
 
-        // Add 2-3 extra random letters for difficulty
+        // add 2-3 extra random letters for difficulty
         String extraLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for (int i = 0; i < 2 && letters.size() < 10; i++) {
             char randomChar = extraLetters.charAt((int) (Math.random() * extraLetters.length()));
@@ -164,7 +164,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         }
         Collections.shuffle(letters);
 
-        // Create buttons
+        // create buttons
         for (char letter : letters) {
             Button btn = new Button(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -214,7 +214,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         String answer = builtWord.toString();
 
         if (answer.equals(targetWord)) {
-            // Correct!
+            // correct
             score += 10 * rank;
             updateScore();
 
@@ -227,7 +227,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
                 showNextWord();
             }, 1000);
         } else {
-            // Wrong
+            // wrong
             tvBuiltWord.setTextColor(Color.RED);
             Toast.makeText(this, "✗ Try again!", Toast.LENGTH_SHORT).show();
 

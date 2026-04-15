@@ -42,7 +42,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:letterSpacing="0.02"
-                        android:text="🎮 Mini Games"
+                        android:text="🎮 Games"
                         android:textColor="#1A237E"
                         android:textSize="32sp"
                         android:textStyle="bold" />

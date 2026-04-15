@@ -66,14 +66,14 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        // Hide user's rank card until data is loaded
+        // hide the user's rank card until data is loaded
         cardYourRank.setVisibility(View.GONE);
     }
 
     private void loadLeaderboard() {
         allEntries = new ArrayList<>();
 
-        // Get all users
+        // get all users
         DatabaseService.getInstance().getUserList(new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(List<User> users) {
@@ -82,13 +82,13 @@ public class LeaderboardActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Create a map to store users by ID
+                // create a map to store users by ID
                 Map<String, User> userMap = new HashMap<>();
                 for (User user : users) {
                     userMap.put(user.getId(), user);
                 }
 
-                // Load stats for all users
+                // load the stats for all the users
                 loadAllStats(userMap);
             }
 
@@ -136,25 +136,25 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void displayLeaderboard() {
-        // Sort by total score (descending)
+        // sort by total score (descending)
         allEntries.sort((e1, e2) ->
                 Integer.compare(e2.totalScore, e1.totalScore));
 
-        // Assign positions
+        // assign positions
         for (int i = 0; i < allEntries.size(); i++) {
             allEntries.get(i).position = i + 1;
         }
 
-        // Get top 10 entries
+        // get top 10 entries
         List<LeaderboardEntry> top10 = new ArrayList<>();
         for (int i = 0; i < Math.min(10, allEntries.size()); i++) {
             top10.add(allEntries.get(i));
         }
 
-        // Display top 10 in RecyclerView
+        // display top 10 in RecyclerView
         leaderboardAdapter.setEntries(top10);
 
-        // Find and display current user's position
+        // find and display the user's current position
         displayUserRank();
     }
 

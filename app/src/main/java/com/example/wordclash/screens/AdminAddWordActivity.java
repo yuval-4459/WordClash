@@ -15,7 +15,7 @@ import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
 /**
- * Admin screen to add new words to the vocabulary
+ * admin screen to add new words to the vocabulary
  */
 public class AdminAddWordActivity extends AppCompatActivity {
 
@@ -27,7 +27,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_add_word);
 
-        // Check if user is admin
+        // check if user is admin
         if (!SharedPreferencesUtils.getUser(this).isAdmin()) {
             Toast.makeText(this, "Access denied - Admin only", Toast.LENGTH_SHORT).show();
             finish();
@@ -68,7 +68,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
 
         int rank = Integer.parseInt(spinnerRank.getSelectedItem().toString());
 
-        // Generate unique ID for the word (public wrapper, not private generateNewId)
+        // generate a unique id for the word (public wrapper, not private generateNewId)
         String wordId = DatabaseService.getInstance().generateWordId(rank);
 
         Word word = new Word(wordId, english, hebrew, rank);

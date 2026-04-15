@@ -43,7 +43,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_manage_words);
 
-        // Check if user is admin
+        // check if the user is an admin
         if (!SharedPreferencesUtils.getUser(this).isAdmin()) {
             Toast.makeText(this, "Access denied - Admin only", Toast.LENGTH_SHORT).show();
             finish();
@@ -71,7 +71,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        // Sort spinner
+        // sort spinner
         String[] sortOptions = {"Random", "A-Z (English)", "א-ב (Hebrew)", "Rank"};
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, sortOptions);
@@ -90,7 +90,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             }
         });
 
-        // Rank filter spinner
+        // rank filter spinner
         String[] rankOptions = {"All Ranks", "Rank 1", "Rank 2", "Rank 3", "Rank 4", "Rank 5"};
         ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, rankOptions);
@@ -149,15 +149,15 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     private void applyFiltersAndSort() {
         String searchQuery = etSearch.getText().toString().trim().toLowerCase();
 
-        // Filter by search and rank
+        // filter by search and rank
         filteredWords.clear();
         for (Word word : allWords) {
-            // Filter by rank
+            // filter by rank
             if (currentRankFilter != 0 && word.getRank() != currentRankFilter) {
                 continue;
             }
 
-            // Filter by search query
+            // filter by search query
             if (!searchQuery.isEmpty()) {
                 boolean matchesEnglish = word.getEnglish() != null &&
                         word.getEnglish().toLowerCase().contains(searchQuery);
@@ -172,7 +172,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             filteredWords.add(word);
         }
 
-        // Sort based on selected option
+        // sort based on selected option
         switch (currentSortOption) {
             case "Random":
                 Collections.shuffle(filteredWords);
@@ -199,7 +199,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 break;
         }
 
-        // Update adapter
+        // update adapter
         wordAdapter.setWordList(filteredWords);
     }
 
@@ -222,7 +222,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                         "Word deleted successfully",
                         Toast.LENGTH_SHORT).show();
 
-                // Remove from local lists
+                // remove from local lists
                 allWords.remove(word);
                 wordAdapter.removeWord(word);
             }

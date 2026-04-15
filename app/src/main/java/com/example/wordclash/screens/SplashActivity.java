@@ -43,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         tvTagline = findViewById(R.id.tvTagline);
         progressBar = findViewById(R.id.progressBar);
 
-        // Initially hide for animation entrance
+        // initially hide for animation entrance
         ivLogo.setScaleX(0.5f);
         ivLogo.setScaleY(0.5f);
         ivLogo.setAlpha(0f);
@@ -72,17 +72,17 @@ public class SplashActivity extends AppCompatActivity {
         logoSet.setStartDelay(200);
         logoSet.start();
 
-        // Subtle pulse after logo appears
+        // subtle pulse after logo appears
         handler.postDelayed(this::startLogoPulseAnimation, 1200);
 
-        // Progress bar fade in
+        // progress bar fade in
         handler.postDelayed(() -> {
             ObjectAnimator alphaProgress = ObjectAnimator.ofFloat(progressBar, "alpha", 0f, 1f);
             alphaProgress.setDuration(600);
             alphaProgress.start();
         }, 1000);
 
-        // Tagline slide up and fade in
+        // tagline slide up and fade in
         handler.postDelayed(() -> {
             ObjectAnimator alphaTagline = ObjectAnimator.ofFloat(tvTagline, "alpha", 0f, 0.9f);
             ObjectAnimator translateTagline = ObjectAnimator.ofFloat(tvTagline, "translationY", 50f, 0f);

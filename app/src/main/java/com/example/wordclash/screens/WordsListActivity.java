@@ -76,15 +76,15 @@ public class WordsListActivity extends AppCompatActivity {
         wordAdapter = new WordAdapter();
         rvWords.setAdapter(wordAdapter);
 
-        // Button is now anchored to the BOTTOM of the screen.
-        // Hide when scrolling DOWN (user goes deeper into list, button obscures nothing important)
-        // Show when scrolling UP (user comes back toward top — ready button should reappear)
-        // This is the OPPOSITE of the previous logic where the button was at the top.
+        // button is now anchored to the BOTTOM of the screen.
+        // hide when scrolling down (user goes deeper into list, button obscures nothing important)
+        // show when scrolling up (user comes back toward top — ready button should reappear)
+        // this is the OPPOSITE of the previous logic where the button was at the top.
         rvWords.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 if (dy > 0) {
-                    // Scrolling DOWN — hide the bottom button to see more list
+                    // scrolling down — hide the bottom button to see more list
                     if (btnReady.getVisibility() == View.VISIBLE) {
                         btnReady.animate()
                                 .translationY(btnReady.getHeight() + 32f)
@@ -94,7 +94,7 @@ public class WordsListActivity extends AppCompatActivity {
                                 .start();
                     }
                 } else if (dy < 0) {
-                    // Scrolling UP — show the bottom button again
+                    // scrolling up — show the bottom button again
                     if (btnReady.getVisibility() == View.GONE) {
                         btnReady.setVisibility(View.VISIBLE);
                         btnReady.setTranslationY(btnReady.getHeight() + 32f);

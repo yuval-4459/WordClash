@@ -85,7 +85,7 @@ public class MatchGameActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Select random words
+                // select random words
                 Collections.shuffle(words);
                 gameWords = new ArrayList<>();
                 for (int i = 0; i < Math.min(TOTAL_PAIRS, words.size()); i++) {
@@ -110,18 +110,18 @@ public class MatchGameActivity extends AppCompatActivity {
 
         updateScore();
 
-        // Clear columns
+        // clear columns
         leftColumn.removeAllViews();
         rightColumn.removeAllViews();
         leftButtons.clear();
         rightButtons.clear();
 
-        // Determine language direction
+        // determine language direction
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
         boolean isLearningEnglish = learningLanguage.equals("english");
 
-        // Create left column (English or Hebrew)
+        // create left column (English or Hebrew)
         List<Word> leftWords = new ArrayList<>(gameWords);
         for (Word word : leftWords) {
             Button btn = createWordButton(isLearningEnglish ? word.getHebrew() : word.getEnglish(), word, true);
@@ -129,7 +129,7 @@ public class MatchGameActivity extends AppCompatActivity {
             leftColumn.addView(btn);
         }
 
-        // Create right column (Hebrew or English) - shuffled
+        // create right column (Hebrew or English) - shuffled
         List<Word> rightWords = new ArrayList<>(gameWords);
         Collections.shuffle(rightWords);
         for (Word word : rightWords) {
@@ -160,44 +160,44 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void handleButtonClick(Button button, boolean isLeft) {
-        // If already matched, ignore
+        // if already matched, ignore
         if (button.getAlpha() == 0.3f) return;
 
         if (isLeft) {
-            // Deselect if clicking same button
+            // deselect if clicking same button
             if (selectedLeft == button) {
                 selectedLeft.setBackgroundColor(Color.parseColor("#2196F3"));
                 selectedLeft = null;
                 return;
             }
 
-            // Deselect previous left button
+            // deselect previous left button
             if (selectedLeft != null) {
                 selectedLeft.setBackgroundColor(Color.parseColor("#2196F3"));
             }
 
-            // Select new left button
+            // select new left button
             selectedLeft = button;
             selectedLeft.setBackgroundColor(Color.parseColor("#FF6F00"));
         } else {
-            // Deselect if clicking same button
+            // deselect if clicking same button
             if (selectedRight == button) {
                 selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
                 selectedRight = null;
                 return;
             }
 
-            // Deselect previous right button
+            // deselect previous right button
             if (selectedRight != null) {
                 selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
             }
 
-            // Select new right button
+            // select new right button
             selectedRight = button;
             selectedRight.setBackgroundColor(Color.parseColor("#FF6F00"));
         }
 
-        // Check if both sides selected
+        // check if both sides selected
         if (selectedLeft != null && selectedRight != null) {
             checkMatch();
         }
@@ -208,7 +208,7 @@ public class MatchGameActivity extends AppCompatActivity {
         Word rightWord = (Word) selectedRight.getTag();
 
         if (leftWord.getId().equals(rightWord.getId())) {
-            // Correct match!
+            // correct match
             selectedLeft.setBackgroundColor(Color.GREEN);
             selectedRight.setBackgroundColor(Color.GREEN);
             selectedLeft.setAlpha(0.3f);
@@ -223,12 +223,12 @@ public class MatchGameActivity extends AppCompatActivity {
             selectedLeft = null;
             selectedRight = null;
 
-            // Check if game complete
+            // check if game complete
             if (matchesFound == TOTAL_PAIRS) {
                 new Handler().postDelayed(this::showWinDialog, 500);
             }
         } else {
-            // Wrong match
+            // wrong match
             selectedLeft.setBackgroundColor(Color.RED);
             selectedRight.setBackgroundColor(Color.RED);
 

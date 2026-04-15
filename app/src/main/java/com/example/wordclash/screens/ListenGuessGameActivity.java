@@ -95,8 +95,22 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                     int result = tts.setLanguage(Locale.US);
                     ttsReady = (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED);
                 } else {
-                    int result = tts.setLanguage(new Locale("he", "IL"));
-                    ttsReady = (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED);
+                    // FIX: Android uses "iw" as the internal code for Hebrew.
+                    // Try several locale options until one is supported by the device's TTS engine.
+                    Locale[] hebrewLocales = {
+                            new Locale("iw", "IL"),   // old ISO code, most common in Android
+                            new Locale("iw"),          // old ISO code without country
+                            new Locale("he", "IL"),    // new ISO code with country
+                            new Locale("he")           // new ISO code without country
+                    };
+
+                    for (Locale locale : hebrewLocales) {
+                        int result = tts.setLanguage(locale);
+                        if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                            ttsReady = true;
+                            break;
+                        }
+                    }
                 }
 
                 if (!ttsReady) {

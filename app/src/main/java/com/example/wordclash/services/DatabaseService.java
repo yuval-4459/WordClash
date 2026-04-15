@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public class DatabaseService {
 
-    // ========== חלק 1: הגדרות בסיסיות ==========
+    // ========== הגדרות בסיסיות ==========
 
     private static final String USERS_PATH = "users";           // נתיב למשתמשים
     private static final String STATS_PATH = "stats";           // נתיב לסטטיסטיקות
@@ -40,14 +40,14 @@ public class DatabaseService {
 
     private final DatabaseReference db;                         // חיבור ל-Firebase
 
-    // ========== חלק 2: ממשק Callback ==========
+    // ========== ממשק Callback ==========
 
     // קונסטרוקטור פרטי (סינגלטון)
     private DatabaseService() {
         db = FirebaseDatabase.getInstance().getReference();
     }
 
-    // ========== חלק 3: משתמשים (Users) ==========
+    // ========== משתמשים (Users) ==========
 
     // קבלת המופע היחיד של השירות
     public static DatabaseService getInstance() {
@@ -142,7 +142,7 @@ public class DatabaseService {
                 });
     }
 
-    // ========== חלק 4: סטטיסטיקות (Stats) ==========
+    // ========== (Stats) ==========
 
     /**
      * מחיקת משתמש
@@ -205,7 +205,7 @@ public class DatabaseService {
         });
     }
 
-    // ========== חלק 5: מילים (Words) ==========
+    // ========== מילים (Words) ==========
 
     /**
      * יצירת סטטיסטיקה חדשה למשתמש
@@ -292,7 +292,7 @@ public class DatabaseService {
                 .addOnFailureListener(callback::onFailed);
     }
 
-    // ========== חלק 6: התקדמות בדרגות (Rank Progress) ==========
+    // ========== התקדמות בדרגות (Rank Progress) ==========
 
     /**
      * קבלת כל המילים
@@ -413,7 +413,7 @@ public class DatabaseService {
                 });
     }
 
-    // ========== חלק 7: פונקציות עזר ==========
+    // ========== פונקציות עזר ==========
 
     /**
      * סימון שהמשתמש סקר את המילים

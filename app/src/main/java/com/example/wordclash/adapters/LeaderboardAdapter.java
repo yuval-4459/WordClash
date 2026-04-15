@@ -38,7 +38,6 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         holder.tvUsername.setText(entry.username);
         holder.tvScore.setText(entry.totalScore + " pts");
 
-        // Add medal emoji for top 3
         if (entry.position == 1) {
             holder.tvPosition.setText("🥇");
         } else if (entry.position == 2) {

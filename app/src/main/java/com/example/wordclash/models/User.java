@@ -5,9 +5,9 @@ import androidx.annotation.NonNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/// Model class for the user
-/// This class represents a user in the application
-/// It contains the user's information including learning language preference
+/// model class for the user
+/// this class represents a user in the application
+/// it contains the user's information (including learning language preference)
 ///
 /// @see Serializable
 public class User implements Serializable {
@@ -20,10 +20,10 @@ public class User implements Serializable {
     private String gender;
     private boolean isAdmin;
 
-    // Profile picture URL (stored in Firebase Storage or base64)
+    // profile picture URL (stored in Firebase Storage or base64)
     private String profilePictureUrl;
 
-    // Language the user wants to LEARN (not UI language)
+    // the language the user wants to learn (not UI language)
     // "english" = learning English (UI in Hebrew)
     // "hebrew" = learning Hebrew (UI in English)
     private String learningLanguage;
@@ -31,8 +31,8 @@ public class User implements Serializable {
     private ArrayList<Word> words;
 
     public User() {
-        this.learningLanguage = "english"; // Default
-        this.profilePictureUrl = null; // Default no picture
+        this.learningLanguage = "english"; // default
+        this.profilePictureUrl = null; // default is no picture
         this.words = new ArrayList<>();
     }
 

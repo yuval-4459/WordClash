@@ -43,7 +43,6 @@ public class LanguageSelectionActivity extends AppCompatActivity {
         Button btnEnglish = findViewById(R.id.btnEnglish);
         Button btnHebrew = findViewById(R.id.btnHebrew);
 
-        // Question is always in Hebrew (since this is first time)
         tvQuestion.setText("?איזו שפה תרצה ללמוד");
 
         btnEnglish.setOnClickListener(v -> selectLanguage("english"));
@@ -61,13 +60,13 @@ public class LanguageSelectionActivity extends AppCompatActivity {
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(LanguageSelectionActivity.this, user);
 
-                // Show confirmation in Hebrew
+                // show confirmation in Hebrew
                 String message = learningLanguage.equals("english")
                         ? "בחרת ללמוד אנגלית! הממשק יהיה בעברית"
                         : "בחרת ללמוד עברית! הממשק יהיה באנגלית";
                 Toast.makeText(LanguageSelectionActivity.this, message, Toast.LENGTH_SHORT).show();
 
-                // Go to main activity
+                // go to main activity
                 Intent intent = new Intent(LanguageSelectionActivity.this, MainActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

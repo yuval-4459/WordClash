@@ -108,7 +108,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         btnTrue.setBackgroundColor(Color.parseColor("#43A047"));
         btnFalse.setBackgroundColor(Color.parseColor("#E53935"));
 
-        // Get random word
+        // get random word
         Word correctWord = allWords.get(currentQuestion % allWords.size());
 
         // 50% chance of showing correct translation
@@ -116,28 +116,28 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         isCorrect = random.nextBoolean();
 
         String displayHebrew;
-        // Current question data
+        // current question data
         String displayEnglish;
         if (isCorrect) {
-            // Show correct pair
+            // show correct pair
             displayEnglish = correctWord.getEnglish();
             displayHebrew = correctWord.getHebrew();
         } else {
-            // Show incorrect pair (mix with another word)
+            // show incorrect pair (mix with another word)
             Word wrongWord = allWords.get((currentQuestion + 1) % allWords.size());
             displayEnglish = correctWord.getEnglish();
             displayHebrew = wrongWord.getHebrew();
         }
 
-        // Display based on learning language
+        // Display based on the learning language
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
         if (learningLanguage.equals("english")) {
-            // Learning English: show Hebrew = English?
+            // learning English: show Hebrew = English?
             tvQuestion.setText(displayHebrew + " = " + displayEnglish);
         } else {
-            // Learning Hebrew: show English = Hebrew?
+            // learning Hebrew: show English = Hebrew?
             tvQuestion.setText(displayEnglish + " = " + displayHebrew);
         }
 
@@ -152,7 +152,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         btnFalse.setEnabled(false);
 
         if (userAnswer == isCorrect) {
-            // Correct!
+            // correct
             score += 10 * rank;
             if (userAnswer) {
                 btnTrue.setBackgroundColor(Color.GREEN);
@@ -160,7 +160,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
                 btnFalse.setBackgroundColor(Color.GREEN);
             }
         } else {
-            // Wrong
+            // wrong
             if (userAnswer) {
                 btnTrue.setBackgroundColor(Color.RED);
                 btnFalse.setBackgroundColor(Color.GREEN);
@@ -172,7 +172,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
 
         updateScore();
 
-        // Next question after delay
+        // next question after delay
         new Handler().postDelayed(() -> {
             currentQuestion++;
             showNextQuestion();

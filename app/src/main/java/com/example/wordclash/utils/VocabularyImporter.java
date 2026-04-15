@@ -27,7 +27,7 @@ public class VocabularyImporter {
      */
     public static void importVocabularyFromAssets(Context context) {
         try {
-            // Read JSON file from assets
+            // read JSON file from assets
             InputStream is = context.getAssets().open("vocabulary_realtime_db.json");
             BufferedReader reader = new BufferedReader(new InputStreamReader(is));
             StringBuilder jsonString = new StringBuilder();

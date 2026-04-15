@@ -205,7 +205,7 @@ public class WordleGameActivity extends AppCompatActivity {
         gridGuesses.setColumnCount(WORD_LENGTH);
         gridGuesses.setRowCount(MAX_ATTEMPTS);
 
-        // Set direction based on language
+        // set direction based on language
         int direction = isHebrewWordle ? android.view.View.LAYOUT_DIRECTION_RTL : android.view.View.LAYOUT_DIRECTION_LTR;
         gridGuesses.setLayoutDirection(direction);
 
@@ -239,7 +239,7 @@ public class WordleGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words != null && !words.isEmpty()) {
-                    // Filter 5-letter words in the target language
+                    // filter 5 letter words in the target language
                     for (Word word : words) {
                         String targetText = isHebrewWordle ? word.getHebrew() : word.getEnglish();
                         if (targetText != null && targetText.trim().length() == 5) {
@@ -320,7 +320,7 @@ public class WordleGameActivity extends AppCompatActivity {
         char[] targetChars = targetWord.toCharArray();
         boolean[] used = new boolean[WORD_LENGTH];
 
-        // First pass: Mark exact matches (GREEN)
+        // first pass: Mark exact matches (green)
         for (int i = 0; i < WORD_LENGTH; i++) {
             TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
             char letter = guess.charAt(i);
@@ -332,7 +332,7 @@ public class WordleGameActivity extends AppCompatActivity {
             }
         }
 
-        // Second pass: Mark wrong position matches (YELLOW) and misses (GRAY)
+        // second pass: mark wrong position matches (yellow) and misses (gray)
         for (int i = 0; i < WORD_LENGTH; i++) {
             TextView tv = (TextView) gridGuesses.getChildAt(startIndex + i);
             char letter = guess.charAt(i);
@@ -363,7 +363,7 @@ public class WordleGameActivity extends AppCompatActivity {
         btnSubmit.setEnabled(false);
         hideKeyboard();
 
-        // Score: more points for fewer attempts, scaled by rank
+        // score: more points for fewer attempts, scaled by rank
         int attemptBonus = (MAX_ATTEMPTS - currentAttempt); // 5 down to 0
         int wonScore = (10 + attemptBonus * 5) * rank;
         saveScoreToStats(wonScore);

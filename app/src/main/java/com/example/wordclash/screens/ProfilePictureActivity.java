@@ -55,8 +55,18 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             success -> {
-                if (success && photoUri != null) {
-                    handleImageSelected(photoUri);
+                if (photoUri != null) {
+                    try {
+                        InputStream test = getContentResolver().openInputStream(photoUri);
+                        if (test != null) {
+                            test.close();
+                            handleImageSelected(photoUri);
+                        }
+                    } catch (Exception e) {
+                        if (success) {
+                            handleImageSelected(photoUri);
+                        }
+                    }
                 }
             });
 
@@ -111,13 +121,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
                 showDefaultAvatar();
             }
 
+            btnDeletePicture.setVisibility(Button.VISIBLE);
             btnDeletePicture.setEnabled(true);
             btnDeletePicture.setAlpha(1.0f);
             showRotationControls();
         } else {
             showDefaultAvatar();
-            btnDeletePicture.setEnabled(false);
-            btnDeletePicture.setAlpha(0.5f);
+            btnDeletePicture.setVisibility(Button.GONE);
             hideRotationControls();
         }
     }
@@ -150,7 +160,9 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
     private void openCamera() {
         try {
-            File photoFile = new File(getCacheDir(), "profile_picture_" + System.currentTimeMillis() + ".jpg");
+            File photoFile = new File(getCacheDir(),
+                    "profile_picture_" + System.currentTimeMillis() + ".jpg");
+            photoFile.createNewFile();
             photoUri = FileProvider.getUriForFile(this,
                     getApplicationContext().getPackageName() + ".fileprovider",
                     photoFile);
@@ -172,21 +184,17 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    // CHANGED: Sample down the bitmap before fully decoding it to avoid OutOfMemoryError
     private void handleImageSelected(Uri uri) {
         try {
-            // Step 1: Read dimensions only (no memory allocated for pixels)
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             try (InputStream sizeStream = getContentResolver().openInputStream(uri)) {
                 BitmapFactory.decodeStream(sizeStream, null, options);
             }
 
-            // Step 2: Calculate subsample size so we never load more than needed
             options.inSampleSize = calculateInSampleSize(options, 512, 512);
             options.inJustDecodeBounds = false;
 
-            // Step 3: Load the already-downscaled bitmap
             Bitmap sampledBitmap;
             try (InputStream inputStream = getContentResolver().openInputStream(uri)) {
                 sampledBitmap = BitmapFactory.decodeStream(inputStream, null, options);
@@ -197,13 +205,11 @@ public class ProfilePictureActivity extends AppCompatActivity {
                 return;
             }
 
-            // Step 4: Fix orientation using a fresh InputStream
             Bitmap orientedBitmap;
             try (InputStream exifStream = getContentResolver().openInputStream(uri)) {
                 orientedBitmap = fixImageOrientation(exifStream, sampledBitmap);
             }
 
-            // Step 5: Final resize and recycle intermediates
             Bitmap resized = resizeBitmap(orientedBitmap, 512, 512);
             if (resized != orientedBitmap) orientedBitmap.recycle();
 
@@ -222,7 +228,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    // CHANGED: Now accepts InputStream instead of Uri to avoid reopening streams
     private Bitmap fixImageOrientation(InputStream input, Bitmap bitmap) {
         try {
             ExifInterface exif = new ExifInterface(input);
@@ -250,14 +255,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
             }
 
             Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
-            bitmap.recycle(); // CHANGED: free the pre-rotation bitmap
+            bitmap.recycle();
             return rotated;
         } catch (Exception e) {
             return bitmap;
         }
     }
 
-    // CHANGED: Recycle old bitmap before replacing to free memory
     private void rotateImage() {
         if (currentBitmap == null) {
             Toast.makeText(this, "No image to rotate", Toast.LENGTH_SHORT).show();
@@ -272,7 +276,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
         Bitmap rotated = Bitmap.createBitmap(currentBitmap, 0, 0,
                 currentBitmap.getWidth(), currentBitmap.getHeight(), matrix, true);
 
-        currentBitmap.recycle(); // CHANGED: free the old bitmap
+        currentBitmap.recycle();
         currentBitmap = rotated;
 
         displayBitmap(currentBitmap);
@@ -282,7 +286,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         saveProfilePicture();
     }
 
-    // NEW: Helper to calculate the correct subsample size
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         int height = options.outHeight;
         int width = options.outWidth;

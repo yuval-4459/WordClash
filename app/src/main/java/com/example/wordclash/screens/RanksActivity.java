@@ -36,7 +36,7 @@ public class RanksActivity extends AppCompatActivity {
     private int currentLevel = 1;
     private int onlinePlayersCount = 0;
 
-    // Hardcoded manager ID extracted to a constant
+    // hardcoded manager ID extracted to a constant
     private static final String MANAGER_ID = "-OfhuEaP25z-o6NIsC5K";
 
     @Override
@@ -121,7 +121,7 @@ public class RanksActivity extends AppCompatActivity {
         if (isUnlocked) {
             card.setAlpha(1.0f);
             button.setEnabled(true);
-            // Use own color resource instead of deprecated AOSP holo_blue_light
+            // use own color resource instead of deprecated AOSP holo_blue_light
             button.setBackgroundTintList(getResources().getColorStateList(R.color.primary));
             button.setText("Play");
             statusText.setText(getString(R.string.unlocked));
@@ -130,12 +130,12 @@ public class RanksActivity extends AppCompatActivity {
         } else {
             card.setAlpha(0.5f);
             button.setEnabled(false);
-            // Use own color resource instead of deprecated AOSP darker_gray
+            // use own color resource instead of deprecated AOSP darker_gray
             button.setBackgroundTintList(getResources().getColorStateList(R.color.level_locked));
             button.setText("🔒");
             statusText.setText(getString(R.string.locked));
             statusText.setTextColor(getResources().getColor(R.color.level_locked));
-            // Don't set a click listener on a disabled button — it won't fire reliably
+            // don't set a click listener on a disabled button — it won't fire reliably
         }
     }
 
