@@ -34,8 +34,7 @@ public class LandingActivity extends AppCompatActivity {
 
 
         if (SharedPreferencesUtils.isUserLoggedIn(LandingActivity.this)) {
-
-            // oldUser = user saved locally (used only to get the userId)
+            // oldUser = משתמש שנשמר כבר מפעם קודמת - משומש בשביל לקבל את הuserID
             User oldUser = SharedPreferencesUtils.getUser(this);
 
             DatabaseService.getInstance().getUser(oldUser.getId(), new DatabaseService.DatabaseCallback<>() {
@@ -55,7 +54,6 @@ public class LandingActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailed(Exception e) {
-
                 }
             });
         }

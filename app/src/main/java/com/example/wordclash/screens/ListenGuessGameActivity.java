@@ -43,6 +43,9 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     private TextToSpeech tts;
     private boolean ttsReady = false;
+    // Tracks whether words are loaded and waiting for TTS to be ready
+    private boolean wordsLoaded = false;
+    private boolean ttsInitialized = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +64,12 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         rank = getIntent().getIntExtra("RANK", 1);
 
         initializeViews();
+        // Start TTS and word loading in parallel
         initializeTTS();
         loadWords();
     }
 
     private void initializeViews() {
-        TextView tvInstruction = findViewById(R.id.tvInstruction);
         tvProgress = findViewById(R.id.tvProgress);
         tvScore = findViewById(R.id.tvScore);
         btnListen = findViewById(R.id.btnListen);
@@ -82,40 +85,86 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         btnOption3.setOnClickListener(v -> checkAnswer(btnOption3));
         btnOption4.setOnClickListener(v -> checkAnswer(btnOption4));
         btnBack.setOnClickListener(v -> finish());
+
+        // Disable listen button until TTS is ready
+        btnListen.setEnabled(false);
+        btnListen.setAlpha(0.5f);
     }
 
     private void initializeTTS() {
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 String learningLanguage = user.getLearningLanguage();
-                if (learningLanguage == null)
-                    learningLanguage = "english";
+                if (learningLanguage == null) learningLanguage = "english";
+
+                boolean languageSet = false;
 
                 if (learningLanguage.equals("english")) {
                     int result = tts.setLanguage(Locale.US);
-                    ttsReady = (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED);
+                    if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                        languageSet = true;
+                    }
                 } else {
-                    // FIX: Android uses "iw" as the internal code for Hebrew.
-                    // Try several locale options until one is supported by the device's TTS engine.
+                    // Hebrew: try multiple locale variations
                     Locale[] hebrewLocales = {
-                            new Locale("iw", "IL"),   // old ISO code, most common in Android
-                            new Locale("iw"),          // old ISO code without country
-                            new Locale("he", "IL"),    // new ISO code with country
-                            new Locale("he")           // new ISO code without country
+                            new Locale("iw", "IL"),
+                            new Locale("iw"),
+                            new Locale("he", "IL"),
+                            new Locale("he"),
                     };
 
                     for (Locale locale : hebrewLocales) {
                         int result = tts.setLanguage(locale);
-                        if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
-                            ttsReady = true;
+                        if (result != TextToSpeech.LANG_MISSING_DATA
+                                && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                            languageSet = true;
                             break;
+                        }
+                    }
+
+                    // If none of the standard locales worked, try to find any available Hebrew voice
+                    if (!languageSet) {
+                        try {
+                            for (java.util.Locale available : tts.getAvailableLanguages()) {
+                                String lang = available.getLanguage();
+                                if (lang.equals("iw") || lang.equals("he")) {
+                                    int result = tts.setLanguage(available);
+                                    if (result != TextToSpeech.LANG_MISSING_DATA
+                                            && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                                        languageSet = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        } catch (Exception ignored) {
+                            // getAvailableLanguages() can throw on some devices
                         }
                     }
                 }
 
-                if (!ttsReady) {
-                    Toast.makeText(this, "Text-to-Speech not available for this language", Toast.LENGTH_LONG).show();
-                }
+                final boolean finalLanguageSet = languageSet;
+                runOnUiThread(() -> {
+                    ttsInitialized = true;
+                    if (finalLanguageSet) {
+                        ttsReady = true;
+                        btnListen.setEnabled(true);
+                        btnListen.setAlpha(1.0f);
+                        // If words are already loaded, speak the first word now
+                        if (wordsLoaded && currentQuestionIndex < gameWords.size()) {
+                            new Handler().postDelayed(this::speakWord, 300);
+                        }
+                    } else {
+                        Toast.makeText(this,
+                                "Hebrew Text-to-Speech is not installed on this device.\n" +
+                                        "Please install it in Settings → Language & Input → Text-to-Speech.",
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else {
+                runOnUiThread(() -> {
+                    ttsInitialized = true;
+                    Toast.makeText(this, "Text-to-Speech failed to initialize.", Toast.LENGTH_LONG).show();
+                });
             }
         });
     }
@@ -132,7 +181,15 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
                 allWords = words;
                 selectRandomWords();
+
+                wordsLoaded = true;
                 showQuestion();
+
+                // If TTS is already ready by the time words load, speak immediately
+                if (ttsReady) {
+                    new Handler().postDelayed(ListenGuessGameActivity.this::speakWord, 500);
+                }
+                // Otherwise speakWord will be called from the TTS init callback above
             }
 
             @Override
@@ -170,8 +227,6 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
         setupOptions(currentWord, !isLearningEnglish);
         updateProgress();
-
-        btnListen.postDelayed(this::speakWord, 500);
     }
 
     private void setupOptions(Word correctWord, boolean showHebrew) {
@@ -201,15 +256,24 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     private void speakWord() {
         if (!ttsReady) {
-            Toast.makeText(this, "Text-to-Speech not ready", Toast.LENGTH_SHORT).show();
+            if (!ttsInitialized) {
+                Toast.makeText(this, "Text-to-Speech is still loading, please wait...", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Text-to-Speech is not available for Hebrew on this device.", Toast.LENGTH_LONG).show();
+            }
             return;
         }
+
+        if (gameWords == null || currentQuestionIndex >= gameWords.size()) return;
 
         Word currentWord = gameWords.get(currentQuestionIndex);
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
-        String textToSpeak = learningLanguage.equals("english") ? currentWord.getEnglish() : currentWord.getHebrew();
+        String textToSpeak = learningLanguage.equals("english")
+                ? currentWord.getEnglish()
+                : currentWord.getHebrew();
+
         tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
     }
 
@@ -257,6 +321,10 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     private void nextQuestion() {
         currentQuestionIndex++;
         showQuestion();
+        // Auto-speak next word if TTS is ready
+        if (ttsReady && currentQuestionIndex < gameWords.size()) {
+            new Handler().postDelayed(this::speakWord, 500);
+        }
     }
 
     private void updateProgress() {
@@ -282,6 +350,9 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                     score = 0;
                     selectRandomWords();
                     showQuestion();
+                    if (ttsReady) {
+                        new Handler().postDelayed(this::speakWord, 500);
+                    }
                 })
                 .setNegativeButton("Back", (dialog, which) -> finish())
                 .setCancelable(false)

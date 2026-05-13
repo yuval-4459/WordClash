@@ -82,6 +82,8 @@ public class SignUpActivity extends AppCompatActivity {
         String password2 = etPassword2.getText().toString().trim();
         String userName = etUserName.getText().toString().trim();
 
+        // בדיקת תקינות השדות לפני פנייה ישירה
+
         if (email.isEmpty() || password.isEmpty()
                 || password2.isEmpty() || userName.isEmpty()) {
             Toast.makeText(this, "נא למלא את כל השדות", Toast.LENGTH_SHORT).show();
@@ -111,14 +113,11 @@ public class SignUpActivity extends AppCompatActivity {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<>() {
                         @Override
                         public void onCompleted(Void v) {
-                            // create initial stats
+                            // יצירת משתמש חדש ונתוני סטטיסטיקה במידה והמייל פנוי
                             Stats initialStats = new Stats(user.getId(), 1, 0);
                             db.createStats(initialStats, null);
-
                             Toast.makeText(SignUpActivity.this, "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
-
                             SharedPreferencesUtils.saveUser(SignUpActivity.this, user);
-
                             // go to language selection screen
                             Intent intent = new Intent(SignUpActivity.this, LanguageSelectionActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

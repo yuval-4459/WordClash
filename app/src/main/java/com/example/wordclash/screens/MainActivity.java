@@ -131,18 +131,21 @@ public class MainActivity extends AppCompatActivity
 
     }
 
+    // בדיקת הרשאות מנהל בעת טעינת התפריט
     private void setupMenu() {
-        if (!user.isAdmin()) {
+        if (!user.isAdmin()) { // במידה והמשתמש אינו מנהל - הסתרת כפתורי האדמין
             navigationView.getMenu().findItem(R.id.nav_users_table).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_add_word).setVisible(false);
             navigationView.getMenu().findItem(R.id.nav_manage_words).setVisible(false);
         }
     }
 
+    // פונקציה לניתוב למסכים לפי בחירת המשתמש בתפריט הצד
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
+        // בדיקה לאיזה מסך המשתמש רוצה לעבור
         if (id == R.id.nav_users_table) {
             startActivity(new Intent(this, UserListActivity.class));
         } else if (id == R.id.nav_add_word) {
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, ProfilePictureActivity.class));
         }
 
-        drawerLayout.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START); // סגירת התפריט לאחר הבחירה
         return true;
     }
 
