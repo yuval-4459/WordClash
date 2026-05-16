@@ -15,7 +15,7 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 /**
  * Mini Games selection screen
- * Shows all available vocabulary-based mini games INCLUDING Wordle
+ * Shows all available vocabulary-based mini games
  */
 public class GamesActivity extends AppCompatActivity {
 
@@ -101,12 +101,6 @@ public class GamesActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        // Wordle
-        cardWordle.setOnClickListener(v -> {
-            Intent intent = new Intent(this, WordleGameActivity.class);
-            intent.putExtra("RANK", rank);
-            startActivity(intent);
-        });
 
         // Speed Quiz
         cardSpeedQuiz.setOnClickListener(v -> {

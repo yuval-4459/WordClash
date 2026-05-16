@@ -341,28 +341,7 @@ public class DatabaseService {
                 });
     }
 
-    /**
-     * קבלת מילים בעלות 5 אותיות (למשחק Wordle)
-     */
-    public void getAllFiveLetterWords(DatabaseCallback<List<Word>> callback) {
-        getAllWords(new DatabaseCallback<>() {
-            @Override
-            public void onCompleted(List<Word> allWords) {
-                List<Word> fiveLetterWords = new ArrayList<>();
-                for (Word word : allWords) {
-                    if (word.getEnglish().trim().length() == 5) {
-                        fiveLetterWords.add(word);
-                    }
-                }
-                callback.onCompleted(fiveLetterWords);
-            }
 
-            @Override
-            public void onFailed(Exception e) {
-                callback.onFailed(e);
-            }
-        });
-    }
 
     /**
      * קבלת התקדמות לדרגה מסוימת
