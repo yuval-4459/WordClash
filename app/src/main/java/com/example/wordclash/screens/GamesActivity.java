@@ -54,7 +54,6 @@ public class GamesActivity extends AppCompatActivity {
         CardView cardWordBuilder = findViewById(R.id.cardWordBuilder);
         CardView cardTrueFalse = findViewById(R.id.cardTrueFalse);
         CardView cardMemoryCards = findViewById(R.id.cardMemoryCards);
-        CardView cardWordle = findViewById(R.id.cardWordle);
         CardView cardSpeedQuiz = findViewById(R.id.cardSpeedQuiz);
 
         btnBack.setOnClickListener(v -> finish());
