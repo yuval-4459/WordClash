@@ -11,7 +11,6 @@
     <string name="logout">יציאה</string>
     <string name="start_playing">🎮 התחל לשחק</string>
     <string name="leaderboard">🏆\nלוח מובילים</string>
-    <string name="wordle">🎯\nWordle</string>
     <string name="mini_games">🎮\nמשחקונים</string>
 
     <!-- Navigation Menu (Hamburger) -->
@@ -62,16 +61,6 @@
     <string name="top_10_players">10 השחקנים המובילים</string>
     <string name="your_ranking">הדירוג שלך</string>
     <string name="points">%d נק\'</string>
-
-    <!-- Wordle -->
-    <string name="wordle_title">🎮 WORDLE</string>
-    <string name="wordle_instructions">נחש את המילה בת 5 אותיות!\n🟩 = מיקום נכון\n🟨 = מיקום שגוי\n⬜ = לא במילה</string>
-    <string name="wordle_type_instruction">הקש על הרשת והתחל להקליד</string>
-    <string name="submit_guess">שלח ניחוש</string>
-    <string name="new_game">🔄 משחק חדש</string>
-    <string name="word_was">המילה הייתה: %s</string>
-    <string name="attempts">ניסיונות: %d/%d</string>
-    <string name="game_over">המשחק נגמר</string>
 
     <!-- Settings & Change Details -->
     <string name="settings_management">ניהול הגדרות</string>

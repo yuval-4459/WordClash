@@ -11,7 +11,6 @@
     <string name="logout">Logout</string>
     <string name="start_playing">🎮 Start Playing</string>
     <string name="leaderboard">🏆\nLeaderboard</string>
-    <string name="wordle">🎯\nWordle</string>
     <string name="mini_games">🎮\nMini Games</string>
 
     <!-- Navigation Menu (Hamburger) -->
@@ -62,16 +61,6 @@
     <string name="top_10_players">Top 10 Players</string>
     <string name="your_ranking">Your Ranking</string>
     <string name="points">%d pts</string>
-
-    <!-- Wordle -->
-    <string name="wordle_title">🎮 WORDLE</string>
-    <string name="wordle_instructions">Guess the 5-letter word!\n🟩 = Correct position\n🟨 = Wrong position\n⬜ = Not in word</string>
-    <string name="wordle_type_instruction">Tap the grid and start typing</string>
-    <string name="submit_guess">Submit Guess</string>
-    <string name="new_game">🔄 New Game</string>
-    <string name="word_was">The word was: %s</string>
-    <string name="attempts">Attempts: %d/%d</string>
-    <string name="game_over">Game Over</string>
 
     <!-- Settings & Change Details -->
     <string name="settings_management">Settings Management</string>
