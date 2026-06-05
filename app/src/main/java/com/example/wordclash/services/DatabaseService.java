@@ -342,7 +342,6 @@ public class DatabaseService {
     }
 
 
-
     /**
      * קבלת התקדמות לדרגה מסוימת
      */

@@ -16,6 +16,7 @@ import java.util.List;
 
 public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.ViewHolder> {
 
+
     private final List<LeaderboardActivity.LeaderboardEntry> entries;
 
     public LeaderboardAdapter() {
@@ -24,6 +25,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     @NonNull
     @Override
+    // ה-ViewHolder הוא פשוט "מחסן קטן" שמחזיק את הרכיבים האלה בזיכרון, כדי שלא נצטרך לעשות findViewById בכל פעם ששורה זזה
+    // ה-holder הוא פשוט הכינוי של השורה הספציפית שאותה המערכת ממחזרת ומציגה כרגע על המסך.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_leaderboard, parent, false);

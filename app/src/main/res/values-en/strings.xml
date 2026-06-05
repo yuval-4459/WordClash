@@ -40,7 +40,7 @@
 
     <!-- Words List -->
     <string name="vocabulary">Rank %d Vocabulary</string>
-    <string name="search_words">Search English or Hebrew...</string>
+    <string name="search_words">Search English or Hebrew…</string>
     <string name="ready">✓ I\'m Ready</string>
     <string name="ready_to_practice">You are ready to practice Rank %d!</string>
     <string name="no_words_found">No words found for this rank</string>

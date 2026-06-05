@@ -11,9 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layoutDirection="locale"
         android:orientation="horizontal"
-        android:padding="16dp"
-        android:layoutDirection="locale">
+        android:padding="16dp">
 
         <!-- English word: always LTR, always on the logical start side -->
         <TextView
@@ -21,12 +21,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="start"
             android:text="Hello"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
-            android:textStyle="bold"
             android:textDirection="ltr"
-            android:gravity="start" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -43,11 +43,11 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:gravity="end"
             android:text="שלום"
             android:textColor="@android:color/black"
-            android:textSize="18sp"
             android:textDirection="rtl"
-            android:gravity="end" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 

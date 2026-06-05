@@ -15,12 +15,12 @@
         android:adjustViewBounds="true"
         android:contentDescription="WordClash Logo"
         android:scaleType="fitCenter"
+        android:src="@drawable/wordclash_logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.35"
-        android:src="@drawable/wordclash_logo" />
+        app:layout_constraintVertical_bias="0.35" />
 
     <!-- App Name -->
     <TextView

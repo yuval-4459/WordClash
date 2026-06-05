@@ -42,10 +42,6 @@ android {
 dependencies {
     implementation libs.gson
 
-    // JavaMail for sending emails
-    implementation libs.android.mail
-    implementation libs.android.activation
-
     // AndroidX basics
     implementation libs.appcompat
     implementation libs.material
