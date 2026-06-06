@@ -274,12 +274,23 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
             Matrix matrix = new Matrix();
             switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:    matrix.postRotate(90);   break;
-                case ExifInterface.ORIENTATION_ROTATE_180:   matrix.postRotate(180);  break;
-                case ExifInterface.ORIENTATION_ROTATE_270:   matrix.postRotate(270);  break;
-                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL: matrix.setScale(-1, 1); break;
-                case ExifInterface.ORIENTATION_FLIP_VERTICAL:   matrix.setScale(1, -1); break;
-                default: return bitmap;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    matrix.postRotate(90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    matrix.postRotate(180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    matrix.postRotate(270);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                    matrix.setScale(-1, 1);
+                    break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                    matrix.setScale(1, -1);
+                    break;
+                default:
+                    return bitmap;
             }
 
             Bitmap rotated = Bitmap.createBitmap(
@@ -320,13 +331,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         int height = options.outHeight;
-        int width  = options.outWidth;
+        int width = options.outWidth;
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
             int halfHeight = height / 2;
-            int halfWidth  = width  / 2;
+            int halfWidth = width / 2;
             while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth  / inSampleSize) >= reqWidth) {
+                    && (halfWidth / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2;
             }
         }
@@ -350,11 +361,11 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     private Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
-        int width  = bitmap.getWidth();
+        int width = bitmap.getWidth();
         int height = bitmap.getHeight();
         float scale = Math.min((float) maxWidth / width, (float) maxHeight / height);
         if (scale < 1.0f) {
-            int newWidth  = Math.round(width  * scale);
+            int newWidth = Math.round(width * scale);
             int newHeight = Math.round(height * scale);
             return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
         }

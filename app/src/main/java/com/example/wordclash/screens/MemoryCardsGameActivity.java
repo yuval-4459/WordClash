@@ -32,10 +32,10 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> gameWords;
     private List<Button> cardButtons;
-    private Button firstCard  = null;
+    private Button firstCard = null;
     private Button secondCard = null;
     private int matchesFound = 0;
-    private int score        = 0;
+    private int score = 0;
     private boolean isProcessing = false;
 
     @Override
@@ -55,10 +55,10 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvScore   = findViewById(R.id.tvScore);
+        tvScore = findViewById(R.id.tvScore);
         tvMatches = findViewById(R.id.tvMatches);
         gridCards = findViewById(R.id.gridCards);
-        Button btnBack    = findViewById(R.id.btnBack);
+        Button btnBack = findViewById(R.id.btnBack);
         Button btnNewGame = findViewById(R.id.btnNewGame);
 
         btnBack.setOnClickListener(v -> finish());
@@ -96,9 +96,9 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
 
     private void setupGame() {
         matchesFound = 0;
-        score        = 0;
-        firstCard    = null;
-        secondCard   = null;
+        score = 0;
+        firstCard = null;
+        secondCard = null;
         isProcessing = false;
 
         updateScore();
@@ -126,7 +126,7 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     private Button createCardButton(CardData card) {
         Button button = new Button(this);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width  = 0;
+        params.width = 0;
         params.height = GridLayout.LayoutParams.WRAP_CONTENT;
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
         params.setMargins(8, 8, 8, 8);
@@ -153,14 +153,14 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
         if (firstCard == null) {
             firstCard = button;
         } else {
-            secondCard   = button;
+            secondCard = button;
             isProcessing = true;
             checkMatch();
         }
     }
 
     private void checkMatch() {
-        CardData firstData  = (CardData) firstCard.getTag();
+        CardData firstData = (CardData) firstCard.getTag();
         CardData secondData = (CardData) secondCard.getTag();
 
         if (firstData.word.getId().equals(secondData.word.getId())) {
@@ -173,8 +173,8 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
             score += 10 * rank;
             updateScore();
 
-            firstCard    = null;
-            secondCard   = null;
+            firstCard = null;
+            secondCard = null;
             isProcessing = false;
 
             if (matchesFound == TOTAL_PAIRS) {
@@ -186,8 +186,8 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
                 secondCard.setText("?");
                 firstCard.setBackgroundColor(Color.parseColor("#2196F3"));
                 secondCard.setBackgroundColor(Color.parseColor("#2196F3"));
-                firstCard    = null;
-                secondCard   = null;
+                firstCard = null;
+                secondCard = null;
                 isProcessing = false;
             }, 1000);
         }
@@ -219,18 +219,19 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) { }
+            public void onFailed(Exception e) {
+            }
         });
     }
 
     private static class CardData {
-        final Word    word;
-        final String  text;
+        final Word word;
+        final String text;
         final boolean isHebrew;
 
         CardData(Word word, String text, boolean isHebrew) {
-            this.word     = word;
-            this.text     = text;
+            this.word = word;
+            this.text = text;
             this.isHebrew = isHebrew;
         }
     }

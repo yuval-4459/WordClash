@@ -27,7 +27,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         this.listener = listener;
     }
 
-    // מנפח (Inflate) את ה-XML של פריט בודד (item_word_admin) ועוטף אותו ב-ViewHolder לצורך תצוגה.
+    // מנפח (Inflate) את ה-XML של פריט בודד (item_word_admin) ועוטף אותו ב-ViewHolder לצורך תצוגה
     @NonNull
     @Override
     public AdminWordAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -35,7 +35,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         return new ViewHolder(view);
     }
 
-    //מחבר את נתוני המילה לפי המיקום לרכיבי ה-UI ומגדיר מאזין ללחיצה על כפתור המחיקה.
+    //מחבר את נתוני המילה לפי המיקום לרכיבי ה-UI ומגדיר מאזין ללחיצה על כפתור המחיקה
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Word word = wordList.get(position);
@@ -54,20 +54,20 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         });
     }
 
-    // מחזיר את כמות הפריטים ברשימה המקומית כדי שה-RecyclerView ידע כמה שורות לייצר.
+    // מחזיר את כמות הפריטים ברשימה המקומית כדי שה-RecyclerView ידע כמה שורות לייצר
     @Override
     public int getItemCount() {
         return wordList.size();
     }
 
-    //מעדכן את האדפטר ברשימה חדשה וקורא ל-notifyDataSetChanged לרענון כל המסך.
+    //מעדכן את האדפטר ברשימה חדשה וקורא ל-notifyDataSetChanged לרענון כל המסך
     public void setWordList(List<Word> words) {
         wordList.clear();
         wordList.addAll(words);
         notifyDataSetChanged();
     }
 
-    //מוחק מילה מהרשימה ומעדכן רק את השורה הספציפית באמצעות notifyItemRemoved ליצירת אנימציית מחיקה חלקה.
+    //מוחק מילה מהרשימה ומעדכן רק את השורה הספציפית באמצעות notifyItemRemoved ליצירת אנימציית מחיקה חלקה
     public void removeWord(Word word) {
         int index = wordList.indexOf(word);
         if (index == -1) return;
@@ -81,7 +81,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         void onDeleteClick(Word word);
     }
 
-    //מחלקה השומרת את רכיבי ה-UI של השורה בזיכרון וחוסכת ריצות חוזרות של findViewById, דבר המשפר ביצועים וסוללה (Optimization).
+    //מחלקה השומרת את רכיבי ה-UI של השורה בזיכרון וחוסכת ריצות חוזרות של findViewById, דבר המשפר ביצועים וסוללה (Optimization)
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView tvEnglish;
         final TextView tvHebrew;

@@ -38,8 +38,8 @@
                 android:layout_width="60dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="8dp"
-                android:background="#FFFFFF"
-                android:alpha="0.5" />
+                android:alpha="0.5"
+                android:background="#FFFFFF" />
 
         </LinearLayout>
 

@@ -49,10 +49,10 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     private void initializeViews() {
         RecyclerView rvLeaderboard = findViewById(R.id.rvLeaderboard);
-        cardYourRank   = findViewById(R.id.cardYourRank);
+        cardYourRank = findViewById(R.id.cardYourRank);
         tvYourPosition = findViewById(R.id.tvYourPosition);
         tvYourUsername = findViewById(R.id.tvYourUsername);
-        tvYourScore    = findViewById(R.id.tvYourScore);
+        tvYourScore = findViewById(R.id.tvYourScore);
 
         rvLeaderboard.setLayoutManager(new LinearLayoutManager(this));
         leaderboardAdapter = new LeaderboardAdapter();
@@ -100,10 +100,10 @@ public class LeaderboardActivity extends AppCompatActivity {
                 public void onCompleted(Stats stats) {
                     if (stats != null) {
                         LeaderboardEntry entry = new LeaderboardEntry();
-                        entry.userId     = user.getId();
-                        entry.username   = user.getUserName();
+                        entry.userId = user.getId();
+                        entry.username = user.getUserName();
                         entry.totalScore = stats.getTotalScore();
-                        entry.rank       = stats.getRank();
+                        entry.rank = stats.getRank();
                         allEntries.add(entry);
                     }
 

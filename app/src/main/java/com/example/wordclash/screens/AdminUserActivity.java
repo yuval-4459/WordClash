@@ -37,7 +37,7 @@ public class AdminUserActivity extends AppCompatActivity {
 
     private User selectedUser;
     private Stats userStats;
-    private boolean isDataLoaded    = false;
+    private boolean isDataLoaded = false;
     private boolean hasUnsavedChanges = false;
 
     @Override
@@ -75,22 +75,22 @@ public class AdminUserActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        rootView    = findViewById(android.R.id.content);
-        mainCard    = findViewById(R.id.mainCard);
+        rootView = findViewById(android.R.id.content);
+        mainCard = findViewById(R.id.mainCard);
         loadingProgress = findViewById(R.id.loadingProgress);
 
-        emailLayout    = findViewById(R.id.emailLayout);
+        emailLayout = findViewById(R.id.emailLayout);
         passwordLayout = findViewById(R.id.passwordLayout);
         usernameLayout = findViewById(R.id.usernameLayout);
-        scoreLayout    = findViewById(R.id.scoreLayout);
+        scoreLayout = findViewById(R.id.scoreLayout);
 
-        emailField      = findViewById(R.id.Email);
-        passwordField   = findViewById(R.id.Password);
-        usernameField   = findViewById(R.id.UserName);
+        emailField = findViewById(R.id.Email);
+        passwordField = findViewById(R.id.Password);
+        usernameField = findViewById(R.id.UserName);
         totalScoreField = findViewById(R.id.TotalScore);
 
         genderSpinner = findViewById(R.id.Gender);
-        rankSpinner   = findViewById(R.id.RankSpinner);
+        rankSpinner = findViewById(R.id.RankSpinner);
 
         isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
 
@@ -135,11 +135,18 @@ public class AdminUserActivity extends AppCompatActivity {
 
     private void setupChangeTracking() {
         TextWatcher changeWatcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 hasUnsavedChanges = true;
             }
-            @Override public void afterTextChanged(Editable s) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
         };
 
         emailField.addTextChangedListener(changeWatcher);
@@ -153,7 +160,10 @@ public class AdminUserActivity extends AppCompatActivity {
                                        View view, int position, long id) {
                 if (isDataLoaded) hasUnsavedChanges = true;
             }
-            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+            }
         });
 
         rankSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
@@ -162,11 +172,16 @@ public class AdminUserActivity extends AppCompatActivity {
                                        View view, int position, long id) {
                 if (isDataLoaded) hasUnsavedChanges = true;
             }
-            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+
+            @Override
+            public void onNothingSelected(android.widget.AdapterView<?> parent) {
+            }
         });
 
         isAdminCheckBox.setOnCheckedChangeListener(
-                (buttonView, isChecked) -> { if (isDataLoaded) hasUnsavedChanges = true; });
+                (buttonView, isChecked) -> {
+                    if (isDataLoaded) hasUnsavedChanges = true;
+                });
     }
 
     private void populateFields() {
@@ -203,7 +218,7 @@ public class AdminUserActivity extends AppCompatActivity {
                             }
                             showLoading(false);
                             setButtonsEnabled(true);
-                            isDataLoaded     = true;
+                            isDataLoaded = true;
                             hasUnsavedChanges = false;
                         });
                     }
@@ -217,7 +232,7 @@ public class AdminUserActivity extends AppCompatActivity {
                             totalScoreField.setText("0");
                             showLoading(false);
                             setButtonsEnabled(true);
-                            isDataLoaded     = true;
+                            isDataLoaded = true;
                             hasUnsavedChanges = false;
                         });
                     }
@@ -227,10 +242,10 @@ public class AdminUserActivity extends AppCompatActivity {
     private boolean validateInputs() {
         boolean isValid = true;
 
-        String email    = emailField.getText().toString().trim();
+        String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
         String username = usernameField.getText().toString().trim();
-        String score    = totalScoreField.getText().toString().trim();
+        String score = totalScoreField.getText().toString().trim();
 
         emailLayout.setError(null);
         passwordLayout.setError(null);
@@ -306,11 +321,11 @@ public class AdminUserActivity extends AppCompatActivity {
         showLoading(true);
         setButtonsEnabled(false);
 
-        String email    = emailField.getText().toString().trim();
+        String email = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
         String username = usernameField.getText().toString().trim();
         String[] dbGenders = {"Male", "Female", "Other"};
-        String gender   = dbGenders[genderSpinner.getSelectedItemPosition()];
+        String gender = dbGenders[genderSpinner.getSelectedItemPosition()];
         boolean isAdmin = isAdminCheckBox.isChecked();
 
         selectedUser.setEmail(email);
@@ -319,11 +334,12 @@ public class AdminUserActivity extends AppCompatActivity {
         selectedUser.setGender(gender);
         selectedUser.setAdmin(isAdmin);
 
-        int newRank  = rankSpinner.getSelectedItemPosition() + 1;
+        int newRank = rankSpinner.getSelectedItemPosition() + 1;
         int newScore = 0;
         try {
             newScore = Integer.parseInt(totalScoreField.getText().toString().trim());
-        } catch (NumberFormatException ignored) {}
+        } catch (NumberFormatException ignored) {
+        }
 
         userStats.setRank(newRank);
         userStats.setTotalScore(newScore);

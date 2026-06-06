@@ -47,17 +47,17 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="@string/word_progress"
-            tools:text="Word 1 / 10"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            tools:text="Word 1 / 10" />
 
         <TextView
             android:id="@+id/tvScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/score"
-            tools:text="Score: 0"
             android:textSize="18sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Score: 0" />
 
     </LinearLayout>
 
@@ -68,12 +68,12 @@
         android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="@string/word_builder_hint_hebrew"
-        tools:text="Hebrew: שלום"
         android:textColor="#424242"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scoreLayout" />
+        app:layout_constraintTop_toBottomOf="@id/scoreLayout"
+        tools:text="Hebrew: שלום" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/wordCard"
@@ -97,17 +97,17 @@
             android:id="@+id/tvWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:breakStrategy="simple"
             android:fontFamily="monospace"
             android:gravity="center"
+            android:hyphenationFrequency="none"
+            android:maxLines="2"
             android:padding="24dp"
             android:text="H _ L L O"
-            tools:text="H _ L L O"
             android:textColor="@android:color/black"
             android:textSize="32sp"
             android:textStyle="bold"
-            android:maxLines="2"
-            android:breakStrategy="simple"
-            android:hyphenationFrequency="none" />
+            tools:text="H _ L L O" />
 
     </androidx.cardview.widget.CardView>
 

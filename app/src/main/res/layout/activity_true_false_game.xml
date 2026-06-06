@@ -47,17 +47,17 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="@string/question_progress"
-            tools:text="Question 1 / 15"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:text="Question 1 / 15" />
 
         <TextView
             android:id="@+id/tvScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/score"
-            tools:text="Score: 0"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Score: 0" />
 
     </LinearLayout>
 
@@ -80,10 +80,10 @@
             android:gravity="center"
             android:padding="32dp"
             android:text="word = מילה"
-            tools:text="word = מילה"
             android:textColor="@android:color/black"
             android:textSize="28sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="word = מילה" />
 
     </androidx.cardview.widget.CardView>
 

@@ -32,10 +32,10 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     private TextView tvCurrentLanguage, tvAdminControlsTitle;
     private CheckBox isAdminCheckBox;
 
-    private String selectedGender   = "";
+    private String selectedGender = "";
     private String selectedLanguage = "";
 
-    private User  currentUser;
+    private User currentUser;
     private Stats userStats;
     private boolean isAdmin = false;
 
@@ -78,17 +78,17 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        etUserName  = findViewById(R.id.UserName);
-        etEmail     = findViewById(R.id.Email);
-        etPassword  = findViewById(R.id.Password);
-        genderSpinner   = findViewById(R.id.Gender);
+        etUserName = findViewById(R.id.UserName);
+        etEmail = findViewById(R.id.Email);
+        etPassword = findViewById(R.id.Password);
+        genderSpinner = findViewById(R.id.Gender);
         languageSpinner = findViewById(R.id.LanguageSpinner);
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
         tvCurrentLanguage = findViewById(R.id.tvCurrentLanguage);
 
-        etTotalScore      = findViewById(R.id.TotalScore);
-        rankSpinner       = findViewById(R.id.RankSpinner);
-        isAdminCheckBox   = findViewById(R.id.isAdminCheckBox);
+        etTotalScore = findViewById(R.id.TotalScore);
+        rankSpinner = findViewById(R.id.RankSpinner);
+        isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
         tvAdminControlsTitle = findViewById(R.id.tvAdminControlsTitle);
     }
 
@@ -244,7 +244,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
     private void updateDetails() {
         String userName = etUserName.getText().toString().trim();
-        String email    = etEmail.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
         // ------------------------------------------------------------------
@@ -299,9 +299,9 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
         // Convert display gender back to English code
         String genderCode = selectedGender;
-        if (selectedGender.equals(getString(R.string.male)))   genderCode = "Male";
+        if (selectedGender.equals(getString(R.string.male))) genderCode = "Male";
         else if (selectedGender.equals(getString(R.string.female))) genderCode = "Female";
-        else if (selectedGender.equals(getString(R.string.other)))  genderCode = "Other";
+        else if (selectedGender.equals(getString(R.string.other))) genderCode = "Other";
 
         currentUser.setUserName(userName);
         currentUser.setGender(genderCode);
@@ -325,7 +325,8 @@ public class ChangeDetailsActivity extends AppCompatActivity {
                 int newScore = 0;
                 try {
                     newScore = Integer.parseInt(etTotalScore.getText().toString().trim());
-                } catch (NumberFormatException ignored) {}
+                } catch (NumberFormatException ignored) {
+                }
                 userStats.setRank(newRank);
                 userStats.setTotalScore(newScore);
             }

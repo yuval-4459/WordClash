@@ -184,10 +184,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:text="@string/level"
-                    tools:text="Current Rank"
                     android:textColor="#000000"
                     android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    tools:text="Current Rank" />
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -212,14 +212,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
                     android:hint="@string/score"
-                    tools:hint="Total Score"
                     app:boxBackgroundMode="outline"
                     app:boxCornerRadiusBottomEnd="12dp"
                     app:boxCornerRadiusBottomStart="12dp"
                     app:boxCornerRadiusTopEnd="12dp"
                     app:boxCornerRadiusTopStart="12dp"
                     app:boxStrokeColor="#1A237E"
-                    app:hintTextColor="#000000">
+                    app:hintTextColor="#000000"
+                    tools:hint="Total Score">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/TotalScore"

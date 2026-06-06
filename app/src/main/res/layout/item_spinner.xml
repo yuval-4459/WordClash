@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/spinner_item.xml
+<?xml version="1.0" encoding="utf-8"?><!-- res/layout/spinner_item.xml
      Use this as the spinner adapter layout instead of android.R.layout.simple_spinner_item
      Text is always dark so it reads clearly on light and dark backgrounds. -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="56dp"
     android:gravity="center_vertical"
+    android:minHeight="56dp"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:textColor="#111111"

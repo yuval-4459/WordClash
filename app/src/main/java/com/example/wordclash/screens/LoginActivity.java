@@ -23,10 +23,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        etEmail    = findViewById(R.id.Email);
+        etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         Button btnConfirm = findViewById(R.id.ConfirmsignUpButton);
-        Button btnBack    = findViewById(R.id.BacktostartButton);
+        Button btnBack = findViewById(R.id.BacktostartButton);
 
         btnBack.setOnClickListener(view -> finish());
 
@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginUser() {
-        String email    = etEmail.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {

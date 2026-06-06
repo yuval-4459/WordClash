@@ -35,15 +35,15 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
 
-        etEmail    = findViewById(R.id.Email);
+        etEmail = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         etPassword2 = findViewById(R.id.PassswordAuthentication);
-        etUserName  = findViewById(R.id.UserName);
+        etUserName = findViewById(R.id.UserName);
 
-        tilEmail           = findViewById(R.id.tilEmail);
-        tilPassword        = findViewById(R.id.tilPassword);
+        tilEmail = findViewById(R.id.tilEmail);
+        tilPassword = findViewById(R.id.tilPassword);
         tilConfirmPassword = findViewById(R.id.tilConfirmPassword);
-        tilUserName        = findViewById(R.id.tilUserName);
+        tilUserName = findViewById(R.id.tilUserName);
 
         Spinner genderSpinner = findViewById(R.id.Gender);
         Button btnConfirm = findViewById(R.id.ConfirmsignUpButton);
@@ -84,10 +84,10 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        String email    = etEmail.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String password2 = etPassword2.getText().toString().trim();
-        String userName  = etUserName.getText().toString().trim();
+        String userName = etUserName.getText().toString().trim();
 
         // Clear previous errors
         tilEmail.setError(null);
@@ -139,8 +139,8 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        String id   = db.generateUserId();
-        User   user = new User(id, email, password, userName,
+        String id = db.generateUserId();
+        User user = new User(id, email, password, userName,
                 selectedGender, false, null, new ArrayList<>());
 
         db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<>() {

@@ -27,6 +27,9 @@ import java.util.Locale;
 
 public class ListenGuessGameActivity extends AppCompatActivity {
 
+    private static final int COLOR_DEFAULT = Color.parseColor("#2196F3");
+    private static final int COLOR_CORRECT = Color.parseColor("#43A047");
+    private static final int COLOR_WRONG = Color.parseColor("#E53935");
     private TextView tvProgress, tvScore;
     private Button btnListen;
     private Button btnOption1, btnOption2, btnOption3, btnOption4;
@@ -35,17 +38,12 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     private List<Word> allWords;
     private List<Word> gameWords;
     private int currentQuestionIndex = 0;
-    private int score                = 0;
-    private boolean answerSelected   = false;
-
+    private int score = 0;
+    private boolean answerSelected = false;
     private TextToSpeech tts;
-    private boolean ttsReady       = false;
-    private boolean wordsLoaded    = false;
+    private boolean ttsReady = false;
+    private boolean wordsLoaded = false;
     private boolean ttsInitialized = false;
-
-    private static final int COLOR_DEFAULT  = Color.parseColor("#2196F3");
-    private static final int COLOR_CORRECT  = Color.parseColor("#43A047");
-    private static final int COLOR_WRONG    = Color.parseColor("#E53935");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +63,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     private void initializeViews() {
         tvProgress = findViewById(R.id.tvProgress);
-        tvScore    = findViewById(R.id.tvScore);
-        btnListen  = findViewById(R.id.btnListen);
+        tvScore = findViewById(R.id.tvScore);
+        btnListen = findViewById(R.id.btnListen);
         btnOption1 = findViewById(R.id.btnOption1);
         btnOption2 = findViewById(R.id.btnOption2);
         btnOption3 = findViewById(R.id.btnOption3);
@@ -127,7 +125,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        } catch (Exception ignored) { }
+                        } catch (Exception ignored) {
+                        }
                     }
                 }
 
@@ -256,7 +255,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         answerSelected = true;
 
         Word selectedWord = (Word) selectedButton.getTag();
-        Word correctWord  = gameWords.get(currentQuestionIndex);
+        Word correctWord = gameWords.get(currentQuestionIndex);
 
         disableAllButtons();
 
@@ -317,7 +316,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentQuestionIndex = 0;
-                    score                = 0;
+                    score = 0;
                     selectRandomWords();
                     showQuestion();
                     if (ttsReady) new Handler().postDelayed(this::speakWord, 500);
@@ -337,13 +336,17 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) { }
+            public void onFailed(Exception e) {
+            }
         });
     }
 
     @Override
     protected void onDestroy() {
-        if (tts != null) { tts.stop(); tts.shutdown(); }
+        if (tts != null) {
+            tts.stop();
+            tts.shutdown();
+        }
         super.onDestroy();
     }
 }

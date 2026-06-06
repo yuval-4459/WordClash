@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +32,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
-    private int score            = 0;
+    private int score = 0;
     private String targetWord;
     private List<Integer> missingIndices;
     private StringBuilder currentGuess;
@@ -54,10 +53,10 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvHint           = findViewById(R.id.tvHint);
-        tvWord           = findViewById(R.id.tvWord);
-        tvProgress       = findViewById(R.id.tvProgress);
-        tvScore          = findViewById(R.id.tvScore);
+        tvHint = findViewById(R.id.tvHint);
+        tvWord = findViewById(R.id.tvWord);
+        tvProgress = findViewById(R.id.tvProgress);
+        tvScore = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
 
         Button btnSkip = findViewById(R.id.btnSkip);
@@ -151,9 +150,9 @@ public class FillGapsGameActivity extends AppCompatActivity {
         Collections.shuffle(missingLetters);
 
         int maxPerRow = 4;
-        int total     = missingLetters.size();
+        int total = missingLetters.size();
         float density = getResources().getDisplayMetrics().density;
-        int letterSizePx = (int)(56 * density);
+        int letterSizePx = (int) (56 * density);
 
         for (int rowStart = 0; rowStart < total; rowStart += maxPerRow) {
             LinearLayout row = new LinearLayout(this);
@@ -161,7 +160,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
             LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT);
-            rowParams.setMargins(0, 0, 0, (int)(8 * density));
+            rowParams.setMargins(0, 0, 0, (int) (8 * density));
             row.setLayoutParams(rowParams);
             row.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
 
@@ -171,7 +170,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
                 Button btn = new Button(this);
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         letterSizePx, letterSizePx);
-                params.setMargins((int)(6 * density), 0, (int)(6 * density), 0);
+                params.setMargins((int) (6 * density), 0, (int) (6 * density), 0);
                 btn.setLayoutParams(params);
                 btn.setText(String.valueOf(letter));
                 btn.setTextSize(22);
@@ -191,7 +190,10 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
         int nextGapIndex = -1;
         for (int i = 0; i < currentGuess.length(); i++) {
-            if (currentGuess.charAt(i) == '_') { nextGapIndex = i; break; }
+            if (currentGuess.charAt(i) == '_') {
+                nextGapIndex = i;
+                break;
+            }
         }
         if (nextGapIndex == -1) return;
 
@@ -262,7 +264,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
                 .setMessage(getString(R.string.game_complete_msg, score, TOTAL_WORDS * 10 * rank, rank))
                 .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentWordIndex = 0;
-                    score            = 0;
+                    score = 0;
                     Collections.shuffle(gameWords);
                     showNextWord();
                 })
@@ -281,7 +283,8 @@ public class FillGapsGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) { }
+            public void onFailed(Exception e) {
+            }
         });
     }
 }

@@ -1,15 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/spinner_item_dropdown.xml
+<?xml version="1.0" encoding="utf-8"?><!-- res/layout/spinner_item_dropdown.xml
      Use this as the dropDownViewResource.
      White popup background + dark text so options are always readable. -->
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:minHeight="56dp"
+    android:background="#FFFFFF"
     android:gravity="center_vertical"
+    android:minHeight="56dp"
     android:paddingStart="20dp"
     android:paddingEnd="20dp"
-    android:background="#FFFFFF"
     android:textColor="#111111"
     android:textSize="18sp" />

@@ -32,7 +32,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
-    private int score            = 0;
+    private int score = 0;
     private String targetWord;
     private StringBuilder builtWord;
     private List<Button> letterButtons;
@@ -54,22 +54,22 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvHint         = findViewById(R.id.tvHint);
-        tvBuiltWord    = findViewById(R.id.tvBuiltWord);
-        tvProgress     = findViewById(R.id.tvProgress);
-        tvScore        = findViewById(R.id.tvScore);
+        tvHint = findViewById(R.id.tvHint);
+        tvBuiltWord = findViewById(R.id.tvBuiltWord);
+        tvProgress = findViewById(R.id.tvProgress);
+        tvScore = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
         Button btnSubmit = findViewById(R.id.btnSubmit);
-        Button btnClear  = findViewById(R.id.btnClear);
-        Button btnBack   = findViewById(R.id.btnBack);
-        Button btnSkip   = findViewById(R.id.btnSkip);
+        Button btnClear = findViewById(R.id.btnClear);
+        Button btnBack = findViewById(R.id.btnBack);
+        Button btnSkip = findViewById(R.id.btnSkip);
 
         btnSubmit.setOnClickListener(v -> checkAnswer());
         btnClear.setOnClickListener(v -> clearWord());
         btnBack.setOnClickListener(v -> finish());
         btnSkip.setOnClickListener(v -> skipWord());
 
-        builtWord     = new StringBuilder();
+        builtWord = new StringBuilder();
         letterButtons = new ArrayList<>();
     }
 
@@ -236,7 +236,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
                 .setMessage(getString(R.string.game_complete_msg, score, TOTAL_WORDS * 10 * rank, rank))
                 .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentWordIndex = 0;
-                    score            = 0;
+                    score = 0;
                     Collections.shuffle(gameWords);
                     showNextWord();
                 })
@@ -255,7 +255,8 @@ public class WordBuilderGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) { }
+            public void onFailed(Exception e) {
+            }
         });
     }
 }

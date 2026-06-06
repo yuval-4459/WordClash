@@ -33,7 +33,7 @@ public class MatchGameActivity extends AppCompatActivity {
     private List<Word> gameWords;
     private List<Button> leftButtons;
     private List<Button> rightButtons;
-    private Button selectedLeft  = null;
+    private Button selectedLeft = null;
     private Button selectedRight = null;
     private int matchesFound = 0;
     private int score = 0;
@@ -55,15 +55,15 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvScore    = findViewById(R.id.tvScore);
-        tvMatches  = findViewById(R.id.tvMatches);
-        leftColumn  = findViewById(R.id.leftColumn);
+        tvScore = findViewById(R.id.tvScore);
+        tvMatches = findViewById(R.id.tvMatches);
+        leftColumn = findViewById(R.id.leftColumn);
         rightColumn = findViewById(R.id.rightColumn);
         Button btnNewGame = findViewById(R.id.btnNewGame);
 
         btnNewGame.setOnClickListener(v -> loadWords());
 
-        leftButtons  = new ArrayList<>();
+        leftButtons = new ArrayList<>();
         rightButtons = new ArrayList<>();
     }
 
@@ -96,8 +96,8 @@ public class MatchGameActivity extends AppCompatActivity {
 
     private void setupGame() {
         matchesFound = 0;
-        score        = 0;
-        selectedLeft  = null;
+        score = 0;
+        selectedLeft = null;
         selectedRight = null;
 
         updateScore();
@@ -164,7 +164,8 @@ public class MatchGameActivity extends AppCompatActivity {
                 selectedRight = null;
                 return;
             }
-            if (selectedRight != null) selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
+            if (selectedRight != null)
+                selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
             selectedRight = button;
             selectedRight.setBackgroundColor(Color.parseColor("#FF6F00"));
         }
@@ -173,7 +174,7 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void checkMatch() {
-        Word leftWord  = (Word) selectedLeft.getTag();
+        Word leftWord = (Word) selectedLeft.getTag();
         Word rightWord = (Word) selectedRight.getTag();
 
         if (leftWord.getId().equals(rightWord.getId())) {
@@ -188,7 +189,7 @@ public class MatchGameActivity extends AppCompatActivity {
             score += 10 * rank;
             updateScore();
 
-            selectedLeft  = null;
+            selectedLeft = null;
             selectedRight = null;
 
             if (matchesFound == TOTAL_PAIRS) {
@@ -237,7 +238,8 @@ public class MatchGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) { }
+            public void onFailed(Exception e) {
+            }
         });
     }
 }

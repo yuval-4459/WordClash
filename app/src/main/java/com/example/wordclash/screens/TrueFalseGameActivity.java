@@ -31,7 +31,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> allWords;
     private int currentQuestion = 0;
-    private int score            = 0;
+    private int score = 0;
     private boolean answerSelected = false;
     private boolean isCorrect;
 
@@ -54,9 +54,9 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     private void initializeViews() {
         tvQuestion = findViewById(R.id.tvQuestion);
         tvProgress = findViewById(R.id.tvProgress);
-        tvScore    = findViewById(R.id.tvScore);
-        btnTrue    = findViewById(R.id.btnTrue);
-        btnFalse   = findViewById(R.id.btnFalse);
+        tvScore = findViewById(R.id.tvScore);
+        btnTrue = findViewById(R.id.btnTrue);
+        btnFalse = findViewById(R.id.btnFalse);
 
         btnTrue.setOnClickListener(v -> checkAnswer(true));
         btnFalse.setOnClickListener(v -> checkAnswer(false));
@@ -141,7 +141,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         if (userAnswer == isCorrect) {
             score += 10 * rank;
             if (userAnswer) btnTrue.setBackgroundColor(Color.GREEN);
-            else            btnFalse.setBackgroundColor(Color.GREEN);
+            else btnFalse.setBackgroundColor(Color.GREEN);
         } else {
             if (userAnswer) {
                 btnTrue.setBackgroundColor(Color.RED);
@@ -180,7 +180,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
                 .setMessage(message)
                 .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentQuestion = 0;
-                    score           = 0;
+                    score = 0;
                     Collections.shuffle(allWords);
                     showNextQuestion();
                 })
@@ -199,7 +199,8 @@ public class TrueFalseGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) { }
+            public void onFailed(Exception e) {
+            }
         });
     }
 }
