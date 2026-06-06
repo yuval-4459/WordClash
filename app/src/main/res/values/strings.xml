@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">WordClash</string>
 
-    <!-- Main Screen -->
     <string name="good_morning">בוקר טוב</string>
     <string name="good_afternoon">צהריים טובים</string>
     <string name="good_evening">ערב טוב</string>
@@ -12,32 +11,28 @@
     <string name="leaderboard">🏆\nלוח מובילים</string>
     <string name="mini_games">🎮\nמשחקונים</string>
 
-    <!-- Navigation Menu -->
     <string name="nav_users_table">📊 טבלת משתמשים</string>
     <string name="nav_add_word">➕ הוסף מילה חדשה</string>
     <string name="nav_manage_words">📝 מחק מילים</string>
     <string name="nav_profile_picture">🖼️ תמונת פרופיל</string>
     <string name="nav_change_details">⚙️ שנה פרטים</string>
 
-    <!-- Ranks Screen -->
     <string name="choose_level">בחר את הרמה שלך</string>
     <string name="players_online">🟢 %d שחקנים מחוברים</string>
     <string name="level">דרגה %d</string>
     <string name="unlocked">פתוח</string>
     <string name="locked">🔒 נעול</string>
-    <string name="play_level">שחק דרגה %d</string>
+    <string name="play_level">שחק רמה %d</string>
     <string name="complete_previous">השלם דרגה %d כדי לפתוח!</string>
     <string name="back">← חזרה</string>
 
-    <!-- Level Screen -->
     <string name="rank">דרגה %d</string>
     <string name="practice_progress">תרגול: %d / %d</string>
     <string name="practice_infinite">תרגול: %d (אינסופי)</string>
     <string name="words">📚 מילים</string>
     <string name="practice">🎮 תרגול</string>
-    <string name="review_words_first">אנא עיין במילות תחילה!</string>
+    <string name="review_words_first">אנא עיין במילים תחילה!</string>
 
-    <!-- Words List -->
     <string name="vocabulary">אוצר מילים דרגה %d</string>
     <string name="search_words">חפש אנגלית או עברית…</string>
     <string name="ready">✓ אני מוכן</string>
@@ -64,7 +59,6 @@
     <string name="menu_desc">תפריט</string>
     <string name="back_btn">חזרה</string>
 
-    <!-- Game Screen – General -->
     <string name="score">ניקוד: %d</string>
     <string name="question_progress">שאלה %d / %d</string>
     <string name="word_progress">מילה %d / %d</string>
@@ -73,7 +67,6 @@
     <string name="practice_complete">התרגול הושלם!</string>
     <string name="your_score">הציון שלך: %d / %d</string>
 
-    <!-- Game – Common Actions -->
     <string name="game_correct">✓ נכון!</string>
     <string name="game_wrong">✗ טעות! נסה שוב</string>
     <string name="game_skip">דלג</string>
@@ -85,19 +78,15 @@
     <string name="game_complete_title">🎉 המשחק הסתיים!</string>
     <string name="game_complete_msg">הניקוד שלך: %1$d / %2$d\n(בונוס דרגה %3$d הוחל!)</string>
 
-    <!-- Match Game -->
     <string name="match_game_title">🎯 משחק התאמה</string>
     <string name="matches_progress">התאמות: %1$d/%2$d</string>
     <string name="match_congrats_msg">התאמת את כל הזוגות!\nניקוד: %1$d נקודות\n(בונוס דרגה %2$d הוחל!)</string>
 
-    <!-- Memory Cards -->
     <string name="memory_game_title">🃏 קלפי זיכרון</string>
     <string name="memory_congrats_msg">מצאת את כל הזוגות!\nניקוד: %1$d נקודות\n(בונוס דרגה %2$d הוחל!)</string>
 
-    <!-- True/False Game -->
     <string name="true_false_game_title">✓✗ נכון או לא נכון?</string>
 
-    <!-- Word Builder -->
     <string name="word_builder_title">🔤 בונה מילים</string>
     <string name="word_builder_hint_hebrew">עברית: %s</string>
     <string name="word_builder_hint_english">אנגלית: %s</string>
@@ -105,10 +94,8 @@
     <string name="skip_word_msg">המילה הנכונה הייתה: %s</string>
     <string name="next">הבא</string>
 
-    <!-- Fill Gaps -->
     <string name="fill_gaps_title">📝 מלא את הפערים</string>
 
-    <!-- Listen and Guess -->
     <string name="listen_guess_title">🔊 הקשב ונחש</string>
     <string name="tts_not_available">TTS לא זמין לשפה זו.</string>
     <string name="tts_loading">TTS עדיין נטען, אנא המתן…</string>
@@ -116,10 +103,8 @@
     <string name="tts_hebrew_missing">עברית TTS לא מותקן. עבור להגדרות → שפה → TTS.</string>
     <string name="listen_instruction">הקשב היטב ובחר את התרגום הנכון</string>
 
-    <!-- Speed Quiz -->
     <string name="speed_quiz_title">🚄 חידון מהיר</string>
 
-    <!-- Leaderboard -->
     <string name="leaderboard_title">🏆 לוח מובילים</string>
     <string name="top_10_players">10 השחקנים המובילים</string>
     <string name="your_ranking">הדירוג שלך</string>
@@ -128,20 +113,17 @@
     <string name="failed_load_users">טעינת משתמשים נכשלה: %s</string>
     <string name="failed_load_stats">טעינת סטטיסטיקות נכשלה</string>
 
-    <!-- Login -->
     <string name="login_title">התחברות</string>
     <string name="login_btn">התחבר</string>
     <string name="login_success">התחברת בהצלחה %s</string>
     <string name="login_wrong_credentials">אימייל או סיסמה שגויים</string>
     <string name="login_failed">נכשל בהתחברות: %s</string>
 
-    <!-- Sign Up -->
     <string name="signup_title">הרשמה</string>
     <string name="signup_success">נרשמת בהצלחה!</string>
     <string name="signup_failed">נכשל בשמירת המשתמש: %s</string>
     <string name="email_already_exists">מייל כבר קיים</string>
 
-    <!-- Admin – Words -->
     <string name="admin_access_denied">גישה נדחתה – מנהל בלבד</string>
     <string name="admin_add_word_title">הוסף מילה חדשה</string>
     <string name="word_added_success">המילה נוספה בהצלחה!</string>
@@ -155,7 +137,6 @@
     <string name="failed_load_words">טעינת מילות נכשלה: %s</string>
     <string name="no_suitable_words">לא נמצאו מילות מתאימות</string>
 
-    <!-- Admin – Users -->
     <string name="admin_panel_title">Admin Panel</string>
     <string name="edit_user_title">עריכת משתמש</string>
     <string name="error_no_user_data">שגיאה: לא התקבלו נתוני משתמש</string>
@@ -180,7 +161,6 @@
     <string name="leave">עזוב</string>
     <string name="stay">הישאר</string>
 
-    <!-- Settings & Change Details -->
     <string name="settings_management">ניהול הגדרות</string>
     <string name="manage_your_app">נהל את האפליקציה שלך</string>
     <string name="change_details">⚙️ שנה פרטים</string>
@@ -190,14 +170,12 @@
     <string name="update_details">עדכן פרטים</string>
     <string name="details_updated">הפרטים עודכנו בהצלחה!</string>
 
-    <!-- Language -->
     <string name="learning_language">שפת לימוד: %s</string>
     <string name="english">אנגלית</string>
     <string name="hebrew">עברית</string>
     <string name="change_learning_language">שנה שפת לימוד</string>
     <string name="language_question">איזו שפה תרצה ללמוד?</string>
 
-    <!-- Profile Picture -->
     <string name="profile_picture_title">תמונת פרופיל</string>
     <string name="profile_picture_updated">תמונת הפרופיל עודכנה!</string>
     <string name="profile_picture_removed">תמונת הפרופיל הוסרה</string>
@@ -212,7 +190,6 @@
     <string name="failed_load_image">טעינת התמונה נכשלה</string>
     <string name="camera_open_failed">שגיאה בפתיחת המצלמה: %s</string>
 
-    <!-- Common -->
     <string name="app_ok">אישור</string>
     <string name="app_cancel">ביטול</string>
     <string name="ok">אישור</string>
@@ -228,14 +205,12 @@
     <string name="female">נקבה</string>
     <string name="other">אחר</string>
 
-    <!-- Errors -->
     <string name="error_fill_fields">נא למלא את כל השדות</string>
     <string name="error_loading">שגיאה בטעינת נתונים</string>
     <string name="error_saving">שגיאה בשמירת נתונים</string>
     <string name="user_not_found">משתמש לא נמצא</string>
     <string name="failed_load_stats_generic">טעינת סטטיסטיקות נכשלה</string>
 
-    <!-- Validation (shared by SignUp / ChangeDetails / AdminUser) -->
     <string name="validation_fill_field">נא למלא את השדה</string>
     <string name="validation_invalid_email">כתובת אימייל לא תקינה</string>
     <string name="validation_password_short">סיסמה חייבת להכיל לפחות 6 תווים</string>
@@ -254,4 +229,24 @@
     <string name="hebrew_word_hint">מילה בעברית (תרגום)</string>
     <string name="validation_choose_rank">יש לבחור דרגה</string>
     <string name="validation_rank_range">הדרגה חייבת להיות בין 1 ל-5</string>
+
+    <string name="games_header">🎮 משחקים</string>
+    <string name="games_subtitle">תרגל אוצר מילים בדרכים מהנות!</string>
+    <string name="game_match_name">משחק התאמה</string>
+    <string name="game_match_desc">התאם זוגות מילים</string>
+    <string name="game_true_false_name">נכון או לא נכון</string>
+    <string name="game_true_false_desc">החלטות מהירות</string>
+    <string name="game_word_builder_name">בונה מילים</string>
+    <string name="game_word_builder_desc">בנה מילים מאותיות</string>
+    <string name="game_fill_gaps_name">מלא את הפערים</string>
+    <string name="game_fill_gaps_desc">השלם אותיות חסרות</string>
+    <string name="game_listen_guess_name">הקשב ונחש</string>
+    <string name="game_listen_guess_desc">חידון הגיית שמע</string>
+    <string name="game_memory_cards_name">קלפי זיכרון</string>
+    <string name="game_memory_cards_desc">התאם זוגות קלפים</string>
+    <string name="game_speed_quiz_name">חידון מהיר</string>
+    <string name="game_speed_quiz_desc">נצח את השעון!</string>
+
+    <string name="rank_label">דרגה</string>
+    <string name="score_label">ניקוד כולל</string>
 </resources>

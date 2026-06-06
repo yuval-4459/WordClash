@@ -13,6 +13,7 @@ import com.example.wordclash.R;
 import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
+import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
 /**
@@ -32,12 +33,22 @@ public class LevelActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // טעינת המשתמש והגדרת השפה *לפני* super.onCreate כדי שהטקסטים וה-Layout ייטענו נכון
+        user = SharedPreferencesUtils.getUser(this);
+        if (user != null) {
+            LanguageUtils.applyLanguageSettings(getApplicationContext(), user);
+            LanguageUtils.applyLanguageSettings(this, user);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_level);
 
-        currentRank = getIntent().getIntExtra("RANK", 1);
+        // החלת כיוון התצוגה (RTL/LTR) בהתאם לשפה
+        if (user != null) {
+            LanguageUtils.setLayoutDirection(this, user);
+        }
 
-        user = SharedPreferencesUtils.getUser(this);
+        currentRank = getIntent().getIntExtra("RANK", 1);
 
         if (user == null) {
             Toast.makeText(this, getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
@@ -56,10 +67,31 @@ public class LevelActivity extends AppCompatActivity {
         Button btnWords = findViewById(R.id.btnWords);
         btnPractice = findViewById(R.id.btnPractice);
 
-        tvLevelTitle.setText(getString(R.string.rank, currentRank));
+        // דריסה תוכנתית של הטקסטים מה-XML כדי להבטיח תרגום מלא לעברית/אנגלית דינמית
+        if (tvLevelTitle != null) {
+            tvLevelTitle.setText(getString(R.string.rank, currentRank));
+        }
+        if (btnWords != null) {
+            btnWords.setText(getString(R.string.words));
+        }
+        if (btnPractice != null) {
+            btnPractice.setText(getString(R.string.practice));
+        }
+        if (tvPracticeHint != null) {
+            tvPracticeHint.setText(getString(R.string.review_words_first));
+        }
 
-        btnWords.setOnClickListener(v -> openWordsList());
-        btnPractice.setOnClickListener(v -> openPractice());
+        // עדכון כותרת ה-ActionBar העליונה (אם קיימת)
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(getString(R.string.rank, currentRank));
+        }
+
+        if (btnWords != null) {
+            btnWords.setOnClickListener(v -> openWordsList());
+        }
+        if (btnPractice != null) {
+            btnPractice.setOnClickListener(v -> openPractice());
+        }
     }
 
     private void loadStats() {

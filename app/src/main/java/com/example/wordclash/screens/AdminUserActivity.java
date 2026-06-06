@@ -97,6 +97,11 @@ public class AdminUserActivity extends AppCompatActivity {
         updateBtn = findViewById(R.id.updateUserBtn);
         deleteBtn = findViewById(R.id.deleteUserBtn);
 
+        // שינוי תוכנתי לפתרון הבאג שמציג את המחרוזת הגולמית עם אסימון הפורמט %d
+        if (scoreLayout != null) {
+            scoreLayout.setHint(getString(R.string.score_label));
+        }
+
         setButtonsEnabled(false);
     }
 
@@ -219,9 +224,6 @@ public class AdminUserActivity extends AppCompatActivity {
                 });
     }
 
-    // ------------------------------------------------------------------
-    // Validation — same rules as SignUpActivity / ChangeDetailsActivity
-    // ------------------------------------------------------------------
     private boolean validateInputs() {
         boolean isValid = true;
 

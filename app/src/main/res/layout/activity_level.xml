@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@android:color/transparent"
-            android:text="📚 Words"
+            android:text="@string/words"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -98,7 +98,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@android:color/transparent"
-            android:text="🎮 Choose Game"
+            android:text="@string/practice"
             android:textColor="#FFFFFF"
             android:textSize="28sp"
             android:textStyle="bold" />
@@ -114,7 +114,7 @@
         android:layout_marginEnd="16dp"
         android:alpha="0.7"
         android:gravity="center"
-        android:text="📖 Review words first to unlock practice"
+        android:text="@string/review_words_first"
         android:textColor="#1A237E"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"

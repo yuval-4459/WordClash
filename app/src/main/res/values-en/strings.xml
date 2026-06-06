@@ -1,8 +1,6 @@
-<!-- app/src/main/res/values-en/strings.xml  (אנגלית) -->
 <resources>
     <string name="app_name">WordClash</string>
 
-    <!-- Main Screen -->
     <string name="good_morning">Good morning</string>
     <string name="good_afternoon">Good afternoon</string>
     <string name="good_evening">Good evening</string>
@@ -13,14 +11,12 @@
     <string name="leaderboard">🏆\nLeaderboard</string>
     <string name="mini_games">🎮\nMini Games</string>
 
-    <!-- Navigation Menu -->
     <string name="nav_users_table">📊 Table of Users</string>
     <string name="nav_add_word">➕ Add New Word</string>
     <string name="nav_manage_words">📝 Delete Words</string>
     <string name="nav_profile_picture">🖼️ Profile Picture</string>
     <string name="nav_change_details">⚙️ Change Details</string>
 
-    <!-- Ranks Screen -->
     <string name="choose_level">Choose Your Level</string>
     <string name="players_online">🟢 %d Players Online</string>
     <string name="level">Level %d</string>
@@ -30,7 +26,6 @@
     <string name="complete_previous">Complete Level %d to unlock!</string>
     <string name="back">← Back</string>
 
-    <!-- Level Screen -->
     <string name="rank">Rank %d</string>
     <string name="practice_progress">Practice: %d / %d</string>
     <string name="practice_infinite">Practice: %d (Infinite)</string>
@@ -38,7 +33,6 @@
     <string name="practice">🎮 Practice</string>
     <string name="review_words_first">Please review the words first!</string>
 
-    <!-- Words List -->
     <string name="vocabulary">Rank %d Vocabulary</string>
     <string name="search_words">Search English or Hebrew…</string>
     <string name="ready">✓ I\'m Ready</string>
@@ -65,7 +59,6 @@
     <string name="menu_desc">Menu</string>
     <string name="back_btn">Back</string>
 
-    <!-- Game Screen – General -->
     <string name="score">Score: %d</string>
     <string name="question_progress">Question %d / %d</string>
     <string name="word_progress">Word %d / %d</string>
@@ -74,7 +67,6 @@
     <string name="practice_complete">Practice Complete!</string>
     <string name="your_score">Your Score: %d / %d</string>
 
-    <!-- Game – Common Actions -->
     <string name="game_correct">✓ Correct!</string>
     <string name="game_wrong">✗ Wrong! Try again</string>
     <string name="game_skip">Skip</string>
@@ -86,19 +78,15 @@
     <string name="game_complete_title">🎉 Game Complete!</string>
     <string name="game_complete_msg">Your Score: %1$d / %2$d\n(Rank %3$d bonus applied!)</string>
 
-    <!-- Match Game -->
     <string name="match_game_title">🎯 Match Game</string>
     <string name="matches_progress">Matches: %1$d/%2$d</string>
     <string name="match_congrats_msg">You matched all pairs!\nScore: %1$d points\n(Rank %2$d bonus applied!)</string>
 
-    <!-- Memory Cards -->
     <string name="memory_game_title">🃏 Memory Cards</string>
     <string name="memory_congrats_msg">You found all pairs!\nScore: %1$d points\n(Rank %2$d bonus applied!)</string>
 
-    <!-- True/False Game -->
     <string name="true_false_game_title">✓✗ True or False?</string>
 
-    <!-- Word Builder -->
     <string name="word_builder_title">🔤 Word Builder</string>
     <string name="word_builder_hint_hebrew">Hebrew: %s</string>
     <string name="word_builder_hint_english">English: %s</string>
@@ -106,10 +94,8 @@
     <string name="skip_word_msg">The correct word was: %s</string>
     <string name="next">Next</string>
 
-    <!-- Fill Gaps -->
     <string name="fill_gaps_title">📝 Fill the Gaps</string>
 
-    <!-- Listen and Guess -->
     <string name="listen_guess_title">🔊 Listen and Guess</string>
     <string name="tts_not_available">TTS not available for this language.</string>
     <string name="tts_loading">TTS still loading, please wait…</string>
@@ -117,10 +103,8 @@
     <string name="tts_hebrew_missing">Hebrew TTS not installed. Go to Settings → Language → TTS.</string>
     <string name="listen_instruction">Listen carefully and choose the correct translation</string>
 
-    <!-- Speed Quiz -->
     <string name="speed_quiz_title">🚄 Speed Quiz</string>
 
-    <!-- Leaderboard -->
     <string name="leaderboard_title">🏆 Leaderboard</string>
     <string name="top_10_players">Top 10 Players</string>
     <string name="your_ranking">Your Ranking</string>
@@ -129,20 +113,17 @@
     <string name="failed_load_users">Failed to load users: %s</string>
     <string name="failed_load_stats">Failed to load stats</string>
 
-    <!-- Login -->
     <string name="login_title">Login</string>
     <string name="login_btn">Login</string>
     <string name="login_success">Logged in successfully %s</string>
     <string name="login_wrong_credentials">Wrong email or password</string>
     <string name="login_failed">Login failed: %s</string>
 
-    <!-- Sign Up -->
     <string name="signup_title">Sign Up</string>
     <string name="signup_success">Registered successfully!</string>
     <string name="signup_failed">Failed to save user: %s</string>
     <string name="email_already_exists">Email already exists</string>
 
-    <!-- Admin – Words -->
     <string name="admin_access_denied">Access denied – Admin only</string>
     <string name="admin_add_word_title">Add New Word</string>
     <string name="word_added_success">Word added successfully!</string>
@@ -156,7 +137,6 @@
     <string name="failed_load_words">Failed to load words: %s</string>
     <string name="no_suitable_words">No suitable words found</string>
 
-    <!-- Admin – Users -->
     <string name="admin_panel_title">Admin Panel</string>
     <string name="edit_user_title">Edit User</string>
     <string name="error_no_user_data">Error: No user data received</string>
@@ -181,7 +161,6 @@
     <string name="leave">Leave</string>
     <string name="stay">Stay</string>
 
-    <!-- Settings & Change Details -->
     <string name="settings_management">Settings Management</string>
     <string name="manage_your_app">Manage your app</string>
     <string name="change_details">⚙️ Change Details</string>
@@ -191,14 +170,12 @@
     <string name="update_details">Update Details</string>
     <string name="details_updated">Details updated successfully!</string>
 
-    <!-- Language -->
     <string name="learning_language">Learning Language: %s</string>
     <string name="english">English</string>
     <string name="hebrew">Hebrew</string>
     <string name="change_learning_language">Change Learning Language</string>
     <string name="language_question">Which language would you like to learn?</string>
 
-    <!-- Profile Picture -->
     <string name="profile_picture_title">Profile Picture</string>
     <string name="profile_picture_updated">Profile picture updated!</string>
     <string name="profile_picture_removed">Profile picture removed</string>
@@ -213,7 +190,6 @@
     <string name="failed_load_image">Failed to load image</string>
     <string name="camera_open_failed">Error opening camera: %s</string>
 
-    <!-- Common -->
     <string name="app_ok">Confirm</string>
     <string name="app_cancel">Cancel</string>
     <string name="ok">OK</string>
@@ -229,14 +205,12 @@
     <string name="female">Female</string>
     <string name="other">Other</string>
 
-    <!-- Errors -->
     <string name="error_fill_fields">Please fill all fields</string>
     <string name="error_loading">Error loading data</string>
     <string name="error_saving">Error saving data</string>
     <string name="user_not_found">User not found</string>
     <string name="failed_load_stats_generic">Failed to load stats</string>
 
-    <!-- Validation -->
     <string name="validation_fill_field">Please fill this field</string>
     <string name="validation_invalid_email">Invalid email address</string>
     <string name="validation_password_short">Password must be at least 6 characters</string>
@@ -255,4 +229,24 @@
     <string name="hebrew_word_hint">Hebrew Word (Translation)</string>
     <string name="validation_choose_rank">Please choose a rank</string>
     <string name="validation_rank_range">Rank must be between 1 and 5</string>
+
+    <string name="games_header">🎮 Games</string>
+    <string name="games_subtitle">Practice vocabulary in fun ways!</string>
+    <string name="game_match_name">Match Game</string>
+    <string name="game_match_desc">Pair words together</string>
+    <string name="game_true_false_name">True/False</string>
+    <string name="game_true_false_desc">Quick decisions</string>
+    <string name="game_word_builder_name">Word Builder</string>
+    <string name="game_word_builder_desc">Build from letters</string>
+    <string name="game_fill_gaps_name">Fill the Gaps</string>
+    <string name="game_fill_gaps_desc">Complete missing letters</string>
+    <string name="game_listen_guess_name">Listen n Guess</string>
+    <string name="game_listen_guess_desc">Audio pronunciation quiz</string>
+    <string name="game_memory_cards_name">Memory Cards</string>
+    <string name="game_memory_cards_desc">Match card pairs</string>
+    <string name="game_speed_quiz_name">Speed Quiz</string>
+    <string name="game_speed_quiz_desc">Beat the clock!</string>
+
+    <string name="rank_label">Rank</string>
+    <string name="score_label">Total Score</string>
 </resources>

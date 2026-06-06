@@ -26,6 +26,7 @@ import androidx.core.content.FileProvider;
 import com.example.wordclash.R;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
+import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -40,7 +41,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private Button btnDeletePicture;
     private Button btnRotate;
     private User currentUser;
-    // photoUri is set BEFORE launching the camera and never cleared before the result arrives.
     private Uri photoUri;
     private Bitmap currentBitmap;
     private int currentRotation = 0;
@@ -58,28 +58,49 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             success -> {
-                // photoUri is guaranteed non-null here because we set it in openCamera()
-                // before calling cameraLauncher.launch(photoUri)
                 if (Boolean.TRUE.equals(success) && photoUri != null) {
                     handleImageSelected(photoUri);
                 }
-                // Whether success or not, photoUri stays set so a retry works without re-creating a file.
             });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // תיקון: שמירה על השפה הנוכחית של המשתמש למקרה שהמצלמה תגרום ל-Recreate של ה-Activity
+        currentUser = SharedPreferencesUtils.getUser(this);
+        if (currentUser != null) {
+            LanguageUtils.applyLanguageSettings(getApplicationContext(), currentUser);
+            LanguageUtils.applyLanguageSettings(this, currentUser);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_picture);
 
-        currentUser = SharedPreferencesUtils.getUser(this);
+        if (currentUser != null) {
+            LanguageUtils.setLayoutDirection(this, currentUser);
+        }
+
         if (currentUser == null) {
             Toast.makeText(this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
+        // תיקון: שחזור ה-photoUri מה-Bundle במידה והמערכת סגרה את המסך בזמן הצילום
+        if (savedInstanceState != null && savedInstanceState.containsKey("photo_uri_string")) {
+            photoUri = Uri.parse(savedInstanceState.getString("photo_uri_string"));
+        }
+
         initializeViews();
         displayCurrentPicture();
+    }
+
+    // תיקון: שמירת ה-photoUri לתוך ה-Bundle לפני שהמסך נסגר לטובת המצלמה
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (photoUri != null) {
+            outState.putString("photo_uri_string", photoUri.toString());
+        }
     }
 
     private void initializeViews() {
@@ -109,6 +130,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
             try {
                 byte[] decodedString = Base64.decode(profilePictureUrl, Base64.DEFAULT);
                 Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+                // תיקון: שחרור בטוח של הביטמאפ הקודם במידה והוא קיים ושונה
+                if (currentBitmap != null && currentBitmap != decodedByte) {
+                    ivProfilePicture.setImageBitmap(null);
+                    currentBitmap.recycle();
+                }
+
                 currentBitmap = decodedByte;
                 ivProfilePicture.setImageBitmap(decodedByte);
             } catch (Exception e) {
@@ -127,14 +155,18 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     private void showDefaultAvatar() {
-        ivProfilePicture.setVisibility(ImageView.GONE);
-        tvUserInitial.setVisibility(TextView.VISIBLE);
-
-        String initial = "";
-        if (currentUser.getUserName() != null && !currentUser.getUserName().isEmpty()) {
-            initial = String.valueOf(currentUser.getUserName().charAt(0)).toUpperCase();
+        if (ivProfilePicture != null) {
+            ivProfilePicture.setImageBitmap(null); // תיקון: ניקוי ה-ImageView למניעת זליגות זיכרון
+            ivProfilePicture.setVisibility(ImageView.GONE);
         }
-        tvUserInitial.setText(initial);
+        if (tvUserInitial != null) {
+            tvUserInitial.setVisibility(TextView.VISIBLE);
+            String initial = "";
+            if (currentUser.getUserName() != null && !currentUser.getUserName().isEmpty()) {
+                initial = String.valueOf(currentUser.getUserName().charAt(0)).toUpperCase();
+            }
+            tvUserInitial.setText(initial);
+        }
     }
 
     private void openGallery() {
@@ -152,19 +184,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Creates a fresh temp file every time the user taps "Take Photo", then immediately
-     * launches the camera with the new URI. This prevents the crash that occurred on the
-     * second capture when the previous file was already written and the URI was stale.
-     *
-     * Key fix: photoUri is always assigned *before* cameraLauncher.launch() is called,
-     * so the result callback always sees a valid, matching URI regardless of how many
-     * times the user takes a photo.
-     */
     private void openCamera() {
         try {
-            // Always create a brand-new file. The old temp file is left in cache and
-            // the OS will clean it up; we never try to overwrite it.
             File storageDir = getExternalCacheDir();
             if (storageDir == null) {
                 storageDir = getCacheDir();
@@ -173,7 +194,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
                     "profile_picture_" + System.currentTimeMillis() + ".jpg");
             photoFile.createNewFile();
 
-            // Assign BEFORE launch so the result callback always has the correct URI.
             photoUri = FileProvider.getUriForFile(
                     this,
                     getApplicationContext().getPackageName() + ".fileprovider",
@@ -227,7 +247,11 @@ public class ProfilePictureActivity extends AppCompatActivity {
             Bitmap resized = resizeBitmap(orientedBitmap, 512, 512);
             if (resized != orientedBitmap) orientedBitmap.recycle();
 
-            if (currentBitmap != null) currentBitmap.recycle();
+            // תיקון: ניקוי ה-ImageView מהביטמאפ הנוכחי *לפני* שמבצעים לו recycle() כדי למנוע קריסת Canvas
+            if (currentBitmap != null) {
+                ivProfilePicture.setImageBitmap(null);
+                currentBitmap.recycle();
+            }
             currentBitmap = resized;
             currentRotation = 0;
 
@@ -282,6 +306,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
                 currentBitmap, 0, 0,
                 currentBitmap.getWidth(), currentBitmap.getHeight(), matrix, true);
 
+        // תיקון: התנתקות מה-ImageView לפני המיחזור של הביטמאפ הישן במסך הסיבוב
+        ivProfilePicture.setImageBitmap(null);
         currentBitmap.recycle();
         currentBitmap = rotated;
 

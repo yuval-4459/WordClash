@@ -94,6 +94,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvLevelTitle1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Level 1"
@@ -149,6 +150,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvLevelTitle2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Level 2"
@@ -204,6 +206,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvLevelTitle3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Level 3"
@@ -259,6 +262,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvLevelTitle4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Level 4"
@@ -314,6 +318,7 @@
                         android:orientation="vertical">
 
                         <TextView
+                            android:id="@+id/tvLevelTitle5"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Level 5"

@@ -14,6 +14,7 @@ import com.example.wordclash.R;
 import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
+import com.example.wordclash.utils.LanguageUtils;
 import com.example.wordclash.utils.SharedPreferencesUtils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,14 +34,27 @@ public class RanksActivity extends AppCompatActivity {
     private Button btnLevel4;
     private Button btnLevel5;
     private TextView tvLevelStatus1, tvLevelStatus2, tvLevelStatus3, tvLevelStatus4, tvLevelStatus5;
+    private TextView tvLevelTitle1, tvLevelTitle2, tvLevelTitle3, tvLevelTitle4, tvLevelTitle5;
     private User user;
     private int currentLevel = 1;
     private int onlinePlayersCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // טעינת המשתמש והגדרת השפה *לפני* super.onCreate כדי שהטקסטים וה-Layout ייטענו נכון
+        user = SharedPreferencesUtils.getUser(this);
+        if (user != null) {
+            LanguageUtils.applyLanguageSettings(getApplicationContext(), user);
+            LanguageUtils.applyLanguageSettings(this, user);
+        }
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranks);
+
+        // החלת כיוון התצוגה (RTL/LTR) בהתאם לשפה
+        if (user != null) {
+            LanguageUtils.setLayoutDirection(this, user);
+        }
 
         initializeUser();
         initializeViews();
@@ -49,7 +63,9 @@ public class RanksActivity extends AppCompatActivity {
     }
 
     private void initializeUser() {
-        user = SharedPreferencesUtils.getUser(RanksActivity.this);
+        if (user == null) {
+            user = SharedPreferencesUtils.getUser(RanksActivity.this);
+        }
         if (user == null) {
             Toast.makeText(this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
             finish();
@@ -58,6 +74,12 @@ public class RanksActivity extends AppCompatActivity {
 
     private void initializeViews() {
         tvOnlinePlayers = findViewById(R.id.tvOnlinePlayers);
+        TextView tvTitle = findViewById(R.id.tvTitle);
+
+        // עדכון כותרת המסך הראשית לפי השפה הנבחרת
+        if (tvTitle != null) {
+            tvTitle.setText(getString(R.string.choose_level));
+        }
 
         cardLevel1 = findViewById(R.id.cardLevel1);
         cardLevel2 = findViewById(R.id.cardLevel2);
@@ -76,6 +98,20 @@ public class RanksActivity extends AppCompatActivity {
         tvLevelStatus3 = findViewById(R.id.tvLevelStatus3);
         tvLevelStatus4 = findViewById(R.id.tvLevelStatus4);
         tvLevelStatus5 = findViewById(R.id.tvLevelStatus5);
+
+        // קישור כותרות הרמות שבתוך ה-Cards
+        tvLevelTitle1 = findViewById(R.id.tvLevelTitle1);
+        tvLevelTitle2 = findViewById(R.id.tvLevelTitle2);
+        tvLevelTitle3 = findViewById(R.id.tvLevelTitle3);
+        tvLevelTitle4 = findViewById(R.id.tvLevelTitle4);
+        tvLevelTitle5 = findViewById(R.id.tvLevelTitle5);
+
+        // עדכון כותרות הרמות דינמית (יציג "דרגה 1" בעברית או "Level 1" באנגלית)
+        if (tvLevelTitle1 != null) tvLevelTitle1.setText(getString(R.string.level, 1));
+        if (tvLevelTitle2 != null) tvLevelTitle2.setText(getString(R.string.level, 2));
+        if (tvLevelTitle3 != null) tvLevelTitle3.setText(getString(R.string.level, 3));
+        if (tvLevelTitle4 != null) tvLevelTitle4.setText(getString(R.string.level, 4));
+        if (tvLevelTitle5 != null) tvLevelTitle5.setText(getString(R.string.level, 5));
     }
 
     private void loadUserStats() {
@@ -116,7 +152,6 @@ public class RanksActivity extends AppCompatActivity {
         if (isUnlocked) {
             card.setAlpha(1.0f);
             button.setEnabled(true);
-            // use own color resource instead of deprecated AOSP holo_blue_light
             button.setBackgroundTintList(getResources().getColorStateList(R.color.primary));
             button.setText(getString(R.string.play_level, level));
             statusText.setText(getString(R.string.unlocked));
@@ -125,12 +160,10 @@ public class RanksActivity extends AppCompatActivity {
         } else {
             card.setAlpha(0.5f);
             button.setEnabled(false);
-            // use own color resource instead of deprecated AOSP darker_gray
             button.setBackgroundTintList(getResources().getColorStateList(R.color.level_locked));
             button.setText("🔒");
             statusText.setText(getString(R.string.locked));
             statusText.setTextColor(getResources().getColor(R.color.level_locked));
-            // don't set a click listener on a disabled button — it won't fire reliably
         }
     }
 
@@ -140,8 +173,6 @@ public class RanksActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    // האזנה רציפה לנתיב השחקנים ב-Firebase באמצעות מאזין מסוג ValueEventListener.
-    // המאזין מתעדעכן אוטומטית בכל פעם ששחקן נכנס או יוצא, ומחשב את כמות הילדים (getChildrenCount) להצגה על המסך.
     private void updateOnlinePlayersCount() {
         DatabaseReference onlineRef = FirebaseDatabase.getInstance().getReference("online_users");
 
@@ -154,7 +185,6 @@ public class RanksActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                // Showing placeholder without "Players Online" text might be safer or use a different string
                 tvOnlinePlayers.setText("🟢 --");
             }
         });

@@ -41,7 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:letterSpacing="0.02"
-                        android:text="🎮 Games"
+                        android:text="@string/games_header"
                         android:textColor="#1A237E"
                         android:textSize="32sp"
                         android:textStyle="bold" />
@@ -50,7 +50,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Practice vocabulary in fun ways!"
+                        android:text="@string/games_subtitle"
                         android:textColor="#757575"
                         android:textSize="14sp" />
 
@@ -110,7 +110,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Match Game"
+                            android:text="@string/game_match_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -120,7 +120,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Pair words together"
+                            android:text="@string/game_match_desc"
                             android:textColor="#E8F5E9"
                             android:textSize="13sp" />
 
@@ -159,7 +159,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="True/False"
+                            android:text="@string/game_true_false_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -169,7 +169,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Quick decisions"
+                            android:text="@string/game_true_false_desc"
                             android:textColor="#FCE4EC"
                             android:textSize="13sp" />
 
@@ -215,7 +215,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Word Builder"
+                            android:text="@string/game_word_builder_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -225,7 +225,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Build from letters"
+                            android:text="@string/game_word_builder_desc"
                             android:textColor="#FFF3E0"
                             android:textSize="13sp" />
 
@@ -263,7 +263,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Fill the Gaps"
+                            android:text="@string/game_fill_gaps_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -273,7 +273,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Complete missing letters"
+                            android:text="@string/game_fill_gaps_desc"
                             android:textColor="#F3E5F5"
                             android:textSize="13sp" />
 
@@ -319,7 +319,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Listen n Guess"
+                            android:text="@string/game_listen_guess_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -329,7 +329,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Audio pronunciation quiz"
+                            android:text="@string/game_listen_guess_desc"
                             android:textColor="#FFEBEE"
                             android:textSize="13sp" />
 
@@ -367,7 +367,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Memory Cards"
+                            android:text="@string/game_memory_cards_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -377,7 +377,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Match card pairs"
+                            android:text="@string/game_memory_cards_desc"
                             android:textColor="#E0F2F1"
                             android:textSize="13sp" />
 
@@ -424,7 +424,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
-                            android:text="Speed Quiz"
+                            android:text="@string/game_speed_quiz_name"
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -434,7 +434,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:gravity="center"
-                            android:text="Beat the clock!"
+                            android:text="@string/game_speed_quiz_desc"
                             android:textColor="#FFF3E0"
                             android:textSize="13sp" />
 
