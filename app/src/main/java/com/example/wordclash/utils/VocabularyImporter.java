@@ -17,6 +17,8 @@ import java.util.Map;
  * Utility class to import vocabulary from JSON file to Firebase
  * Run this ONCE when app first launches to populate the database
  */
+// מחלקת עזר שתפקידה לקרוא קובץ JSON מקומי מתיקיית ה-assets של האפליקציה
+// ולהעלות את כל מילון המילים הראשוני ל-Firebase באופן אוטומטי כשהאפליקציה מופעלת לראשונה.
 public class VocabularyImporter {
 
     private static final String TAG = "VocabularyImporter";
@@ -25,6 +27,8 @@ public class VocabularyImporter {
      * Import all vocabulary from JSON file to Firebase
      * This should be called once to populate the database
      */
+    // הפונקציה קוראת את קובץ ה-JSON שורה אחר שורה באמצעות InputStream ו-BufferedReader,
+    // ואז מפרסרת (הופכת) אותו לאובייקטי תצוגה ומחלקת אותם לפי דרגות ליבוא לענן.
     public static void importVocabularyFromAssets(Context context) {
         try {
             // read JSON file from assets
@@ -37,7 +41,10 @@ public class VocabularyImporter {
             }
             reader.close();
 
+
             // Parse JSON
+            // שימוש בספריית Gson החיצונית של גוגל כדי להפוך את מחרוזת הטקסט הגולמית של הקובץ לאובייקט קוד מסוג JsonObject,
+            // המאפשר לשלוף רמות ומילים בקלות לפי מפתחות.
             Gson gson = new Gson();
             JsonObject root = gson.fromJson(jsonString.toString(), JsonObject.class);
             JsonObject vocabulary = root.getAsJsonObject("vocabulary");
@@ -56,6 +63,7 @@ public class VocabularyImporter {
         }
     }
 
+    // הפונקציה מקבלת את נתוני המילים של רמה ספציפית, רצה בלולאה על כל המילים, מחלצת את השדות באנגלית ובעברית, ומייצרת מכל שורה אובייקט מסוג Word.
     private static void importLevel(JsonObject levelData, int rank) {
         if (levelData == null) return;
 
@@ -65,6 +73,8 @@ public class VocabularyImporter {
                 String english = wordData.get("en").getAsString();
                 String hebrew = wordData.get("he").getAsString();
 
+                // שליחת אובייקט המילה שנוצר אל ה-DatabaseService לשמירה אסינכרונית ב-Firebase,
+                // ושימוש ב-Log כדי להדפיס ב-Logcat של אנדרואיד סטודיו חיווי אם המילה עלתה בהצלחה או נכשלה.
                 Word word = new Word(entry.getKey(), english, hebrew, rank);
 
                 DatabaseService.getInstance().createWord(word, new DatabaseService.DatabaseCallback<>() {

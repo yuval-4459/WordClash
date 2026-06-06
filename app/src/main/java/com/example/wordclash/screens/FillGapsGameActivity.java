@@ -157,6 +157,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
         updateWordDisplay();
     }
 
+    // הפונקציה מנקה את המיכל, מייצרת אובייקטי Button חדשים, קובעת להם משקל עיצובי שווה (weight = 1.0f) ומצמידה להם מאזין לחיצה.
     private void setupLetterButtons() {
         lettersContainer.removeAllViews();
 
@@ -189,6 +190,8 @@ public class FillGapsGameActivity extends AppCompatActivity {
         }
     }
 
+    // הפונקציה רצה בלולאה על מחרוזת הניחוש (currentGuess), מוצאת את הקו התחתון הראשון שמסמן אות חסרה, ומחליפה אותו באות שנלחצה.
+    // בסיום היא משביתה את הכפתור הגרפי ומורידה לו את השקיפות (Alpha) כדי לסמן למשתמש שהוא כבר נלחץ.
     private void fillLetter(char letter, Button button) {
         int nextGapIndex = -1;
         for (int i = 0; i < currentGuess.length(); i++) {

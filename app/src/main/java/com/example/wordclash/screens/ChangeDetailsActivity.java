@@ -24,6 +24,7 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 
+// המחלקה יורשת מ-AppCompatActivity ומתקשרת חזק עם מחלקות עזר לשפה ודאטהבייס.
 public class ChangeDetailsActivity extends AppCompatActivity {
 
     private EditText etUserName, etEmail, etPassword, etTotalScore;
@@ -50,6 +51,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.change_details_page);
 
         if (currentUser != null) {
+            // קביעת כיווניות הממשק (RTL/LTR) של קובץ ה-XML לפי שפת הלימוד, כדי שהאלמנטים במסך יוצגו בצד הנכון (מימין לשמאל או משמאל לימין).
             LanguageUtils.setLayoutDirection(this, currentUser);
         }
 
@@ -155,6 +157,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         rankSpinner.setAdapter(adapter);
     }
 
+    // שליפת הסטטיסטיקות של המשתמש מה-Firebase במידה והמשתמש המחובר הוא אדמין (שורה 70).
     private void loadUserStats() {
         DatabaseService.getInstance().getStats(currentUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -372,6 +375,9 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         });
     }
 
+    // שמירת המשתמש המעודכן ב-SharedPreferences המקומי והפעלה מחדש של האפליקציה ממסך הבית.
+    // הפעולה משתמשת בדגלי אינטנט מיוחדים (CLEAR_TASK ו-NEW_TASK)
+    // כדי לנקות את מחסנית המסכים לחלוטין ולאלץ את אנדרואיד לצייר מחדש את הממשק בשפה ובכיווניות החדשות.
     private void finalizeUpdate() {
         SharedPreferencesUtils.saveUser(ChangeDetailsActivity.this, currentUser);
 

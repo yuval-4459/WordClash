@@ -10,11 +10,12 @@ import java.util.ArrayList;
 /// it contains the user's information (including learning language preference)
 ///
 /// @see Serializable
+// מחלקת מודל המייצגת את נתוני המשתמש באפליקציה.
+// היא מממשת Serializable כדי שנוכל להעביר את אובייקט המשתמש השלם בין מסכים שונים (Activities) בעזרת Intent.
 public class User implements Serializable {
 
-    /// unique id of the user
+    // משתנים פרטיים השומרים את פרטי המשתמש, כולל הרשאות מנהל, נתיב לתמונת פרופיל, שפת הלימוד הנבחרת ורשימת המילים האישית שלו מסוג Word.
     private String id;
-
     private String email, password;
     private String userName;
     private String gender;
@@ -30,12 +31,15 @@ public class User implements Serializable {
 
     private ArrayList<Word> words;
 
+    // בנאי ריק שמאתחל את רשימת המילים וקובע ערכי ברירת מחדל.
+    // הוא חובה עבור Firebase Realtime Database כדי לבצע המרה אוטומטית של נתונים מהענן לאובייקט באמצעות getValue.
     public User() {
         this.learningLanguage = "english"; // default
         this.profilePictureUrl = null; // default is no picture
         this.words = new ArrayList<>();
     }
 
+    // בנאי עם פרמטרים המשמש ליצירת אובייקט משתמש חדש ואתחול כל משתניו בבת אחת בזמן הריצה, למשל בשלב ההרשמה באפליקציה (SignUpActivity).
     public User(String id, String email, String password, String userName,
                 String gender, boolean isAdmin, String learningLanguage, ArrayList<Word> words) {
         this.id = id;
@@ -49,6 +53,7 @@ public class User implements Serializable {
         this.words = words;
     }
 
+    // פעולות תיווך ציבוריות המאפשרות לקרוא את ערכי המשתנים הפרטיים או לעדכן אותם בצורה בטוחה ומבוקרת מחוץ למחלקה.
     public String getId() {
         return id;
     }
@@ -124,6 +129,7 @@ public class User implements Serializable {
 
     @NonNull
     @Override
+    // דורסת את פעולת toString ומחזירה מחרוזת המציגה את כל ערכי המשתמש, המשמשת בעיקר לצורכי בדיקות והדפסה ב-Logcat לצורך Debugging.
     public String toString() {
         return "User{" +
                 "id='" + id + '\'' +

@@ -53,7 +53,7 @@ public class LanguageUtils {
                 ? View.LAYOUT_DIRECTION_RTL
                 : View.LAYOUT_DIRECTION_LTR;
 
-        if (activity.getWindow() != null && activity.getWindow().getDecorView() != null) {
+        if (activity.getWindow() != null) {
             activity.getWindow().getDecorView().setLayoutDirection(direction);
         }
     }

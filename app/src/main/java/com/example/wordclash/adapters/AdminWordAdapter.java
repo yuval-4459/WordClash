@@ -17,22 +17,17 @@ import java.util.List;
 
 public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.ViewHolder> {
 
-    // רשימה של אובייקטים מסוג Word (אחד מהmodels)
+    // רשימה מקומית של אובייקטים מסוג Word ומאזין OnWordActionListener (שורה 73) לניהול אירועים מול ה-Activity. (
     private final List<Word> wordList;
-
-    // הוגדר בשורה 73
     private final OnWordActionListener listener;
 
-    // מאתחל רשימת מילים ריקה מסוג ArrayList, ומקבל את המאזין מבחוץ
+    // מאתחל ArrayList ריקה ומקבל את המאזין (Callback) מהמסך הראשי.
     public AdminWordAdapter(OnWordActionListener listener) {
         this.wordList = new ArrayList<>();
         this.listener = listener;
     }
 
-    // פונקציה של הRecyclerView
-    // הפונקציה לוקחת את קובץ הxml של פריד בודד (item_word_admin),
-    // מנפחת אותו (inflate) לאובייקט תצוגה בjava,
-    // ועוטפת אותו בViewHolder שיוחזר
+    // מנפח (Inflate) את ה-XML של פריט בודד (item_word_admin) ועוטף אותו ב-ViewHolder לצורך תצוגה.
     @NonNull
     @Override
     public AdminWordAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -40,9 +35,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         return new ViewHolder(view);
     }
 
-    // הפונקציה מקבל שורה ספציפית ומיקום.
-    // היא לוקחת את המילה שבמיקום הזה ומציגה את הטקסטים שלה (אנגלית, עברית, דרגה) על רכיבי ה-UI.
-    // אני מגדיר כאן מה קורה כשלוחצים על כפתור המחיקה באותה שורה.
+    //מחבר את נתוני המילה לפי המיקום לרכיבי ה-UI ומגדיר מאזין ללחיצה על כפתור המחיקה.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Word word = wordList.get(position);
@@ -51,10 +44,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         holder.tvEnglish.setText(word.getEnglish());
         holder.tvHebrew.setText(word.getHebrew());
 
-        // אם מעבירים מספר ישירות ל-setText(),
-        // המערכת בטוחה שהמספר הזה הוא מזהה של קובץ (Resource ID כמו R.string...).
-        // היא תנסה לחפש קובץ כזה, לא תמצא, והאפליקציה תקרוס מיד.
-        // בשביל לטפל בבעיה הזאת, המרתי את המספר למחרוזת
+        //המרה של המספר (int) למחרוזת כדי למנוע קריסה של setText, שמצפה לקבל Resource ID של טקסט באנדרואיד.
         holder.tvRankBadge.setText(word.getRank() + "");
 
         holder.btnDelete.setOnClickListener(v -> {
@@ -64,24 +54,20 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         });
     }
 
-    // מחזיר ל-RecyclerView את כמות הפריטים שיש ברשימה,
-    // כדי שהמסך ידע כמה שורות הוא צריך לייצר בסך הכל.
+    // מחזיר את כמות הפריטים ברשימה המקומית כדי שה-RecyclerView ידע כמה שורות לייצר.
     @Override
     public int getItemCount() {
         return wordList.size();
     }
 
-    // כשמגיעים נתונים חדשים, היא מנקה את הרשימה הישנה, מוסיפה את כל המילים החדשות,
-    // וקוראת ל-notifyDataSetChanged() שאומר ל-RecyclerView "להתרענן" כי יש נתונים חדשים על המסך.
+    //מעדכן את האדפטר ברשימה חדשה וקורא ל-notifyDataSetChanged לרענון כל המסך.
     public void setWordList(List<Word> words) {
         wordList.clear();
         wordList.addAll(words);
         notifyDataSetChanged();
     }
 
-    // מוצאת את המיקום של מילה מסוימת, מוחקת אותה מהרשימה המקומית,
-    // ומעדכנת רק את השורה הספציפית הזו שנמחקה באמצעות notifyItemRemoved.
-    // זה גורם לאנימציית מחיקה חלקה ויפה במסך (במקום לרענן את כל הרשימה מההתחלה).
+    //מוחק מילה מהרשימה ומעדכן רק את השורה הספציפית באמצעות notifyItemRemoved ליצירת אנימציית מחיקה חלקה.
     public void removeWord(Word word) {
         int index = wordList.indexOf(word);
         if (index == -1) return;
@@ -95,16 +81,7 @@ public class AdminWordAdapter extends RecyclerView.Adapter<AdminWordAdapter.View
         void onDeleteClick(Word word);
     }
 
-
-
-
-    // תבנית עיצוב (Design Pattern) חובה ב-RecyclerView.
-    // תפקידה להחזיק את רכיבי ה-UI של שורה בודדת בזיכרון (הטקסטים והכפתור)
-    // ולקשר אותם באמצעות findViewById.
-    // ----------------------------------------------------------------
-    // זה קורה רק פעם אחת לכל שורה,
-    // מה שמונע מהאפליקציה לקרוא ל-findViewById כל הזמן,
-    // ומשפר את הביצועים והסוללה של המכשיר באופן דרמטי.
+    //מחלקה השומרת את רכיבי ה-UI של השורה בזיכרון וחוסכת ריצות חוזרות של findViewById, דבר המשפר ביצועים וסוללה (Optimization).
     public static class ViewHolder extends RecyclerView.ViewHolder {
         final TextView tvEnglish;
         final TextView tvHebrew;

@@ -40,6 +40,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_leaderboard);
 
+        // שליפת אובייקט המשתמש הנוכחי מתוך ה-SharedPreferences המקומי כדי שנוכל בהמשך להשוות אותו לשאר המשתמשים ולדעת מה המיקום שלו בטבלה.
         currentUser = SharedPreferencesUtils.getUser(this);
         if (currentUser == null) {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
@@ -51,6 +52,7 @@ public class LeaderboardActivity extends AppCompatActivity {
         loadLeaderboard();
     }
 
+    // קישור רכיבי הגרפיקה מה-XML ל-Java, אתחול ה-RecyclerView עם מנהל פריסה LinearLayoutManager, וחיבורו לאדפטר LeaderboardAdapter.
     private void initializeViews() {
         RecyclerView rvLeaderboard = findViewById(R.id.rvLeaderboard);
         Button btnBack = findViewById(R.id.btnBack);
@@ -69,6 +71,8 @@ public class LeaderboardActivity extends AppCompatActivity {
         cardYourRank.setVisibility(View.GONE);
     }
 
+    // שליפת רשימת כל המשתמשים מה-Firebase באופן אסינכרוני.
+    // לאחר השליפה, המערכת מייצרת Map שממפה משתמשים לפי המזהה הייחודי שלהם (ID) כדי לייעל את חיבור הנתונים בשלב הבא.
     private void loadLeaderboard() {
         allEntries = new ArrayList<>();
 
@@ -100,10 +104,13 @@ public class LeaderboardActivity extends AppCompatActivity {
         });
     }
 
+    // ריצה בלולאה על כל המשתמשים ושליפת הסטטיסטיקות שלהם מה-Firebase.
+    // הפונקציה משתמשת במערך מונים סופי (loadedCount) כדי לעקוב אחרי הקריאות האסינכרוניות ולדעת מתי כל הנתונים הגיעו כדי לעבור להצגת הטבלה.
     private void loadAllStats(Map<String, User> userMap) {
         final int[] loadedCount = {0};
         final int totalUsers = userMap.size();
 
+        // load stats for each user
         for (User user : userMap.values()) {
             DatabaseService.getInstance().getStats(user.getId(), new DatabaseService.DatabaseCallback<>() {
                 @Override
@@ -134,6 +141,8 @@ public class LeaderboardActivity extends AppCompatActivity {
         }
     }
 
+    // מיון כל רשימת השחקנים בסדר יורד לפי הניקוד שלהם באמצעות פונקציית למדא והשורה Integer.compare.
+    // לאחר מכן, הפונקציה מחלצת את 10 המקומות הראשונים בלבד ומעבירה אותם לאדפטר לרענון המסך.
     private void displayLeaderboard() {
         // sort by total score (descending)
         allEntries.sort((e1, e2) ->
@@ -157,6 +166,8 @@ public class LeaderboardActivity extends AppCompatActivity {
         displayUserRank();
     }
 
+    // ריצה על כל השחקנים בטבלה כדי למצוא את המיקום של המשתמש הנוכחי לפי ה-ID שלו,
+    // והצגת כרטיסיית הציון האישית שלו בתחתית המסך באמצעות שינוי הראות ל-VISIBLE.
     private void displayUserRank() {
         LeaderboardEntry userEntry = null;
 
@@ -177,6 +188,8 @@ public class LeaderboardActivity extends AppCompatActivity {
         }
     }
 
+    // מחלקה פנימית סטטית (Static Inner Class) המשמשת כמודל עזר זמני המאחד את פרטי המשתמש מהרשימה יחד עם הניקוד והמיקום שלו,
+    // לצורך הצגה נוחה באדפטר של הטבלה.
     public static class LeaderboardEntry {
         public String userId;
         public String username;

@@ -25,7 +25,8 @@ import com.example.wordclash.services.DatabaseService;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
-
+// מסך מנהל המאפשר לערוך פרטי משתמש קיים ואת הסטטיסטיקות שלו, או למחוק אותו לחלוטין.
+// המסך יורש מ-AppCompatActivity ומקבל את אובייקט המשתמש מהמסך הקודם.
 public class AdminUserActivity extends AppCompatActivity {
 
     // ui Components
@@ -55,6 +56,8 @@ public class AdminUserActivity extends AppCompatActivity {
             getSupportActionBar().setTitle("Edit User");
         }
 
+        // שליפת אובייקט המשתמש שנשלח מהמסך הקודם דרך ה-Intent,
+        // תוך שימוש במנגנון Serializable המאפשר העברת עצמים שלמים בין מסכים באנדרואיד.
         selectedUser = getIntent().getSerializableExtra("user", User.class);
 
         if (selectedUser == null) {
@@ -63,6 +66,7 @@ public class AdminUserActivity extends AppCompatActivity {
             return;
         }
 
+        // שימוש ברכיב OnBackPressedDispatcher המודרני של אנדרואיד כדי לתפוס את הלחיצה על כפתור החזור הפיזי במכשיר ולבדוק אם יש שינויים שלא נשמרו לפני היציאה.
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -74,9 +78,11 @@ public class AdminUserActivity extends AppCompatActivity {
         initViews();
         setupSpinners();
         setupListeners();
+
         setupChangeTracking();
         showLoading(true);
         populateFields();
+
         loadUserStats();
     }
 
@@ -113,6 +119,7 @@ public class AdminUserActivity extends AppCompatActivity {
         setButtonsEnabled(false);
     }
 
+    // אתחול תיבות הבחירה (Spinner) עבור מגדר ודרגות בעזרת ArrayAdapter, המקשר בין מערך מחרוזות פשוט לרכיב התצוגה הגרפי ב-XML.
     private void setupSpinners() {
         // Gender spinner with better styling
         String[] genders = {"Male", "Female", "Other"};
@@ -142,6 +149,8 @@ public class AdminUserActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(v -> handleBackPress());
     }
 
+    // הגדרת מאזינים מסוג TextWatcher על שדות הטקסט ומאזיני בחירה בתיבות,
+    // כדי לעקוב בזמן אמת אם המנהל ביצע שינוי כלשהו בנתונים ולסמן שהמידע לא שמור.
     private void setupChangeTracking() {
         TextWatcher changeWatcher = new TextWatcher() {
             @Override
@@ -208,6 +217,8 @@ public class AdminUserActivity extends AppCompatActivity {
         }
     }
 
+    // שליפת הסטטיסטיקות של המשתמש מה-Firebase בעזרת DatabaseService.
+    // במידה ולא קיימות סטטיסטיקות בענן עבורו, נוצר אובייקט Stats חדש עם ערכי ברירת מחדל של דרגה 1 ו-0 נקודות.
     private void loadUserStats() {
         DatabaseService.getInstance().getStats(selectedUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -247,6 +258,8 @@ public class AdminUserActivity extends AppCompatActivity {
         });
     }
 
+    // פונקציית אימות קלט הבודקת תקינות אימייל באמצעות תבנית מובנית של אנדרואיד (Patterns.EMAIL_ADDRESS), מוודאת אורכי טקסט,
+    // ומבצעת try-catch כדי למנוע קריסה משגיאת NumberFormatException במידה והניקוד שהוזן בשדה אינו מספר תקין.
     private boolean validateInputs() {
         boolean isValid = true;
 
@@ -328,6 +341,8 @@ public class AdminUserActivity extends AppCompatActivity {
                 .show();
     }
 
+    // מעדכנת את פרטי המשתמש והסטטיסטיקות שלו ב-Firebase בצורה מדורגת
+    // (קודם המשתמש ולאחר מכן הסטטיסטיקות בתוך ה-Callback של ההצלחה) כדי לשמור על סנכרון ושלמות הנתונים בענן.
     private void updateUser() {
         if (selectedUser == null) return;
 
@@ -373,7 +388,9 @@ public class AdminUserActivity extends AppCompatActivity {
                             hasUnsavedChanges = false;
                             showSuccess("User updated successfully");
 
-                            // Delay before returning to list
+
+                            // שימוש במחלקת Handler עם הפעולה postDelayed כדי ליצור השהייה של שנייה וחצי.
+                            // זה מאפשר למשתמש להספיק לקרוא את הודעת הSnackbar לפני שהמסך נסגר ומחזיר אותו אוטומטית ל-UserListActivity.
                             new android.os.Handler().postDelayed(() -> {
                                 Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -419,7 +436,8 @@ public class AdminUserActivity extends AppCompatActivity {
                     hasUnsavedChanges = false;
                     showSuccess("User deleted successfully");
 
-                    // a bit of a delay before returning to list
+                    // שימוש במחלקת Handler עם הפעולה postDelayed כדי ליצור השהייה של שנייה וחצי.
+                    // זה מאפשר למשתמש להספיק לקרוא את הודעת החיווי הירקה (Snackbar) לפני שהמסך נסגר ומחזיר אותו אוטומטית ל-UserListActivity.
                     new android.os.Handler().postDelayed(() -> {
                         Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

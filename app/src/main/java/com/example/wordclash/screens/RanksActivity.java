@@ -143,6 +143,8 @@ public class RanksActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    // האזנה רציפה לנתיב השחקנים ב-Firebase באמצעות מאזין מסוג ValueEventListener.
+    // המאזין מתעדכן אוטומטית בכל פעם ששחקן נכנס או יוצא, ומחשב את כמות הילדים (getChildrenCount) להצגה על המסך.
     private void updateOnlinePlayersCount() {
         DatabaseReference onlineRef = FirebaseDatabase.getInstance().getReference("online_users");
 

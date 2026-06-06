@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+// מסך מנהל המאפשר להציג, לסנן, למיין ולמחוק מילים ממאגר האפליקציה.
+// המסך מנהל רשימה כללית מול Firebase ורשימה מסוננת מקומית לצורך עדכון המסך בזמן אמת.
 public class AdminDeleteWordActivity extends AppCompatActivity {
 
     private final List<Word> filteredWords = new ArrayList<>();
@@ -41,7 +43,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_manage_words);
 
-        // check if the user is an admin
+        // בדיקת אבטחה המשתמשת ב-SharedPreferencesUtils כדי למנוע ממשתמשים שאינם מנהלים גישה למסך, וסוגרת אותו מיד בעזרת finish במידת הצורך.
         if (!SharedPreferencesUtils.getUser(this).isAdmin()) {
             Toast.makeText(this, "Access denied - Admin only", Toast.LENGTH_SHORT).show();
             finish();
@@ -54,6 +56,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         loadWords();
     }
 
+    // קישור רכיבי הגרפיקה מה-XML ל-Java ואתחול ה-AdminWordAdapter.
+    // יצירת האדפטר מתבצעת על ידי העברת הפונקציה confirmDelete כ-Callback ישירות אליו באמצעות הפניה לפעולה.
     private void initializeViews() {
         RecyclerView rvWords = findViewById(R.id.rvWords);
         Button btnBack = findViewById(R.id.btnBack);
@@ -68,6 +72,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
     }
 
+    // אתחול תיבות הבחירה (Spinner) למיון וסינון המילים באמצעות ArrayAdapter,
+    // והגדרת מאזיני בחירה (OnItemSelectedListener) שמפעילים מחדש את לוגיקת הסינון בכל שינוי של המשתמש.
     private void setupSpinners() {
         // sort spinner
         String[] sortOptions = {"Random", "A-Z (English)", "א-ב (Hebrew)", "Rank"};
@@ -108,6 +114,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         });
     }
 
+    // הגדרת מאזין לשינוי טקסט (TextWatcher) על שדה החיפוש.
+    // המאזין קורא לפונקציית הסינון בכל פעם שהמשתמש מקליד או מוחק אות, מה שמאפשר חיפוש דינמי בזמן אמת (בזמן ההקלדה).
     private void setupSearchListener() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -125,6 +133,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         });
     }
 
+    // שליפת כל המילים באופן אסינכרוני מתוך ה-Firebase בעזרת DatabaseService ושמירתן ברשימה הכללית (allWords) כדי שנוכל לבצע עליהן את החיפוש המקומי במכשיר.
     private void loadWords() {
         DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -144,6 +153,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         });
     }
 
+    // הפונקציה המרכזית במסך שמסננת את המילים לפי הדרגה שנבחרה ושאילתת החיפוש (באנגלית ובעברית).
+    // לאחר מכן היא ממיינת את הרשימה המסוננת (למשל ערבוב אקראי בעזרת Collections.shuffle או מיון אלפביתי בעזרת השוואת למדא) ומעדכנת את האדפטר.
     private void applyFiltersAndSort() {
         String searchQuery = etSearch.getText().toString().trim().toLowerCase();
 
@@ -201,6 +212,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         wordAdapter.setWordList(filteredWords);
     }
 
+    // יצירת תיבת דיאלוג קופצת (AlertDialog.Builder) המבקשת מהמנהל לאשר סופית את מחיקת המילה כדי למנוע מחיקות שגויות בטעות בדירקטורי של הענן.
     private void confirmDelete(Word word) {
         new AlertDialog.Builder(this)
                 .setTitle("Delete Word")
@@ -212,6 +224,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 .show();
     }
 
+    // מחיקת המילה בפועל מבסיס הנתונים Firebase בצורה אסינכרונית. ברגע שמתקבל חיווי הצלחה (onCompleted),
+    // המילה מוסרת מהרשימה המקומית ומהאדפטר כדי שהיא תיעלם מהמסך מיד עם אנימציה חלקה ובלי לרענן את כל הדאטהבייס מחדש.
     private void deleteWord(Word word) {
         DatabaseService.getInstance().deleteWord(word, new DatabaseService.DatabaseCallback<>() {
             @Override

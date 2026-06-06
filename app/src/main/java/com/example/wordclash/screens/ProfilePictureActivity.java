@@ -32,6 +32,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 
+// מסך המאפשר למשתמש להעלות תמונת פרופיל מהגלריה או מהמצלמה, לסובב אותה או למחוק אותה.
+// המסך יורש מ-AppCompatActivity ומעדכן את המידע גם בענן וגם מקומית בזיכרון המכשיר.
 public class ProfilePictureActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_CODE = 100;
@@ -44,6 +46,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private Bitmap currentBitmap;
     private int currentRotation = 0;
 
+    // שימוש ברכיב ActivityResultLauncher המודרני של אנדרואיד במקום הפונקציה המיושנת startActivityForResult.
+    // הוא מאפשר להפעיל את אפליקציית הגלריה או המצלמה של המכשיר ולקבל חזרה את כתובת התמונה (Uri) בצורה מאובטחת.
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
@@ -75,6 +79,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_picture);
 
+        // שליפת המשתמש המחובר מהזיכרון המקומי ובדיקה אם קיימת לו תמונת פרופיל שמורה בענן.
+        // אם התמונה לא קיימת, המסך יציג אוטומטית את האות הראשונה של שם המשתמש שלו כעיצוב ברירת מחדל (Avatar).
         currentUser = SharedPreferencesUtils.getUser(this);
         if (currentUser == null) {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
@@ -105,6 +111,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
     }
 
+    // הפונקציה שולפת את נתיב התמונה. מכיוון שהתמונה נשמרת כטקסט ארוך,
+    // הפונקציה מפענחת את מחרוזת ה-Base64 חזרה למערך בייטים, והופכת אותו לאובייקט Bitmap תצוגתי באמצעות BitmapFactory.
     private void displayCurrentPicture() {
         String profilePictureUrl = currentUser.getProfilePictureUrl();
 
@@ -158,6 +166,9 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
+    // יצירת קובץ זמני בזיכרון המטמון (Cache) של המכשיר ושימוש ברכיב FileProvider המובנה.
+    // רכיב זה חיוני באנדרואיד כדי להפיק כתובת Uri מאובטחת,
+    // המאפשרת לאפליקציית המצלמה החיצונית לכתוב את התמונה שצולמה ישירות לתוך התיקייה של האפליקציה שלנו.
     private void openCamera() {
         try {
             File photoFile = new File(getCacheDir(),
@@ -184,8 +195,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
+    // היא מבצעת אופטימיזציה של הזיכרון באמצעות כיווץ ושינוי גודל (Resize)
+    // ל-512x512 פיקסלים כדי למנוע קריסה מוחלטת של המכשיר בגלל מחסור בזיכרון (OutOfMemoryError).
     private void handleImageSelected(Uri uri) {
         try {
+            // שימוש במאפיין inJustDecodeBounds כדי לקרוא אך ורק את המימדים של התמונה (אורך ורוחב) מהקובץ.
+            // זה מאפשר לנו לחשב את יחס הכיווץ (inSampleSize)
+            // לפני שאנחנו טוענים את הפיקסלים הכבדים של התמונה לתוך זיכרון ה-RAM של המכשיר.
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             try (InputStream sizeStream = getContentResolver().openInputStream(uri)) {
@@ -228,6 +244,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
+    // פונקציית עזר המשתמשת במחלקה המובנית ExifInterface כדי לקרוא את נתוני ה-Exif (המטא-דאטה הנסתר של הקובץ).
+    // היא מזהה אם המצלמה של המכשיר צילמה את התמונה לאורך או על הצד, ומתקנת את זווית הראייה באמצעות מחלקת Matrix כדי שלא תופיע הפוכה במסך.
     private Bitmap fixImageOrientation(InputStream input, Bitmap bitmap) {
         try {
             ExifInterface exif = new ExifInterface(input);
@@ -262,6 +280,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
+    // היא מסובבת את אובייקט ה-Bitmap הנוכחי ב-90 מעלות בכל לחיצה באמצעות Matrix,
+    // מציגה את התוצאה המעודכנת על המסך ושומרת את המחרוזת החדשה ב-Firebase.
     private void rotateImage() {
         if (currentBitmap == null) {
             Toast.makeText(this, "No image to rotate", Toast.LENGTH_SHORT).show();
@@ -335,6 +355,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    // דוחסת את אובייקט ה-Bitmap הגרפי לפורמט JPEG עם 80 אחוזי איכות,
+    // והופכת את מערך הבייטים שנוצר למחרוזת טקסט (String) מסוג Base64 כדי שיהיה ניתן לשמור אותה ישירות בתוך שדה טקסט פשוט בבסיס הנתונים.
     private String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
@@ -342,6 +364,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
+    // מעדכנות את אובייקט המשתמש בענן בצורה אסינכרונית באמצעות DatabaseService. ברגע שמתקבל חיווי הצלחה (onCompleted),
+    // המידע החדש נשמר מיד גם ב-SharedPreferencesUtils כדי שכל שאר המסכים באפליקציה יציגו את התמונה המעודכנת בלי צורך לפנות שוב לאינטרנט.
     private void saveProfilePicture() {
         DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
