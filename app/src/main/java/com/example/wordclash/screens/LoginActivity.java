@@ -16,7 +16,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
-
     private DatabaseService db;
 
     @Override
@@ -24,25 +23,24 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_page);
 
-        etEmail = findViewById(R.id.Email);
+        etEmail    = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
-        Button btnConfirm = findViewById(R.id.ConfirmsignUpButton); // same button id
+        Button btnConfirm = findViewById(R.id.ConfirmsignUpButton);
+        Button btnBack    = findViewById(R.id.BacktostartButton);
 
-        Button btnBack = findViewById(R.id.BacktostartButton);
         btnBack.setOnClickListener(view -> finish());
 
         db = DatabaseService.getInstance();
 
         btnConfirm.setOnClickListener(v -> loginUser());
-
     }
 
     private void loginUser() {
-        String email = etEmail.getText().toString().trim();
+        String email    = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
         if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "נא למלא את כל השדות", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_fill_fields), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -51,12 +49,14 @@ public class LoginActivity extends AppCompatActivity {
             public void onCompleted(User user) {
                 if (user == null) {
                     Toast.makeText(LoginActivity.this,
-                            "אימייל או סיסמה שגויים",
+                            getString(R.string.login_wrong_credentials),
                             Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                Toast.makeText(LoginActivity.this, "התחברת בהצלחה " + user.getUserName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this,
+                        getString(R.string.login_success, user.getUserName()),
+                        Toast.LENGTH_SHORT).show();
 
                 SharedPreferencesUtils.saveUser(LoginActivity.this, user);
 
@@ -68,10 +68,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(LoginActivity.this,
-                        "נכשל בהתחברות: " + e.getMessage(),
+                        getString(R.string.login_failed, e.getMessage()),
                         Toast.LENGTH_LONG).show();
             }
         });
-
     }
 }

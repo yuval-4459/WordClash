@@ -40,7 +40,7 @@ public class LevelActivity extends AppCompatActivity {
         user = SharedPreferencesUtils.getUser(this);
 
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -56,7 +56,7 @@ public class LevelActivity extends AppCompatActivity {
         Button btnWords = findViewById(R.id.btnWords);
         btnPractice = findViewById(R.id.btnPractice);
 
-        tvLevelTitle.setText("Rank " + currentRank);
+        tvLevelTitle.setText(getString(R.string.rank, currentRank));
 
         btnWords.setOnClickListener(v -> openWordsList());
         btnPractice.setOnClickListener(v -> openPractice());
@@ -77,7 +77,7 @@ public class LevelActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(LevelActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LevelActivity.this, getString(R.string.failed_load_stats), Toast.LENGTH_SHORT).show();
                 stats = new Stats(user.getId(), 1, 0);
                 loadRankProgress();
             }
@@ -107,9 +107,9 @@ public class LevelActivity extends AppCompatActivity {
 
         int required = DatabaseService.getRequiredPracticeCount(currentRank);
         if (currentRank == 5) {
-            tvProgress.setText("Practice: " + rankProgress.practiceCount + " (Infinite)");
+            tvProgress.setText(getString(R.string.practice_infinite, rankProgress.practiceCount));
         } else {
-            tvProgress.setText("Practice: " + rankProgress.practiceCount + " / " + required);
+            tvProgress.setText(getString(R.string.practice_progress, rankProgress.practiceCount, required));
         }
 
         if (rankProgress.hasReviewedWords) {
@@ -135,7 +135,7 @@ public class LevelActivity extends AppCompatActivity {
 
     private void openPractice() {
         if (rankProgress == null || !rankProgress.hasReviewedWords) {
-            Toast.makeText(this, "Please review the words first!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.review_words_first), Toast.LENGTH_SHORT).show();
             return;
         }
 

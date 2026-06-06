@@ -51,7 +51,7 @@ public class RanksActivity extends AppCompatActivity {
     private void initializeUser() {
         user = SharedPreferencesUtils.getUser(RanksActivity.this);
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
             finish();
         }
     }
@@ -96,7 +96,7 @@ public class RanksActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(RanksActivity.this, "Failed to load stats", Toast.LENGTH_SHORT).show();
+                Toast.makeText(RanksActivity.this, R.string.failed_load_stats, Toast.LENGTH_SHORT).show();
                 setupLevelButtons();
             }
         });
@@ -149,12 +149,13 @@ public class RanksActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 onlinePlayersCount = (int) snapshot.getChildrenCount();
-                tvOnlinePlayers.setText("🟢 " + onlinePlayersCount + " Players Online");
+                tvOnlinePlayers.setText(getString(R.string.players_online, onlinePlayersCount));
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                tvOnlinePlayers.setText("🟢 -- Players Online");
+                // Showing placeholder without "Players Online" text might be safer or use a different string
+                tvOnlinePlayers.setText("🟢 --");
             }
         });
     }

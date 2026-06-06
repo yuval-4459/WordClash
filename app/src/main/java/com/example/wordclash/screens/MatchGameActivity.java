@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Match Game - Match English words to Hebrew translations
- */
 public class MatchGameActivity extends AppCompatActivity {
 
     private final int TOTAL_PAIRS = 6;
@@ -36,7 +33,7 @@ public class MatchGameActivity extends AppCompatActivity {
     private List<Word> gameWords;
     private List<Button> leftButtons;
     private List<Button> rightButtons;
-    private Button selectedLeft = null;
+    private Button selectedLeft  = null;
     private Button selectedRight = null;
     private int matchesFound = 0;
     private int score = 0;
@@ -44,16 +41,12 @@ public class MatchGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = SharedPreferencesUtils.getUser(this);
-        if (user != null) {
-            LanguageUtils.applyLanguageSettings(this, user);
-        }
+        if (user != null) LanguageUtils.applyLanguageSettings(this, user);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_game);
 
-        if (user != null) {
-            LanguageUtils.setLayoutDirection(this, user);
-        }
+        if (user != null) LanguageUtils.setLayoutDirection(this, user);
 
         rank = getIntent().getIntExtra("RANK", 1);
 
@@ -62,17 +55,17 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvScore = findViewById(R.id.tvScore);
-        tvMatches = findViewById(R.id.tvMatches);
-        leftColumn = findViewById(R.id.leftColumn);
+        tvScore    = findViewById(R.id.tvScore);
+        tvMatches  = findViewById(R.id.tvMatches);
+        leftColumn  = findViewById(R.id.leftColumn);
         rightColumn = findViewById(R.id.rightColumn);
-        Button btnBack = findViewById(R.id.btnBack);
+        Button btnBack    = findViewById(R.id.btnBack);
         Button btnNewGame = findViewById(R.id.btnNewGame);
 
         btnBack.setOnClickListener(v -> finish());
         btnNewGame.setOnClickListener(v -> loadWords());
 
-        leftButtons = new ArrayList<>();
+        leftButtons  = new ArrayList<>();
         rightButtons = new ArrayList<>();
     }
 
@@ -81,59 +74,58 @@ public class MatchGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(MatchGameActivity.this, "No words available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MatchGameActivity.this,
+                            getString(R.string.no_words_available), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                // select random words
                 Collections.shuffle(words);
                 gameWords = new ArrayList<>();
                 for (int i = 0; i < Math.min(TOTAL_PAIRS, words.size()); i++) {
                     gameWords.add(words.get(i));
                 }
-
                 setupGame();
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(MatchGameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MatchGameActivity.this,
+                        getString(R.string.failed_load_words, e.getMessage()),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setupGame() {
         matchesFound = 0;
-        score = 0;
-        selectedLeft = null;
+        score        = 0;
+        selectedLeft  = null;
         selectedRight = null;
 
         updateScore();
 
-        // clear columns
         leftColumn.removeAllViews();
         rightColumn.removeAllViews();
         leftButtons.clear();
         rightButtons.clear();
 
-        // determine language direction
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
         boolean isLearningEnglish = learningLanguage.equals("english");
 
-        // create left column (English or Hebrew)
         List<Word> leftWords = new ArrayList<>(gameWords);
         for (Word word : leftWords) {
-            Button btn = createWordButton(isLearningEnglish ? word.getHebrew() : word.getEnglish(), word, true);
+            Button btn = createWordButton(
+                    isLearningEnglish ? word.getHebrew() : word.getEnglish(), word, true);
             leftButtons.add(btn);
             leftColumn.addView(btn);
         }
 
-        // create right column (Hebrew or English) - shuffled
         List<Word> rightWords = new ArrayList<>(gameWords);
         Collections.shuffle(rightWords);
         for (Word word : rightWords) {
-            Button btn = createWordButton(isLearningEnglish ? word.getEnglish() : word.getHebrew(), word, false);
+            Button btn = createWordButton(
+                    isLearningEnglish ? word.getEnglish() : word.getHebrew(), word, false);
             rightButtons.add(btn);
             rightColumn.addView(btn);
         }
@@ -143,8 +135,7 @@ public class MatchGameActivity extends AppCompatActivity {
         Button button = new Button(this);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-        );
+                LinearLayout.LayoutParams.WRAP_CONTENT);
         params.setMargins(8, 8, 8, 8);
         button.setLayoutParams(params);
         button.setText(text);
@@ -153,62 +144,41 @@ public class MatchGameActivity extends AppCompatActivity {
         button.setBackgroundColor(Color.parseColor("#2196F3"));
         button.setTextColor(Color.WHITE);
         button.setPadding(16, 16, 16, 16);
-
         button.setOnClickListener(v -> handleButtonClick(button, isLeft));
-
         return button;
     }
 
     private void handleButtonClick(Button button, boolean isLeft) {
-        // if already matched, ignore
         if (button.getAlpha() == 0.3f) return;
 
         if (isLeft) {
-            // deselect if clicking same button
             if (selectedLeft == button) {
                 selectedLeft.setBackgroundColor(Color.parseColor("#2196F3"));
                 selectedLeft = null;
                 return;
             }
-
-            // deselect previous left button
-            if (selectedLeft != null) {
-                selectedLeft.setBackgroundColor(Color.parseColor("#2196F3"));
-            }
-
-            // select new left button
+            if (selectedLeft != null) selectedLeft.setBackgroundColor(Color.parseColor("#2196F3"));
             selectedLeft = button;
             selectedLeft.setBackgroundColor(Color.parseColor("#FF6F00"));
         } else {
-            // deselect if clicking same button
             if (selectedRight == button) {
                 selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
                 selectedRight = null;
                 return;
             }
-
-            // deselect previous right button
-            if (selectedRight != null) {
-                selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
-            }
-
-            // select new right button
+            if (selectedRight != null) selectedRight.setBackgroundColor(Color.parseColor("#2196F3"));
             selectedRight = button;
             selectedRight.setBackgroundColor(Color.parseColor("#FF6F00"));
         }
 
-        // check if both sides selected
-        if (selectedLeft != null && selectedRight != null) {
-            checkMatch();
-        }
+        if (selectedLeft != null && selectedRight != null) checkMatch();
     }
 
     private void checkMatch() {
-        Word leftWord = (Word) selectedLeft.getTag();
+        Word leftWord  = (Word) selectedLeft.getTag();
         Word rightWord = (Word) selectedRight.getTag();
 
         if (leftWord.getId().equals(rightWord.getId())) {
-            // correct match
             selectedLeft.setBackgroundColor(Color.GREEN);
             selectedRight.setBackgroundColor(Color.GREEN);
             selectedLeft.setAlpha(0.3f);
@@ -220,15 +190,13 @@ public class MatchGameActivity extends AppCompatActivity {
             score += 10 * rank;
             updateScore();
 
-            selectedLeft = null;
+            selectedLeft  = null;
             selectedRight = null;
 
-            // check if game complete
             if (matchesFound == TOTAL_PAIRS) {
                 new Handler().postDelayed(this::showWinDialog, 500);
             }
         } else {
-            // wrong match
             selectedLeft.setBackgroundColor(Color.RED);
             selectedRight.setBackgroundColor(Color.RED);
 
@@ -246,18 +214,17 @@ public class MatchGameActivity extends AppCompatActivity {
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
-        tvMatches.setText("Matches: " + matchesFound + "/" + TOTAL_PAIRS);
+        tvScore.setText(getString(R.string.score, score));
+        tvMatches.setText(getString(R.string.matches_progress, matchesFound, TOTAL_PAIRS));
     }
 
     private void showWinDialog() {
         saveScoreToStats();
-
         new AlertDialog.Builder(this)
-                .setTitle("🎉 Congratulations!")
-                .setMessage("You matched all pairs!\nScore: " + score + " points\n(Rank " + rank + " bonus applied!)")
-                .setPositiveButton("Play Again", (dialog, which) -> loadWords())
-                .setNegativeButton("Back", (dialog, which) -> finish())
+                .setTitle(getString(R.string.congratulations))
+                .setMessage(getString(R.string.match_congrats_msg, score, rank))
+                .setPositiveButton(getString(R.string.game_play_again), (d, w) -> loadWords())
+                .setNegativeButton(getString(R.string.game_back), (d, w) -> finish())
                 .setCancelable(false)
                 .show();
     }
@@ -272,8 +239,7 @@ public class MatchGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) {
-            }
+            public void onFailed(Exception e) { }
         });
     }
 }

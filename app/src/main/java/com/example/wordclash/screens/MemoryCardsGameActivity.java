@@ -32,25 +32,21 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> gameWords;
     private List<Button> cardButtons;
-    private Button firstCard = null;
+    private Button firstCard  = null;
     private Button secondCard = null;
     private int matchesFound = 0;
-    private int score = 0;
+    private int score        = 0;
     private boolean isProcessing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = SharedPreferencesUtils.getUser(this);
-        if (user != null) {
-            LanguageUtils.applyLanguageSettings(this, user);
-        }
+        if (user != null) LanguageUtils.applyLanguageSettings(this, user);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_memory_cards_game);
 
-        if (user != null) {
-            LanguageUtils.setLayoutDirection(this, user);
-        }
+        if (user != null) LanguageUtils.setLayoutDirection(this, user);
 
         rank = getIntent().getIntExtra("RANK", 1);
 
@@ -59,10 +55,10 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvScore = findViewById(R.id.tvScore);
+        tvScore   = findViewById(R.id.tvScore);
         tvMatches = findViewById(R.id.tvMatches);
         gridCards = findViewById(R.id.gridCards);
-        Button btnBack = findViewById(R.id.btnBack);
+        Button btnBack    = findViewById(R.id.btnBack);
         Button btnNewGame = findViewById(R.id.btnNewGame);
 
         btnBack.setOnClickListener(v -> finish());
@@ -76,7 +72,8 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(MemoryCardsGameActivity.this, "No words available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MemoryCardsGameActivity.this,
+                            getString(R.string.no_words_available), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -85,22 +82,23 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
                 for (int i = 0; i < Math.min(TOTAL_PAIRS, words.size()); i++) {
                     gameWords.add(words.get(i));
                 }
-
                 setupGame();
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(MemoryCardsGameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MemoryCardsGameActivity.this,
+                        getString(R.string.failed_load_words, e.getMessage()),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setupGame() {
         matchesFound = 0;
-        score = 0;
-        firstCard = null;
-        secondCard = null;
+        score        = 0;
+        firstCard    = null;
+        secondCard   = null;
         isProcessing = false;
 
         updateScore();
@@ -128,7 +126,7 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
     private Button createCardButton(CardData card) {
         Button button = new Button(this);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-        params.width = 0;
+        params.width  = 0;
         params.height = GridLayout.LayoutParams.WRAP_CONTENT;
         params.columnSpec = GridLayout.spec(GridLayout.UNDEFINED, 1f);
         params.setMargins(8, 8, 8, 8);
@@ -139,9 +137,7 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
         button.setBackgroundColor(Color.parseColor("#2196F3"));
         button.setTextColor(Color.WHITE);
         button.setPadding(16, 32, 16, 32);
-
         button.setOnClickListener(v -> handleCardClick(button));
-
         return button;
     }
 
@@ -157,17 +153,17 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
         if (firstCard == null) {
             firstCard = button;
         } else {
-            secondCard = button;
+            secondCard   = button;
             isProcessing = true;
             checkMatch();
         }
     }
 
     private void checkMatch() {
-        CardData firstCardData = (CardData) firstCard.getTag();
-        CardData secondCardData = (CardData) secondCard.getTag();
+        CardData firstData  = (CardData) firstCard.getTag();
+        CardData secondData = (CardData) secondCard.getTag();
 
-        if (firstCardData.word.getId().equals(secondCardData.word.getId())) {
+        if (firstData.word.getId().equals(secondData.word.getId())) {
             firstCard.setBackgroundColor(Color.GREEN);
             secondCard.setBackgroundColor(Color.GREEN);
             firstCard.setAlpha(0.3f);
@@ -177,8 +173,8 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
             score += 10 * rank;
             updateScore();
 
-            firstCard = null;
-            secondCard = null;
+            firstCard    = null;
+            secondCard   = null;
             isProcessing = false;
 
             if (matchesFound == TOTAL_PAIRS) {
@@ -190,27 +186,25 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
                 secondCard.setText("?");
                 firstCard.setBackgroundColor(Color.parseColor("#2196F3"));
                 secondCard.setBackgroundColor(Color.parseColor("#2196F3"));
-
-                firstCard = null;
-                secondCard = null;
+                firstCard    = null;
+                secondCard   = null;
                 isProcessing = false;
             }, 1000);
         }
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
-        tvMatches.setText("Matches: " + matchesFound + "/" + TOTAL_PAIRS);
+        tvScore.setText(getString(R.string.score, score));
+        tvMatches.setText(getString(R.string.matches_progress, matchesFound, TOTAL_PAIRS));
     }
 
     private void showWinDialog() {
         saveScoreToStats();
-
         new AlertDialog.Builder(this)
-                .setTitle("🎉 Congratulations!")
-                .setMessage("You found all pairs!\nScore: " + score + " points\n(Rank " + rank + " bonus applied!)")
-                .setPositiveButton("Play Again", (dialog, which) -> loadWords())
-                .setNegativeButton("Back", (dialog, which) -> finish())
+                .setTitle(getString(R.string.congratulations))
+                .setMessage(getString(R.string.memory_congrats_msg, score, rank))
+                .setPositiveButton(getString(R.string.game_play_again), (d, w) -> loadWords())
+                .setNegativeButton(getString(R.string.game_back), (d, w) -> finish())
                 .setCancelable(false)
                 .show();
     }
@@ -225,19 +219,18 @@ public class MemoryCardsGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) {
-            }
+            public void onFailed(Exception e) { }
         });
     }
 
     private static class CardData {
-        final Word word;
-        final String text;
+        final Word    word;
+        final String  text;
         final boolean isHebrew;
 
         CardData(Word word, String text, boolean isHebrew) {
-            this.word = word;
-            this.text = text;
+            this.word     = word;
+            this.text     = text;
             this.isHebrew = isHebrew;
         }
     }

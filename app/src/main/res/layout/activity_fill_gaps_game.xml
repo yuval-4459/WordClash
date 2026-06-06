@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
@@ -11,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#8E24AA"
-        android:text="Skip"
+        android:text="@string/game_skip"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="📝 Fill the Gaps"
+        android:text="@string/fill_gaps_title"
         android:textColor="#1A237E"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -45,14 +46,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
-            android:text="Word 1 / 10"
+            android:text="@string/word_progress"
+            tools:text="Word 1 / 10"
             android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Score: 0"
+            android:text="@string/score"
+            tools:text="Score: 0"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -64,7 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:gravity="center"
-        android:text="Hebrew: שלום"
+        android:text="@string/word_builder_hint_hebrew"
+        tools:text="Hebrew: שלום"
         android:textColor="#424242"
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -97,6 +101,7 @@
             android:gravity="center"
             android:padding="24dp"
             android:text="H _ L L O"
+            tools:text="H _ L L O"
             android:textColor="@android:color/black"
             android:textSize="32sp"
             android:textStyle="bold"

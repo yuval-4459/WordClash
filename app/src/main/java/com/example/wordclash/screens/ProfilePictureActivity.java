@@ -73,7 +73,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
         currentUser = SharedPreferencesUtils.getUser(this);
         if (currentUser == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -181,7 +181,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
             cameraLauncher.launch(photoUri);
         } catch (Exception e) {
-            Toast.makeText(this, "Error opening camera: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.camera_open_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -193,7 +193,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 openCamera();
             } else {
-                Toast.makeText(this, "Camera permission is required", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.camera_permission_required, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -215,7 +215,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
             }
 
             if (sampledBitmap == null) {
-                Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.failed_load_image, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -236,9 +236,9 @@ public class ProfilePictureActivity extends AppCompatActivity {
             saveProfilePicture();
 
         } catch (OutOfMemoryError e) {
-            Toast.makeText(this, "Image too large, please choose a smaller one", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.image_too_large, Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this, "Error processing image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.image_process_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -269,7 +269,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
     private void rotateImage() {
         if (currentBitmap == null) {
-            Toast.makeText(this, "No image to rotate", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.no_image_to_rotate, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -348,24 +348,24 @@ public class ProfilePictureActivity extends AppCompatActivity {
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(ProfilePictureActivity.this, currentUser);
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Profile picture updated!", Toast.LENGTH_SHORT).show();
+                        R.string.profile_picture_updated, Toast.LENGTH_SHORT).show();
                 displayCurrentPicture();
             }
 
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        getString(R.string.profile_picture_update_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void confirmDeletePicture() {
         new AlertDialog.Builder(this)
-                .setTitle("Delete Profile Picture")
-                .setMessage("Are you sure you want to remove your profile picture?")
-                .setPositiveButton("Delete", (dialog, which) -> deletePicture())
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.delete_picture_title)
+                .setMessage(R.string.delete_picture_msg)
+                .setPositiveButton(R.string.delete, (dialog, which) -> deletePicture())
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -377,14 +377,14 @@ public class ProfilePictureActivity extends AppCompatActivity {
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(ProfilePictureActivity.this, currentUser);
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Profile picture removed", Toast.LENGTH_SHORT).show();
+                        R.string.profile_picture_removed, Toast.LENGTH_SHORT).show();
                 displayCurrentPicture();
             }
 
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Failed to delete: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        getString(R.string.profile_picture_delete_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }

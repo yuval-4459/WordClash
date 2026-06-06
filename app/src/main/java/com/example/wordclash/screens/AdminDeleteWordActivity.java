@@ -41,7 +41,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_manage_words);
 
         if (!SharedPreferencesUtils.getUser(this).isAdmin()) {
-            Toast.makeText(this, "Access denied - Admin only", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.admin_access_denied), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -65,7 +65,12 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     }
 
     private void setupSpinners() {
-        String[] sortOptions = {"Random", "A-Z (English)", "א-ב (Hebrew)", "Rank"};
+        String[] sortOptions = {
+                getString(R.string.sort_random),
+                getString(R.string.sort_english),
+                getString(R.string.sort_hebrew),
+                getString(R.string.sort_rank)
+        };
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, sortOptions);
         sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -82,7 +87,14 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        String[] rankOptions = {"All Ranks", "Rank 1", "Rank 2", "Rank 3", "Rank 4", "Rank 5"};
+        String[] rankOptions = {
+                getString(R.string.all_ranks),
+                getString(R.string.rank, 1),
+                getString(R.string.rank, 2),
+                getString(R.string.rank, 3),
+                getString(R.string.rank, 4),
+                getString(R.string.rank, 5)
+        };
         ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, rankOptions);
         rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -120,7 +132,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(AdminDeleteWordActivity.this, "No words found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AdminDeleteWordActivity.this, getString(R.string.no_words_found), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 allWords = new ArrayList<>(words);
@@ -129,7 +141,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(AdminDeleteWordActivity.this, "Failed to load words: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(AdminDeleteWordActivity.this, getString(R.string.failed_load_words, e.getMessage()), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -152,27 +164,22 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             filteredWords.add(word);
         }
 
-        switch (currentSortOption) {
-            case "Random":
-                Collections.shuffle(filteredWords);
-                break;
-            case "A-Z (English)":
-                filteredWords.sort((w1, w2) -> {
-                    String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
-                    String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
-                    return en1.compareTo(en2);
-                });
-                break;
-            case "א-ב (Hebrew)":
-                filteredWords.sort((w1, w2) -> {
-                    String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
-                    String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
-                    return he1.compareTo(he2);
-                });
-                break;
-            case "Rank":
-                filteredWords.sort((w1, w2) -> Integer.compare(w1.getRank(), w2.getRank()));
-                break;
+        if (currentSortOption.equals(getString(R.string.sort_random))) {
+            Collections.shuffle(filteredWords);
+        } else if (currentSortOption.equals(getString(R.string.sort_english))) {
+            filteredWords.sort((w1, w2) -> {
+                String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
+                String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
+                return en1.compareTo(en2);
+            });
+        } else if (currentSortOption.equals(getString(R.string.sort_hebrew))) {
+            filteredWords.sort((w1, w2) -> {
+                String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
+                String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
+                return he1.compareTo(he2);
+            });
+        } else if (currentSortOption.equals(getString(R.string.sort_rank))) {
+            filteredWords.sort((w1, w2) -> Integer.compare(w1.getRank(), w2.getRank()));
         }
 
         wordAdapter.setWordList(filteredWords);
@@ -180,12 +187,10 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
 
     private void confirmDelete(Word word) {
         new AlertDialog.Builder(this)
-                .setTitle("Delete Word")
-                .setMessage("Are you sure you want to delete:\n\n" +
-                        word.getEnglish() + " - " + word.getHebrew() +
-                        "\n\n(Rank " + word.getRank() + ")")
-                .setPositiveButton("Delete", (dialog, which) -> deleteWord(word))
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.delete_word_title)
+                .setMessage(getString(R.string.delete_word_msg, word.getEnglish(), word.getHebrew(), word.getRank()))
+                .setPositiveButton(R.string.delete, (dialog, which) -> deleteWord(word))
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -194,7 +199,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             @Override
             public void onCompleted(Void unused) {
                 Toast.makeText(AdminDeleteWordActivity.this,
-                        "Word deleted successfully",
+                        getString(R.string.word_deleted_success),
                         Toast.LENGTH_SHORT).show();
                 allWords.remove(word);
                 wordAdapter.removeWord(word);
@@ -203,7 +208,7 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(AdminDeleteWordActivity.this,
-                        "Failed to delete word: " + e.getMessage(),
+                        getString(R.string.word_delete_failed, e.getMessage()),
                         Toast.LENGTH_LONG).show();
             }
         });

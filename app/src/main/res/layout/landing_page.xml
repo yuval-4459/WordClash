@@ -60,7 +60,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:text="שלום שחקן!"
+        android:text="@string/login_welcome"
         android:textColor="#1A237E"
         android:textSize="28sp"
         android:textStyle="bold"
@@ -106,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:background="@android:color/transparent"
-                android:text="הירשם"
+                android:text="@string/signup_btn"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="64dp"
                 android:background="@android:color/transparent"
-                android:text="התחבר"
+                android:text="@string/login_btn"
                 android:textColor="#FFFFFF"
                 android:textSize="24sp"
                 android:textStyle="bold" />

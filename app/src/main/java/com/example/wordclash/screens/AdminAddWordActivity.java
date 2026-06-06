@@ -25,7 +25,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_admin_add_word);
 
         if (!SharedPreferencesUtils.getUser(this).isAdmin()) {
-            Toast.makeText(this, "Access denied - Admin only", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.admin_access_denied), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -57,7 +57,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
         String hebrew = etHebrew.getText().toString().trim();
 
         if (english.isEmpty() || hebrew.isEmpty()) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.error_fill_fields), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -69,7 +69,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
             @Override
             public void onCompleted(Void unused) {
                 Toast.makeText(AdminAddWordActivity.this,
-                        "Word added successfully!",
+                        getString(R.string.word_added_success),
                         Toast.LENGTH_SHORT).show();
                 etEnglish.setText("");
                 etHebrew.setText("");
@@ -79,7 +79,7 @@ public class AdminAddWordActivity extends AppCompatActivity {
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(AdminAddWordActivity.this,
-                        "Failed to add word: " + e.getMessage(),
+                        getString(R.string.word_add_failed, e.getMessage()),
                         Toast.LENGTH_LONG).show();
             }
         });

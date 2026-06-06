@@ -62,7 +62,7 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onClick(User user) {
                 if (user.getId().equals("-OfhuEaP25z-o6NIsC5K")) {
-                    Toast.makeText(UserListActivity.this, "Can't Access this user - He is a Manager", Toast.LENGTH_LONG).show();
+                    Toast.makeText(UserListActivity.this, getString(R.string.manager_access_denied), Toast.LENGTH_LONG).show();
                 } else {
                     Intent intent = new Intent(UserListActivity.this, AdminUserActivity.class);
                     intent.putExtra("user", user);
@@ -73,7 +73,7 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onLongClick(User user) {
                 if (user.getId().equals("-OfhuEaP25z-o6NIsC5K")) {
-                    Toast.makeText(UserListActivity.this, "Can't Access this user - He is a Manager", Toast.LENGTH_LONG).show();
+                    Toast.makeText(UserListActivity.this, getString(R.string.manager_access_denied), Toast.LENGTH_LONG).show();
                 } else {
                     Intent intent = new Intent(UserListActivity.this, AdminUserActivity.class);
                     intent.putExtra("user", user);
@@ -140,13 +140,18 @@ public class UserListActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(UserListActivity.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserListActivity.this, getString(R.string.failed_load_users, e.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setupGenderSpinner() {
-        String[] genders = {"All", "Male", "Female", "Other"};
+        String[] genders = {
+                getString(R.string.all),
+                getString(R.string.male),
+                getString(R.string.female),
+                getString(R.string.other)
+        };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, genders);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -156,9 +161,11 @@ public class UserListActivity extends AppCompatActivity {
     private void filterUsers() {
         String usernameQuery = searchUsername.getText().toString().toLowerCase().trim();
         String emailQuery = searchEmail.getText().toString().toLowerCase().trim();
-        String genderQuery = searchGender.getSelectedItem().toString();
+        int genderIndex = searchGender.getSelectedItemPosition();
 
         List<User> filteredList = new ArrayList<>();
+        String[] dbGenders = {"All", "Male", "Female", "Other"};
+        String dbGenderQuery = dbGenders[genderIndex];
 
         for (User user : allUsers) {
             if (!usernameQuery.isEmpty()) {
@@ -175,9 +182,9 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            if (!genderQuery.equals("All")) {
+            if (!dbGenderQuery.equals("All")) {
                 if (user.getGender() == null ||
-                        !user.getGender().equalsIgnoreCase(genderQuery)) {
+                        !user.getGender().equalsIgnoreCase(dbGenderQuery)) {
                     continue;
                 }
             }
@@ -216,7 +223,7 @@ public class UserListActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(UserListActivity.this, "Failed to load users", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UserListActivity.this, getString(R.string.failed_load_users, e.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }

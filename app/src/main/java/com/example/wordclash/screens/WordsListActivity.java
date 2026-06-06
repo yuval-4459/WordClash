@@ -49,7 +49,7 @@ public class WordsListActivity extends AppCompatActivity {
         user = SharedPreferencesUtils.getUser(this);
 
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.user_not_found, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -67,7 +67,7 @@ public class WordsListActivity extends AppCompatActivity {
         etSearch = findViewById(R.id.etSearch);
         spinnerSort = findViewById(R.id.spinnerSort);
 
-        tvTitle.setText("Rank " + currentRank + " Vocabulary");
+        tvTitle.setText(getString(R.string.vocabulary, currentRank));
 
         rvWords.setLayoutManager(new LinearLayoutManager(this));
         wordAdapter = new WordAdapter();
@@ -110,7 +110,11 @@ public class WordsListActivity extends AppCompatActivity {
     }
 
     private void setupSortSpinner() {
-        String[] sortOptions = {"Random", "A-Z (English)", "א-ב (Hebrew)"};
+        String[] sortOptions = {
+                getString(R.string.sort_random),
+                getString(R.string.sort_english),
+                getString(R.string.sort_hebrew)
+        };
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions) {
             @NonNull
@@ -141,7 +145,6 @@ public class WordsListActivity extends AppCompatActivity {
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currentSortOption = parent.getItemAtPosition(position).toString();
                 applyFiltersAndSort();
             }
 
@@ -173,7 +176,7 @@ public class WordsListActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(WordsListActivity.this, "No words found for this rank", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WordsListActivity.this, R.string.no_words_found, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 allWords = new ArrayList<>(words);
@@ -182,7 +185,7 @@ public class WordsListActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(WordsListActivity.this, "Failed to load words: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(WordsListActivity.this, getString(R.string.failed_load_words, e.getMessage()), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -206,18 +209,19 @@ public class WordsListActivity extends AppCompatActivity {
             }
         }
 
-        switch (currentSortOption) {
-            case "Random":
+        int sortPosition = spinnerSort.getSelectedItemPosition();
+        switch (sortPosition) {
+            case 0: // Random
                 Collections.shuffle(filteredWords);
                 break;
-            case "A-Z (English)":
+            case 1: // A-Z (English)
                 filteredWords.sort((w1, w2) -> {
                     String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
                     String en2 = w2.getEnglish() != null ? w2.getEnglish().toLowerCase() : "";
                     return en1.compareTo(en2);
                 });
                 break;
-            case "א-ב (Hebrew)":
+            case 2: // א-ב (Hebrew)
                 filteredWords.sort((w1, w2) -> {
                     String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
                     String he2 = w2.getHebrew() != null ? w2.getHebrew() : "";
@@ -233,13 +237,13 @@ public class WordsListActivity extends AppCompatActivity {
         DatabaseService.getInstance().markWordsReviewedForRank(user.getId(), currentRank, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
-                Toast.makeText(WordsListActivity.this, "You're ready to practice Rank " + currentRank + "!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WordsListActivity.this, getString(R.string.ready_to_practice, currentRank), Toast.LENGTH_SHORT).show();
                 finish();
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(WordsListActivity.this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(WordsListActivity.this, getString(R.string.user_update_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
             }
         });
     }

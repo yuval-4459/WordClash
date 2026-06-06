@@ -23,6 +23,8 @@
             android:layout_weight="1"
             android:gravity="start"
             android:text="Hello"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:text="Hello"
             android:textColor="@android:color/black"
             android:textDirection="ltr"
             android:textSize="18sp"
@@ -45,6 +47,8 @@
             android:layout_weight="1"
             android:gravity="end"
             android:text="שלום"
+            xmlns:tools="http://schemas.android.com/tools"
+            tools:text="שלום"
             android:textColor="@android:color/black"
             android:textDirection="rtl"
             android:textSize="18sp" />

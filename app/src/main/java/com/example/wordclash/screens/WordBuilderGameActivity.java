@@ -23,9 +23,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Word Builder Game - Build words from scrambled letters
- */
 public class WordBuilderGameActivity extends AppCompatActivity {
 
     private final int TOTAL_WORDS = 10;
@@ -35,7 +32,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
-    private int score = 0;
+    private int score            = 0;
     private String targetWord;
     private StringBuilder builtWord;
     private List<Button> letterButtons;
@@ -43,16 +40,12 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = SharedPreferencesUtils.getUser(this);
-        if (user != null) {
-            LanguageUtils.applyLanguageSettings(this, user);
-        }
+        if (user != null) LanguageUtils.applyLanguageSettings(this, user);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_word_builder_game);
 
-        if (user != null) {
-            LanguageUtils.setLayoutDirection(this, user);
-        }
+        if (user != null) LanguageUtils.setLayoutDirection(this, user);
 
         rank = getIntent().getIntExtra("RANK", 1);
 
@@ -61,22 +54,22 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvHint = findViewById(R.id.tvHint);
-        tvBuiltWord = findViewById(R.id.tvBuiltWord);
-        tvProgress = findViewById(R.id.tvProgress);
-        tvScore = findViewById(R.id.tvScore);
+        tvHint         = findViewById(R.id.tvHint);
+        tvBuiltWord    = findViewById(R.id.tvBuiltWord);
+        tvProgress     = findViewById(R.id.tvProgress);
+        tvScore        = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
         Button btnSubmit = findViewById(R.id.btnSubmit);
-        Button btnClear = findViewById(R.id.btnClear);
-        Button btnBack = findViewById(R.id.btnBack);
-        Button btnSkip = findViewById(R.id.btnSkip);
+        Button btnClear  = findViewById(R.id.btnClear);
+        Button btnBack   = findViewById(R.id.btnBack);
+        Button btnSkip   = findViewById(R.id.btnSkip);
 
         btnSubmit.setOnClickListener(v -> checkAnswer());
         btnClear.setOnClickListener(v -> clearWord());
         btnBack.setOnClickListener(v -> finish());
         btnSkip.setOnClickListener(v -> skipWord());
 
-        builtWord = new StringBuilder();
+        builtWord     = new StringBuilder();
         letterButtons = new ArrayList<>();
     }
 
@@ -85,12 +78,12 @@ public class WordBuilderGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(WordBuilderGameActivity.this, "No words available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WordBuilderGameActivity.this,
+                            getString(R.string.no_words_available), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
 
-                // filter words (4-8 letters work best)
                 gameWords = new ArrayList<>();
                 for (Word word : words) {
                     String english = word.getEnglish();
@@ -100,7 +93,8 @@ public class WordBuilderGameActivity extends AppCompatActivity {
                 }
 
                 if (gameWords.isEmpty()) {
-                    Toast.makeText(WordBuilderGameActivity.this, "No suitable words found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(WordBuilderGameActivity.this,
+                            getString(R.string.no_suitable_words), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -111,7 +105,9 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(WordBuilderGameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(WordBuilderGameActivity.this,
+                        getString(R.string.failed_load_words, e.getMessage()),
+                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -125,19 +121,15 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
         Word word = gameWords.get(currentWordIndex);
 
-        // determine which word to build based on learning language
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
-        String targetHint;
         if (learningLanguage.equals("english")) {
             targetWord = word.getEnglish().toUpperCase();
-            targetHint = word.getHebrew();
-            tvHint.setText("Hebrew: " + targetHint);
+            tvHint.setText(getString(R.string.word_builder_hint_hebrew, word.getHebrew()));
         } else {
             targetWord = word.getHebrew();
-            targetHint = word.getEnglish();
-            tvHint.setText("English: " + targetHint);
+            tvHint.setText(getString(R.string.word_builder_hint_english, word.getEnglish()));
         }
 
         clearWord();
@@ -149,29 +141,20 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         lettersContainer.removeAllViews();
         letterButtons.clear();
 
-        // create scrambled letters
         List<Character> letters = new ArrayList<>();
-        for (char c : targetWord.toCharArray()) {
-            letters.add(c);
-        }
+        for (char c : targetWord.toCharArray()) letters.add(c);
         Collections.shuffle(letters);
 
-        // add 2-3 extra random letters for difficulty
         String extraLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for (int i = 0; i < 2 && letters.size() < 10; i++) {
-            char randomChar = extraLetters.charAt((int) (Math.random() * extraLetters.length()));
-            letters.add(randomChar);
+            letters.add(extraLetters.charAt((int) (Math.random() * extraLetters.length())));
         }
         Collections.shuffle(letters);
 
-        // create buttons
         for (char letter : letters) {
             Button btn = new Button(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1.0f
-            );
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
             params.setMargins(4, 4, 4, 4);
             btn.setLayoutParams(params);
             btn.setText(String.valueOf(letter));
@@ -179,9 +162,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
             btn.setBackgroundColor(Color.parseColor("#2196F3"));
             btn.setTextColor(Color.WHITE);
             btn.setPadding(8, 16, 8, 16);
-
             btn.setOnClickListener(v -> addLetter(btn));
-
             letterButtons.add(btn);
             lettersContainer.addView(btn);
         }
@@ -189,7 +170,6 @@ public class WordBuilderGameActivity extends AppCompatActivity {
 
     private void addLetter(Button button) {
         if (button.getTag() != null && button.getTag().equals("used")) return;
-
         builtWord.append(button.getText());
         button.setTag("used");
         button.setBackgroundColor(Color.GRAY);
@@ -199,7 +179,6 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     private void clearWord() {
         builtWord.setLength(0);
         updateBuiltWord();
-
         for (Button btn : letterButtons) {
             btn.setTag(null);
             btn.setBackgroundColor(Color.parseColor("#2196F3"));
@@ -214,12 +193,10 @@ public class WordBuilderGameActivity extends AppCompatActivity {
         String answer = builtWord.toString();
 
         if (answer.equals(targetWord)) {
-            // correct
             score += 10 * rank;
             updateScore();
-
             tvBuiltWord.setTextColor(Color.GREEN);
-            Toast.makeText(this, "✓ Correct!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.game_correct), Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(() -> {
                 tvBuiltWord.setTextColor(Color.BLACK);
@@ -227,19 +204,17 @@ public class WordBuilderGameActivity extends AppCompatActivity {
                 showNextWord();
             }, 1000);
         } else {
-            // wrong
             tvBuiltWord.setTextColor(Color.RED);
-            Toast.makeText(this, "✗ Try again!", Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(this, getString(R.string.game_wrong), Toast.LENGTH_SHORT).show();
             new Handler().postDelayed(() -> tvBuiltWord.setTextColor(Color.BLACK), 500);
         }
     }
 
     private void skipWord() {
         new AlertDialog.Builder(this)
-                .setTitle("Skip Word")
-                .setMessage("The correct word was: " + targetWord)
-                .setPositiveButton("Next", (dialog, which) -> {
+                .setTitle(getString(R.string.skip_word_title))
+                .setMessage(getString(R.string.skip_word_msg, targetWord))
+                .setPositiveButton(getString(R.string.next), (d, w) -> {
                     currentWordIndex++;
                     showNextWord();
                 })
@@ -247,26 +222,25 @@ public class WordBuilderGameActivity extends AppCompatActivity {
     }
 
     private void updateProgress() {
-        tvProgress.setText("Word " + (currentWordIndex + 1) + " / " + TOTAL_WORDS);
+        tvProgress.setText(getString(R.string.word_progress, currentWordIndex + 1, TOTAL_WORDS));
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
+        tvScore.setText(getString(R.string.score, score));
     }
 
     private void showResults() {
         saveScoreToStats();
-
         new AlertDialog.Builder(this)
-                .setTitle("🎉 Game Complete!")
-                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10 * rank) + "\n(Rank " + rank + " bonus applied!)")
-                .setPositiveButton("Play Again", (dialog, which) -> {
+                .setTitle(getString(R.string.game_complete_title))
+                .setMessage(getString(R.string.game_complete_msg, score, TOTAL_WORDS * 10 * rank, rank))
+                .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentWordIndex = 0;
-                    score = 0;
+                    score            = 0;
                     Collections.shuffle(gameWords);
                     showNextWord();
                 })
-                .setNegativeButton("Back", (dialog, which) -> finish())
+                .setNegativeButton(getString(R.string.game_back), (d, w) -> finish())
                 .setCancelable(false)
                 .show();
     }
@@ -281,8 +255,7 @@ public class WordBuilderGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) {
-            }
+            public void onFailed(Exception e) { }
         });
     }
 }

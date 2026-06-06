@@ -47,13 +47,13 @@ public class AdminUserActivity extends AppCompatActivity {
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Edit User");
+            getSupportActionBar().setTitle(R.string.edit_user_title);
         }
 
         selectedUser = getIntent().getSerializableExtra("user", User.class);
 
         if (selectedUser == null) {
-            showError("Error: No user data received");
+            showError(getString(R.string.error_no_user_data));
             finish();
             return;
         }
@@ -102,7 +102,7 @@ public class AdminUserActivity extends AppCompatActivity {
 
     private void setupSpinners() {
         // Gender — readable adapter
-        String[] genders = {"Male", "Female", "Other"};
+        String[] genders = {getString(R.string.male), getString(R.string.female), getString(R.string.other)};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(
                 this, R.layout.item_spinner, genders);
         genderAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
@@ -110,8 +110,8 @@ public class AdminUserActivity extends AppCompatActivity {
 
         // Rank — readable adapter
         String[] ranks = {
-                "Rank 1 - Beginner", "Rank 2 - Intermediate",
-                "Rank 3 - Advanced",  "Rank 4 - Expert", "Rank 5 - Master"};
+                getString(R.string.rank_1), getString(R.string.rank_2),
+                getString(R.string.rank_3), getString(R.string.rank_4), getString(R.string.rank_5)};
         ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(
                 this, R.layout.item_spinner, ranks);
         rankAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
@@ -172,9 +172,9 @@ public class AdminUserActivity extends AppCompatActivity {
         usernameField.setText(selectedUser.getUserName());
         isAdminCheckBox.setChecked(selectedUser.isAdmin());
 
-        String[] genders = {"Male", "Female", "Other"};
-        for (int i = 0; i < genders.length; i++) {
-            if (genders[i].equalsIgnoreCase(selectedUser.getGender())) {
+        String[] dbGenders = {"Male", "Female", "Other"};
+        for (int i = 0; i < dbGenders.length; i++) {
+            if (dbGenders[i].equalsIgnoreCase(selectedUser.getGender())) {
                 genderSpinner.setSelection(i);
                 break;
             }
@@ -206,7 +206,7 @@ public class AdminUserActivity extends AppCompatActivity {
                     @Override
                     public void onFailed(Exception e) {
                         runOnUiThread(() -> {
-                            showError("Failed to load user stats: " + e.getMessage());
+                            showError(getString(R.string.failed_load_user_stats, e.getMessage()));
                             userStats = new Stats(selectedUser.getId(), 1, 0);
                             rankSpinner.setSelection(0);
                             totalScoreField.setText("0");
@@ -236,41 +236,41 @@ public class AdminUserActivity extends AppCompatActivity {
         scoreLayout.setError(null);
 
         if (email.isEmpty()) {
-            emailLayout.setError("Email is required");
+            emailLayout.setError(getString(R.string.validation_email_required));
             isValid = false;
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            emailLayout.setError("Invalid email format");
+            emailLayout.setError(getString(R.string.validation_invalid_email));
             isValid = false;
         }
 
         if (password.isEmpty()) {
-            passwordLayout.setError("Password is required");
+            passwordLayout.setError(getString(R.string.validation_password_required));
             isValid = false;
         } else if (password.length() < 6) {
-            passwordLayout.setError("Password must be at least 6 characters");
+            passwordLayout.setError(getString(R.string.validation_password_short));
             isValid = false;
         }
 
         if (username.isEmpty()) {
-            usernameLayout.setError("Username is required");
+            usernameLayout.setError(getString(R.string.validation_username_required));
             isValid = false;
         } else if (username.length() < 3) {
-            usernameLayout.setError("Username must be at least 3 characters");
+            usernameLayout.setError(getString(R.string.validation_username_short));
             isValid = false;
         }
 
         if (score.isEmpty()) {
-            scoreLayout.setError("Score is required");
+            scoreLayout.setError(getString(R.string.validation_score_required));
             isValid = false;
         } else {
             try {
                 int scoreValue = Integer.parseInt(score);
                 if (scoreValue < 0) {
-                    scoreLayout.setError("Score cannot be negative");
+                    scoreLayout.setError(getString(R.string.validation_score_negative));
                     isValid = false;
                 }
             } catch (NumberFormatException e) {
-                scoreLayout.setError("Invalid score format");
+                scoreLayout.setError(getString(R.string.validation_score_invalid));
                 isValid = false;
             }
         }
@@ -280,20 +280,20 @@ public class AdminUserActivity extends AppCompatActivity {
 
     private void showUpdateConfirmation() {
         new AlertDialog.Builder(this)
-                .setTitle("Confirm Update")
-                .setMessage("Are you sure you want to update this user's information?")
-                .setPositiveButton("Update", (dialog, which) -> updateUser())
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.confirm_update_title)
+                .setMessage(R.string.confirm_update_msg)
+                .setPositiveButton(R.string.update, (dialog, which) -> updateUser())
+                .setNegativeButton(R.string.cancel, null)
                 .setIcon(android.R.drawable.ic_dialog_info)
                 .show();
     }
 
     private void showDeleteConfirmation() {
         new AlertDialog.Builder(this)
-                .setTitle("Confirm Delete")
-                .setMessage("Are you sure you want to delete this user? This action cannot be undone.")
-                .setPositiveButton("Delete", (dialog, which) -> deleteUser())
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.confirm_delete_title)
+                .setMessage(R.string.confirm_delete_msg)
+                .setPositiveButton(R.string.delete, (dialog, which) -> deleteUser())
+                .setNegativeButton(R.string.cancel, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
@@ -307,7 +307,8 @@ public class AdminUserActivity extends AppCompatActivity {
         String email    = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
         String username = usernameField.getText().toString().trim();
-        String gender   = genderSpinner.getSelectedItem().toString();
+        String[] dbGenders = {"Male", "Female", "Other"};
+        String gender   = dbGenders[genderSpinner.getSelectedItemPosition()];
         boolean isAdmin = isAdminCheckBox.isChecked();
 
         selectedUser.setEmail(email);
@@ -336,7 +337,7 @@ public class AdminUserActivity extends AppCompatActivity {
                                         runOnUiThread(() -> {
                                             showLoading(false);
                                             hasUnsavedChanges = false;
-                                            showSuccess("User updated successfully");
+                                            showSuccess(getString(R.string.user_updated_success));
 
                                             new android.os.Handler().postDelayed(() -> {
                                                 Intent intent = new Intent(
@@ -353,7 +354,7 @@ public class AdminUserActivity extends AppCompatActivity {
                                         runOnUiThread(() -> {
                                             showLoading(false);
                                             setButtonsEnabled(true);
-                                            showError("Failed to update stats: " + e.getMessage());
+                                            showError(getString(R.string.stats_update_failed, e.getMessage()));
                                         });
                                     }
                                 });
@@ -364,7 +365,7 @@ public class AdminUserActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             showLoading(false);
                             setButtonsEnabled(true);
-                            showError("Update failed: " + e.getMessage());
+                            showError(getString(R.string.user_update_failed, e.getMessage()));
                         });
                     }
                 });
@@ -383,7 +384,7 @@ public class AdminUserActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             showLoading(false);
                             hasUnsavedChanges = false;
-                            showSuccess("User deleted successfully");
+                            showSuccess(getString(R.string.user_deleted_success));
 
                             new android.os.Handler().postDelayed(() -> {
                                 Intent intent = new Intent(
@@ -400,7 +401,7 @@ public class AdminUserActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             showLoading(false);
                             setButtonsEnabled(true);
-                            showError("Delete failed: " + e.getMessage());
+                            showError(getString(R.string.user_delete_failed, e.getMessage()));
                         });
                     }
                 });
@@ -438,10 +439,10 @@ public class AdminUserActivity extends AppCompatActivity {
     private void handleBackPress() {
         if (hasUnsavedChanges) {
             new AlertDialog.Builder(this)
-                    .setTitle("Unsaved Changes")
-                    .setMessage("You have unsaved changes. Are you sure you want to leave?")
-                    .setPositiveButton("Leave", (dialog, which) -> finish())
-                    .setNegativeButton("Stay", null)
+                    .setTitle(R.string.unsaved_changes_title)
+                    .setMessage(R.string.unsaved_changes_msg)
+                    .setPositiveButton(R.string.leave, (dialog, which) -> finish())
+                    .setNegativeButton(R.string.stay, null)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
         } else {

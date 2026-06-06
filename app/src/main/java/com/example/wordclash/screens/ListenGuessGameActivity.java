@@ -27,8 +27,7 @@ import java.util.Locale;
 
 public class ListenGuessGameActivity extends AppCompatActivity {
 
-    private TextView tvProgress;
-    private TextView tvScore;
+    private TextView tvProgress, tvScore;
     private Button btnListen;
     private Button btnOption1, btnOption2, btnOption3, btnOption4;
     private User user;
@@ -36,31 +35,28 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     private List<Word> allWords;
     private List<Word> gameWords;
     private int currentQuestionIndex = 0;
-    private int score = 0;
-    private boolean answerSelected = false;
+    private int score                = 0;
+    private boolean answerSelected   = false;
 
     private TextToSpeech tts;
-    private boolean ttsReady = false;
-    private boolean wordsLoaded = false;
+    private boolean ttsReady       = false;
+    private boolean wordsLoaded    = false;
     private boolean ttsInitialized = false;
 
-    // Color constants for readability
     private static final int COLOR_DEFAULT  = Color.parseColor("#2196F3");
     private static final int COLOR_CORRECT  = Color.parseColor("#43A047");
     private static final int COLOR_WRONG    = Color.parseColor("#E53935");
-    private static final int COLOR_DISABLED = Color.parseColor("#9E9E9E");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = SharedPreferencesUtils.getUser(this);
-        if (user != null) {
-            LanguageUtils.applyLanguageSettings(this, user);
-        }
+        if (user != null) LanguageUtils.applyLanguageSettings(this, user);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listen_guess_game);
-        if (user != null) {
-            LanguageUtils.setLayoutDirection(this, user);
-        }
+
+        if (user != null) LanguageUtils.setLayoutDirection(this, user);
+
         rank = getIntent().getIntExtra("RANK", 1);
         initializeViews();
         initializeTTS();
@@ -76,7 +72,6 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
 
-        // Bigger text on answer buttons for "grandma test"
         for (Button b : new Button[]{btnOption1, btnOption2, btnOption3, btnOption4}) {
             b.setTextSize(20f);
             b.setTypeface(null, Typeface.BOLD);
@@ -88,7 +83,6 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         btnOption2.setOnClickListener(v -> checkAnswer(btnOption2));
         btnOption3.setOnClickListener(v -> checkAnswer(btnOption3));
         btnOption4.setOnClickListener(v -> checkAnswer(btnOption4));
-        // No back button - use system gesture
 
         btnListen.setEnabled(false);
         btnListen.setAlpha(0.5f);
@@ -110,7 +104,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                 } else {
                     Locale[] hebrewLocales = {
                             new Locale("iw", "IL"), new Locale("iw"),
-                            new Locale("he", "IL"), new Locale("he"),
+                            new Locale("he", "IL"), new Locale("he")
                     };
                     for (Locale locale : hebrewLocales) {
                         int result = tts.setLanguage(locale);
@@ -122,7 +116,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                     }
                     if (!languageSet) {
                         try {
-                            for (java.util.Locale available : tts.getAvailableLanguages()) {
+                            for (Locale available : tts.getAvailableLanguages()) {
                                 String lang = available.getLanguage();
                                 if (lang.equals("iw") || lang.equals("he")) {
                                     int result = tts.setLanguage(available);
@@ -149,14 +143,14 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                         }
                     } else {
                         Toast.makeText(this,
-                                "Hebrew TTS not installed. Go to Settings → Language → TTS.",
+                                getString(R.string.tts_hebrew_missing),
                                 Toast.LENGTH_LONG).show();
                     }
                 });
             } else {
                 runOnUiThread(() -> {
                     ttsInitialized = true;
-                    Toast.makeText(this, "TTS failed to initialize.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, getString(R.string.tts_failed), Toast.LENGTH_LONG).show();
                 });
             }
         });
@@ -167,8 +161,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(ListenGuessGameActivity.this, "No words available",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListenGuessGameActivity.this,
+                            getString(R.string.no_words_available), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -183,7 +177,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(ListenGuessGameActivity.this, "Failed to load words",
+                Toast.makeText(ListenGuessGameActivity.this,
+                        getString(R.string.failed_load_words, e.getMessage()),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -221,9 +216,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         List<Word> otherWords = new ArrayList<>(allWords);
         otherWords.remove(correctWord);
         Collections.shuffle(otherWords);
-        for (int i = 0; i < Math.min(3, otherWords.size()); i++) {
-            options.add(otherWords.get(i));
-        }
+        for (int i = 0; i < Math.min(3, otherWords.size()); i++) options.add(otherWords.get(i));
         Collections.shuffle(options);
 
         Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
@@ -241,11 +234,11 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     private void speakWord() {
         if (!ttsReady) {
-            if (!ttsInitialized) {
-                Toast.makeText(this, "TTS still loading, please wait...", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "TTS not available for this language.", Toast.LENGTH_LONG).show();
-            }
+            Toast.makeText(this,
+                    ttsInitialized
+                            ? getString(R.string.tts_not_available)
+                            : getString(R.string.tts_loading),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
         if (gameWords == null || currentQuestionIndex >= gameWords.size()) return;
@@ -254,8 +247,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
         String textToSpeak = learningLanguage.equals("english")
-                ? currentWord.getEnglish()
-                : currentWord.getHebrew();
+                ? currentWord.getEnglish() : currentWord.getHebrew();
         tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
     }
 
@@ -264,43 +256,35 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         answerSelected = true;
 
         Word selectedWord = (Word) selectedButton.getTag();
-        Word correctWord = gameWords.get(currentQuestionIndex);
+        Word correctWord  = gameWords.get(currentQuestionIndex);
 
         disableAllButtons();
 
         if (selectedWord.getId().equals(correctWord.getId())) {
-            // Correct - bold green, white text
             selectedButton.setBackgroundColor(COLOR_CORRECT);
-            selectedButton.setTextColor(Color.WHITE);
             score += 10 * rank;
             updateScore();
         } else {
-            // Wrong - red for selected
             selectedButton.setBackgroundColor(COLOR_WRONG);
-            selectedButton.setTextColor(Color.WHITE);
-            // Show correct answer in green
             highlightCorrect(correctWord);
         }
 
         new Handler().postDelayed(this::nextQuestion, 1800);
     }
 
-    /** Highlight the correct button in green after a wrong answer */
     private void highlightCorrect(Word correctWord) {
         Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
         for (Button button : buttons) {
             Word word = (Word) button.getTag();
             if (word != null && word.getId().equals(correctWord.getId())) {
                 button.setBackgroundColor(COLOR_CORRECT);
-                button.setTextColor(Color.WHITE);
                 break;
             }
         }
     }
 
     private void disableAllButtons() {
-        Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
-        for (Button b : buttons) {
+        for (Button b : new Button[]{btnOption1, btnOption2, btnOption3, btnOption4}) {
             b.setEnabled(false);
         }
     }
@@ -314,32 +298,31 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     }
 
     private void updateProgress() {
-        tvProgress.setText("Question " + (currentQuestionIndex + 1) + " / " + gameWords.size());
+        tvProgress.setText(getString(R.string.question_progress,
+                currentQuestionIndex + 1, gameWords.size()));
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
+        tvScore.setText(getString(R.string.score, score));
     }
 
     private void endGame() {
         saveScoreToStats();
         int percentage = (score * 100) / (gameWords.size() * 10 * rank);
-        String message = "Your Score: " + score + " / " + (gameWords.size() * 10 * rank)
-                + "\nAccuracy: " + percentage + "%\n(Rank " + rank + " bonus applied!)";
+        String message = getString(R.string.your_score, score, gameWords.size() * 10 * rank)
+                + "\n" + getString(R.string.game_complete_msg, score, gameWords.size() * 10 * rank, rank);
 
         new AlertDialog.Builder(this)
-                .setTitle("🎉 Game Complete!")
+                .setTitle(getString(R.string.game_complete_title))
                 .setMessage(message)
-                .setPositiveButton("Play Again", (dialog, which) -> {
+                .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentQuestionIndex = 0;
-                    score = 0;
+                    score                = 0;
                     selectRandomWords();
                     showQuestion();
-                    if (ttsReady) {
-                        new Handler().postDelayed(this::speakWord, 500);
-                    }
+                    if (ttsReady) new Handler().postDelayed(this::speakWord, 500);
                 })
-                .setNegativeButton("Back", (dialog, which) -> finish())
+                .setNegativeButton(getString(R.string.game_back), (d, w) -> finish())
                 .setCancelable(false)
                 .show();
     }
@@ -360,10 +343,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (tts != null) {
-            tts.stop();
-            tts.shutdown();
-        }
+        if (tts != null) { tts.stop(); tts.shutdown(); }
         super.onDestroy();
     }
 }

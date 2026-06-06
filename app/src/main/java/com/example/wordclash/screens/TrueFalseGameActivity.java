@@ -22,37 +22,28 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-/**
- * True/False Game - Verify if translations are correct
- */
 public class TrueFalseGameActivity extends AppCompatActivity {
 
     private final int TOTAL_QUESTIONS = 15;
     private TextView tvQuestion, tvProgress, tvScore;
-    private Button btnTrue;
-    private Button btnFalse;
+    private Button btnTrue, btnFalse;
     private User user;
     private int rank = 1;
     private List<Word> allWords;
     private int currentQuestion = 0;
-    private int score = 0;
+    private int score            = 0;
     private boolean answerSelected = false;
-
     private boolean isCorrect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = SharedPreferencesUtils.getUser(this);
-        if (user != null) {
-            LanguageUtils.applyLanguageSettings(this, user);
-        }
+        if (user != null) LanguageUtils.applyLanguageSettings(this, user);
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_true_false_game);
 
-        if (user != null) {
-            LanguageUtils.setLayoutDirection(this, user);
-        }
+        if (user != null) LanguageUtils.setLayoutDirection(this, user);
 
         rank = getIntent().getIntExtra("RANK", 1);
 
@@ -63,9 +54,9 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     private void initializeViews() {
         tvQuestion = findViewById(R.id.tvQuestion);
         tvProgress = findViewById(R.id.tvProgress);
-        tvScore = findViewById(R.id.tvScore);
-        btnTrue = findViewById(R.id.btnTrue);
-        btnFalse = findViewById(R.id.btnFalse);
+        tvScore    = findViewById(R.id.tvScore);
+        btnTrue    = findViewById(R.id.btnTrue);
+        btnFalse   = findViewById(R.id.btnFalse);
         Button btnBack = findViewById(R.id.btnBack);
 
         btnBack.setOnClickListener(v -> finish());
@@ -78,11 +69,11 @@ public class TrueFalseGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.size() < 10) {
-                    Toast.makeText(TrueFalseGameActivity.this, "Not enough words", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(TrueFalseGameActivity.this,
+                            getString(R.string.no_suitable_words), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
-
                 allWords = words;
                 Collections.shuffle(allWords);
                 showNextQuestion();
@@ -90,7 +81,9 @@ public class TrueFalseGameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(TrueFalseGameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TrueFalseGameActivity.this,
+                        getString(R.string.failed_load_words, e.getMessage()),
+                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -108,36 +101,27 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         btnTrue.setBackgroundColor(Color.parseColor("#43A047"));
         btnFalse.setBackgroundColor(Color.parseColor("#E53935"));
 
-        // get random word
         Word correctWord = allWords.get(currentQuestion % allWords.size());
 
-        // 50% chance of showing correct translation
         Random random = new Random();
         isCorrect = random.nextBoolean();
 
-        String displayHebrew;
-        // current question data
-        String displayEnglish;
+        String displayEnglish, displayHebrew;
         if (isCorrect) {
-            // show correct pair
             displayEnglish = correctWord.getEnglish();
-            displayHebrew = correctWord.getHebrew();
+            displayHebrew  = correctWord.getHebrew();
         } else {
-            // show incorrect pair (mix with another word)
             Word wrongWord = allWords.get((currentQuestion + 1) % allWords.size());
             displayEnglish = correctWord.getEnglish();
-            displayHebrew = wrongWord.getHebrew();
+            displayHebrew  = wrongWord.getHebrew();
         }
 
-        // Display based on the learning language
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
         if (learningLanguage.equals("english")) {
-            // learning English: show Hebrew = English?
             tvQuestion.setText(displayHebrew + " = " + displayEnglish);
         } else {
-            // learning Hebrew: show English = Hebrew?
             tvQuestion.setText(displayEnglish + " = " + displayHebrew);
         }
 
@@ -152,15 +136,10 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         btnFalse.setEnabled(false);
 
         if (userAnswer == isCorrect) {
-            // correct
             score += 10 * rank;
-            if (userAnswer) {
-                btnTrue.setBackgroundColor(Color.GREEN);
-            } else {
-                btnFalse.setBackgroundColor(Color.GREEN);
-            }
+            if (userAnswer) btnTrue.setBackgroundColor(Color.GREEN);
+            else            btnFalse.setBackgroundColor(Color.GREEN);
         } else {
-            // wrong
             if (userAnswer) {
                 btnTrue.setBackgroundColor(Color.RED);
                 btnFalse.setBackgroundColor(Color.GREEN);
@@ -172,7 +151,6 @@ public class TrueFalseGameActivity extends AppCompatActivity {
 
         updateScore();
 
-        // next question after delay
         new Handler().postDelayed(() -> {
             currentQuestion++;
             showNextQuestion();
@@ -180,30 +158,30 @@ public class TrueFalseGameActivity extends AppCompatActivity {
     }
 
     private void updateProgress() {
-        tvProgress.setText("Question " + (currentQuestion + 1) + " / " + TOTAL_QUESTIONS);
+        tvProgress.setText(getString(R.string.question_progress, currentQuestion + 1, TOTAL_QUESTIONS));
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
+        tvScore.setText(getString(R.string.score, score));
     }
 
     private void showResults() {
         saveScoreToStats();
 
         int percentage = (score * 100) / (TOTAL_QUESTIONS * 10 * rank);
-        String message = "Your Score: " + score + " / " + (TOTAL_QUESTIONS * 10 * rank) + "\n" +
-                "Accuracy: " + percentage + "%\n(Rank " + rank + " bonus applied!)";
+        String message = getString(R.string.your_score, score, TOTAL_QUESTIONS * 10 * rank)
+                + "\n" + getString(R.string.game_complete_msg, score, TOTAL_QUESTIONS * 10 * rank, rank);
 
         new AlertDialog.Builder(this)
-                .setTitle("🎉 Game Complete!")
+                .setTitle(getString(R.string.game_complete_title))
                 .setMessage(message)
-                .setPositiveButton("Play Again", (dialog, which) -> {
+                .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentQuestion = 0;
-                    score = 0;
+                    score           = 0;
                     Collections.shuffle(allWords);
                     showNextQuestion();
                 })
-                .setNegativeButton("Back", (dialog, which) -> finish())
+                .setNegativeButton(getString(R.string.game_back), (d, w) -> finish())
                 .setCancelable(false)
                 .show();
     }
@@ -218,8 +196,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) {
-            }
+            public void onFailed(Exception e) { }
         });
     }
 }

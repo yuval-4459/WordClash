@@ -47,7 +47,7 @@
             android:layout_marginTop="1dp"
             android:layout_marginEnd="16dp"
             android:gravity="center"
-            android:text="איזו שפה תרצה ללמוד?"
+            android:text="@string/language_question"
             android:textColor="#1A237E"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -90,7 +90,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="אנגלית"
+                    android:text="@string/english"
                     android:textColor="#1A237E"
                     android:textSize="36sp"
                     android:textStyle="bold" />
@@ -99,7 +99,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="הממשק יהיה בעברית"
+                    android:text="@string/interface_hebrew"
                     android:textColor="#757575"
                     android:textSize="16sp" />
 
@@ -109,7 +109,7 @@
                     android:layout_height="60dp"
                     android:layout_marginTop="24dp"
                     android:backgroundTint="#43A047"
-                    android:text="בחר אנגלית"
+                    android:text="@string/choose_english"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -156,7 +156,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="עברית"
+                    android:text="@string/hebrew"
                     android:textColor="#1A237E"
                     android:textSize="36sp"
                     android:textStyle="bold" />
@@ -165,7 +165,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="The interface will be in English"
+                    android:text="@string/interface_english"
                     android:textColor="#757575"
                     android:textSize="16sp" />
 
@@ -175,7 +175,7 @@
                     android:layout_height="60dp"
                     android:layout_marginTop="24dp"
                     android:backgroundTint="#1565C0"
-                    android:text="בחר עברית"
+                    android:text="@string/choose_hebrew"
                     android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold" />

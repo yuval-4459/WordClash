@@ -38,7 +38,7 @@ public class LeaderboardActivity extends AppCompatActivity {
 
         currentUser = SharedPreferencesUtils.getUser(this);
         if (currentUser == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -49,11 +49,10 @@ public class LeaderboardActivity extends AppCompatActivity {
 
     private void initializeViews() {
         RecyclerView rvLeaderboard = findViewById(R.id.rvLeaderboard);
-        // btnBack הוסר — system back מספיק
-        cardYourRank = findViewById(R.id.cardYourRank);
+        cardYourRank   = findViewById(R.id.cardYourRank);
         tvYourPosition = findViewById(R.id.tvYourPosition);
         tvYourUsername = findViewById(R.id.tvYourUsername);
-        tvYourScore = findViewById(R.id.tvYourScore);
+        tvYourScore    = findViewById(R.id.tvYourScore);
 
         rvLeaderboard.setLayoutManager(new LinearLayoutManager(this));
         leaderboardAdapter = new LeaderboardAdapter();
@@ -69,7 +68,9 @@ public class LeaderboardActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<User> users) {
                 if (users == null || users.isEmpty()) {
-                    Toast.makeText(LeaderboardActivity.this, "No users found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LeaderboardActivity.this,
+                            getString(R.string.no_users_found),
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -77,14 +78,13 @@ public class LeaderboardActivity extends AppCompatActivity {
                 for (User user : users) {
                     userMap.put(user.getId(), user);
                 }
-
                 loadAllStats(userMap);
             }
 
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(LeaderboardActivity.this,
-                        "Failed to load users: " + e.getMessage(),
+                        getString(R.string.failed_load_users, e.getMessage()),
                         Toast.LENGTH_SHORT).show();
             }
         });
@@ -100,10 +100,10 @@ public class LeaderboardActivity extends AppCompatActivity {
                 public void onCompleted(Stats stats) {
                     if (stats != null) {
                         LeaderboardEntry entry = new LeaderboardEntry();
-                        entry.userId = user.getId();
-                        entry.username = user.getUserName();
+                        entry.userId     = user.getId();
+                        entry.username   = user.getUserName();
                         entry.totalScore = stats.getTotalScore();
-                        entry.rank = stats.getRank();
+                        entry.rank       = stats.getRank();
                         allEntries.add(entry);
                     }
 
@@ -125,8 +125,7 @@ public class LeaderboardActivity extends AppCompatActivity {
     }
 
     private void displayLeaderboard() {
-        allEntries.sort((e1, e2) ->
-                Integer.compare(e2.totalScore, e1.totalScore));
+        allEntries.sort((e1, e2) -> Integer.compare(e2.totalScore, e1.totalScore));
 
         for (int i = 0; i < allEntries.size(); i++) {
             allEntries.get(i).position = i + 1;
@@ -155,7 +154,7 @@ public class LeaderboardActivity extends AppCompatActivity {
             cardYourRank.setVisibility(View.VISIBLE);
             tvYourPosition.setText("#" + userEntry.position);
             tvYourUsername.setText(userEntry.username);
-            tvYourScore.setText(userEntry.totalScore + " pts");
+            tvYourScore.setText(getString(R.string.points, userEntry.totalScore));
         } else {
             cardYourRank.setVisibility(View.GONE);
         }

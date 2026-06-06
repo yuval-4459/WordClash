@@ -35,7 +35,7 @@ public class GamesActivity extends AppCompatActivity {
         }
 
         if (user == null) {
-            Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.user_not_found), Toast.LENGTH_SHORT).show();
             finish();
             return;
         }

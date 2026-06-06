@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:gravity="center"
-                android:text="Search Users"
+                android:text="@string/search_users_title"
                 android:textColor="#1A237E"
                 android:textSize="24sp"
                 android:textStyle="bold" />
@@ -41,7 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Username"
+                android:text="@string/username"
                 android:textColor="#1A237E"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -52,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_bg"
-                android:hint="Search by username..."
+                android:hint="@string/hint_search_username"
                 android:inputType="text"
                 android:maxLines="1"
                 android:minHeight="64dp"
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Email"
+                android:text="@string/email"
                 android:textColor="#1A237E"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/rounded_bg"
-                android:hint="Search by email..."
+                android:hint="@string/hint_search_email"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
                 android:minHeight="64dp"
@@ -89,7 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="סינון לפי מגדר"
+                android:text="@string/filter_gender"
                 android:textColor="#1A237E"
                 android:textSize="16sp"
                 android:textStyle="bold" />

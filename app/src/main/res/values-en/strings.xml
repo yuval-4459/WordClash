@@ -1,4 +1,4 @@
-<!-- app/src/main/res/values-en/strings.xml -->
+<!-- app/src/main/res/values-en/strings.xml  (אנגלית) -->
 <resources>
     <string name="app_name">WordClash</string>
 
@@ -13,7 +13,7 @@
     <string name="leaderboard">🏆\nLeaderboard</string>
     <string name="mini_games">🎮\nMini Games</string>
 
-    <!-- Navigation Menu (Hamburger) -->
+    <!-- Navigation Menu -->
     <string name="nav_users_table">📊 Table of Users</string>
     <string name="nav_add_word">➕ Add New Word</string>
     <string name="nav_manage_words">📝 Delete Words</string>
@@ -42,25 +42,144 @@
     <string name="vocabulary">Rank %d Vocabulary</string>
     <string name="search_words">Search English or Hebrew…</string>
     <string name="ready">✓ I\'m Ready</string>
-    <string name="ready_to_practice">You are ready to practice Rank %d!</string>
+    <string name="ready_to_practice">You\'re ready to practice Rank %d!</string>
     <string name="no_words_found">No words found for this rank</string>
     <string name="sort_random">Random</string>
     <string name="sort_english">A-Z (English)</string>
     <string name="sort_hebrew">א-ב (Hebrew)</string>
+    <string name="sort_rank">By Rank</string>
+    <string name="all_ranks">All Ranks</string>
+    <string name="all">All</string>
+    <string name="signup_btn">Sign Up</string>
+    <string name="login_welcome">Hello Player!</string>
+    <string name="create_account">Create New Account</string>
+    <string name="interface_hebrew">The interface will be in Hebrew</string>
+    <string name="interface_english">The interface will be in English</string>
+    <string name="choose_english">Choose English</string>
+    <string name="choose_hebrew">Choose Hebrew</string>
+    <string name="filter_gender">Filter by gender</string>
+    <string name="search_users_title">Search Users</string>
+    <string name="hint_search_username">Search by username…</string>
+    <string name="hint_search_email">Search by email…</string>
+    <string name="edit_user_details">Edit user details</string>
+    <string name="menu_desc">Menu</string>
+    <string name="back_btn">Back</string>
 
-    <!-- Game Screen -->
+    <!-- Game Screen – General -->
     <string name="score">Score: %d</string>
     <string name="question_progress">Question %d / %d</string>
+    <string name="word_progress">Word %d / %d</string>
     <string name="congratulations">🎉 Congratulations!</string>
     <string name="you_failed">❌ You failed.\nYou need at least 80 points to pass.</string>
     <string name="practice_complete">Practice Complete!</string>
     <string name="your_score">Your Score: %d / %d</string>
+
+    <!-- Game – Common Actions -->
+    <string name="game_correct">✓ Correct!</string>
+    <string name="game_wrong">✗ Wrong! Try again</string>
+    <string name="game_skip">Skip</string>
+    <string name="game_submit">Submit</string>
+    <string name="game_clear">Clear</string>
+    <string name="game_new">🔄 New Game</string>
+    <string name="game_play_again">Play Again</string>
+    <string name="game_back">← Back</string>
+    <string name="game_complete_title">🎉 Game Complete!</string>
+    <string name="game_complete_msg">Your Score: %1$d / %2$d\n(Rank %3$d bonus applied!)</string>
+
+    <!-- Match Game -->
+    <string name="match_game_title">🎯 Match Game</string>
+    <string name="matches_progress">Matches: %1$d/%2$d</string>
+    <string name="match_congrats_msg">You matched all pairs!\nScore: %1$d points\n(Rank %2$d bonus applied!)</string>
+
+    <!-- Memory Cards -->
+    <string name="memory_game_title">🃏 Memory Cards</string>
+    <string name="memory_congrats_msg">You found all pairs!\nScore: %1$d points\n(Rank %2$d bonus applied!)</string>
+
+    <!-- True/False Game -->
+    <string name="true_false_game_title">✓✗ True or False?</string>
+
+    <!-- Word Builder -->
+    <string name="word_builder_title">🔤 Word Builder</string>
+    <string name="word_builder_hint_hebrew">Hebrew: %s</string>
+    <string name="word_builder_hint_english">English: %s</string>
+    <string name="skip_word_title">Skip Word</string>
+    <string name="skip_word_msg">The correct word was: %s</string>
+    <string name="next">Next</string>
+
+    <!-- Fill Gaps -->
+    <string name="fill_gaps_title">📝 Fill the Gaps</string>
+
+    <!-- Listen and Guess -->
+    <string name="listen_guess_title">🔊 Listen and Guess</string>
+    <string name="tts_not_available">TTS not available for this language.</string>
+    <string name="tts_loading">TTS still loading, please wait…</string>
+    <string name="tts_failed">TTS failed to initialize.</string>
+    <string name="tts_hebrew_missing">Hebrew TTS not installed. Go to Settings → Language → TTS.</string>
+    <string name="listen_instruction">Listen carefully and choose the correct translation</string>
+
+    <!-- Speed Quiz -->
+    <string name="speed_quiz_title">🚄 Speed Quiz</string>
 
     <!-- Leaderboard -->
     <string name="leaderboard_title">🏆 Leaderboard</string>
     <string name="top_10_players">Top 10 Players</string>
     <string name="your_ranking">Your Ranking</string>
     <string name="points">%d pts</string>
+    <string name="no_users_found">No users found</string>
+    <string name="failed_load_users">Failed to load users: %s</string>
+    <string name="failed_load_stats">Failed to load stats</string>
+
+    <!-- Login -->
+    <string name="login_title">Login</string>
+    <string name="login_btn">Login</string>
+    <string name="login_success">Logged in successfully %s</string>
+    <string name="login_wrong_credentials">Wrong email or password</string>
+    <string name="login_failed">Login failed: %s</string>
+
+    <!-- Sign Up -->
+    <string name="signup_title">Sign Up</string>
+    <string name="signup_success">Registered successfully!</string>
+    <string name="signup_failed">Failed to save user: %s</string>
+    <string name="email_already_exists">Email already exists</string>
+
+    <!-- Admin – Words -->
+    <string name="admin_access_denied">Access denied – Admin only</string>
+    <string name="admin_add_word_title">Add New Word</string>
+    <string name="word_added_success">Word added successfully!</string>
+    <string name="word_add_failed">Failed to add word: %s</string>
+    <string name="word_fill_all_fields">Please fill all fields</string>
+    <string name="delete_word_title">Delete Word</string>
+    <string name="delete_word_msg">Are you sure you want to delete:\n\n%1$s - %2$s\n\n(Rank %3$d)</string>
+    <string name="word_deleted_success">Word deleted successfully</string>
+    <string name="word_delete_failed">Failed to delete word: %s</string>
+    <string name="no_words_available">No words available</string>
+    <string name="failed_load_words">Failed to load words: %s</string>
+    <string name="no_suitable_words">No suitable words found</string>
+
+    <!-- Admin – Users -->
+    <string name="admin_panel_title">Admin Panel</string>
+    <string name="edit_user_title">Edit User</string>
+    <string name="error_no_user_data">Error: No user data received</string>
+    <string name="rank_1">Rank 1 - Beginner</string>
+    <string name="rank_2">Rank 2 - Intermediate</string>
+    <string name="rank_3">Rank 3 - Advanced</string>
+    <string name="rank_4">Rank 4 - Expert</string>
+    <string name="rank_5">Rank 5 - Master</string>
+    <string name="confirm_update_title">Confirm Update</string>
+    <string name="confirm_update_msg">Are you sure you want to update this user\'s information?</string>
+    <string name="confirm_delete_title">Confirm Delete</string>
+    <string name="confirm_delete_msg">Are you sure you want to delete this user? This action cannot be undone.</string>
+    <string name="user_updated_success">User updated successfully</string>
+    <string name="user_deleted_success">User deleted successfully</string>
+    <string name="user_update_failed">Update failed: %s</string>
+    <string name="user_delete_failed">Delete failed: %s</string>
+    <string name="stats_update_failed">Failed to update stats: %s</string>
+    <string name="failed_load_user_stats">Failed to load user stats: %s</string>
+    <string name="manager_access_denied">Can\'t access this user – He is a Manager</string>
+    <string name="unsaved_changes_title">Unsaved Changes</string>
+    <string name="unsaved_changes_msg">You have unsaved changes. Are you sure you want to leave?</string>
+    <string name="leave">Leave</string>
+    <string name="stay">Stay</string>
 
     <!-- Settings & Change Details -->
     <string name="settings_management">Settings Management</string>
@@ -79,10 +198,24 @@
     <string name="change_learning_language">Change Learning Language</string>
     <string name="language_question">Which language would you like to learn?</string>
 
-    <string name="app_ok">Confirm</string>
-    <string name="app_cancel">Cancel</string>
+    <!-- Profile Picture -->
+    <string name="profile_picture_title">Profile Picture</string>
+    <string name="profile_picture_updated">Profile picture updated!</string>
+    <string name="profile_picture_removed">Profile picture removed</string>
+    <string name="profile_picture_update_failed">Failed to update: %s</string>
+    <string name="profile_picture_delete_failed">Failed to delete: %s</string>
+    <string name="delete_picture_title">Delete Profile Picture</string>
+    <string name="delete_picture_msg">Are you sure you want to remove your profile picture?</string>
+    <string name="no_image_to_rotate">No image to rotate</string>
+    <string name="camera_permission_required">Camera permission is required</string>
+    <string name="image_too_large">Image too large, please choose a smaller one</string>
+    <string name="image_process_failed">Error processing image: %s</string>
+    <string name="failed_load_image">Failed to load image</string>
+    <string name="camera_open_failed">Error opening camera: %s</string>
 
     <!-- Common -->
+    <string name="app_ok">Confirm</string>
+    <string name="app_cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="delete">Delete</string>
@@ -101,4 +234,25 @@
     <string name="error_loading">Error loading data</string>
     <string name="error_saving">Error saving data</string>
     <string name="user_not_found">User not found</string>
+    <string name="failed_load_stats_generic">Failed to load stats</string>
+
+    <!-- Validation -->
+    <string name="validation_fill_field">Please fill this field</string>
+    <string name="validation_invalid_email">Invalid email address</string>
+    <string name="validation_password_short">Password must be at least 6 characters</string>
+    <string name="validation_username_short">Username must be at least 3 characters</string>
+    <string name="validation_passwords_mismatch">Passwords do not match</string>
+    <string name="validation_choose_gender">You need to choose a gender</string>
+    <string name="validation_score_negative">Score cannot be negative</string>
+    <string name="validation_score_invalid">Invalid score format</string>
+    <string name="validation_email_required">Email is required</string>
+    <string name="validation_password_required">Password is required</string>
+    <string name="validation_username_required">Username is required</string>
+    <string name="validation_score_required">Score is required</string>
+    <string name="game_true">✓ TRUE</string>
+    <string name="game_false">✗ FALSE</string>
+    <string name="english_word_hint">English Word</string>
+    <string name="hebrew_word_hint">Hebrew Word (Translation)</string>
+    <string name="validation_choose_rank">Please choose a rank</string>
+    <string name="validation_rank_range">Rank must be between 1 and 5</string>
 </resources>

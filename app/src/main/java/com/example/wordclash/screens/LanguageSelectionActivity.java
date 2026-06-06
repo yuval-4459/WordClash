@@ -43,7 +43,7 @@ public class LanguageSelectionActivity extends AppCompatActivity {
         Button btnEnglish = findViewById(R.id.btnEnglish);
         Button btnHebrew = findViewById(R.id.btnHebrew);
 
-        tvQuestion.setText("?איזו שפה תרצה ללמוד");
+        tvQuestion.setText(R.string.language_question);
 
         btnEnglish.setOnClickListener(v -> selectLanguage("english"));
         btnHebrew.setOnClickListener(v -> selectLanguage("hebrew"));
@@ -60,10 +60,10 @@ public class LanguageSelectionActivity extends AppCompatActivity {
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(LanguageSelectionActivity.this, user);
 
-                // show confirmation in Hebrew
+                // show confirmation in Hebrew/English
                 String message = learningLanguage.equals("english")
-                        ? "בחרת ללמוד אנגלית! הממשק יהיה בעברית"
-                        : "בחרת ללמוד עברית! הממשק יהיה באנגלית";
+                        ? getString(R.string.choose_english) + "! " + getString(R.string.interface_hebrew)
+                        : getString(R.string.choose_hebrew) + "! " + getString(R.string.interface_english);
                 Toast.makeText(LanguageSelectionActivity.this, message, Toast.LENGTH_SHORT).show();
 
                 // go to main activity
@@ -76,7 +76,7 @@ public class LanguageSelectionActivity extends AppCompatActivity {
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(LanguageSelectionActivity.this,
-                        "שגיאה בשמירת העדפת שפה: " + e.getMessage(),
+                        getString(R.string.error_saving) + ": " + e.getMessage(),
                         Toast.LENGTH_LONG).show();
             }
         });

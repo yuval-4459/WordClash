@@ -99,43 +99,43 @@ public class SignUpActivity extends AppCompatActivity {
 
         // --- Validation: same rules as AdminUserActivity ---
         if (email.isEmpty()) {
-            tilEmail.setError("נא למלא את השדה");
+            tilEmail.setError(getString(R.string.validation_fill_field));
             hasError = true;
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            tilEmail.setError("כתובת אימייל לא תקינה");
+            tilEmail.setError(getString(R.string.validation_invalid_email));
             hasError = true;
         }
 
         if (password.isEmpty()) {
-            tilPassword.setError("נא למלא את השדה");
+            tilPassword.setError(getString(R.string.validation_fill_field));
             hasError = true;
         } else if (password.length() < 6) {
-            tilPassword.setError("סיסמה חייבת להכיל לפחות 6 תווים");
+            tilPassword.setError(getString(R.string.validation_password_short));
             hasError = true;
         }
 
         if (password2.isEmpty()) {
-            tilConfirmPassword.setError("נא למלא את השדה");
+            tilConfirmPassword.setError(getString(R.string.validation_fill_field));
             hasError = true;
         }
 
         if (userName.isEmpty()) {
-            tilUserName.setError("נא למלא את השדה");
+            tilUserName.setError(getString(R.string.validation_fill_field));
             hasError = true;
         } else if (userName.length() < 3) {
-            tilUserName.setError("שם משתמש חייב להכיל לפחות 3 תווים");
+            tilUserName.setError(getString(R.string.validation_username_short));
             hasError = true;
         }
 
         if (hasError) return;
 
         if (!password.equals(password2)) {
-            tilConfirmPassword.setError("הסיסמאות אינן תואמות");
+            tilConfirmPassword.setError(getString(R.string.validation_passwords_mismatch));
             return;
         }
 
         if (selectedGender.equals("Choose") || selectedGender.isEmpty()) {
-            Toast.makeText(this, "You need to choose a gender", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.validation_choose_gender), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -147,7 +147,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onCompleted(Boolean exist) {
                 if (exist) {
-                    tilEmail.setError("מייל כבר קיים");
+                    tilEmail.setError(getString(R.string.email_already_exists));
                 } else {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<>() {
                         @Override
@@ -155,7 +155,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Stats initialStats = new Stats(user.getId(), 1, 0);
                             db.createStats(initialStats, null);
                             Toast.makeText(SignUpActivity.this,
-                                    "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
+                                    getString(R.string.signup_success), Toast.LENGTH_SHORT).show();
                             SharedPreferencesUtils.saveUser(SignUpActivity.this, user);
                             Intent intent = new Intent(
                                     SignUpActivity.this, LanguageSelectionActivity.class);
@@ -169,7 +169,7 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onFailed(Exception e) {
                             Toast.makeText(SignUpActivity.this,
-                                    "נכשל בשמירת המשתמש: " + e.getMessage(),
+                                    getString(R.string.signup_failed, e.getMessage()),
                                     Toast.LENGTH_LONG).show();
                         }
                     });
@@ -179,7 +179,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(SignUpActivity.this,
-                        "נכשל בשמירת המשתמש: " + e.getMessage(),
+                        getString(R.string.signup_failed, e.getMessage()),
                         Toast.LENGTH_LONG).show();
             }
         });

@@ -33,7 +33,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private int rank = 1;
     private List<Word> gameWords;
     private int currentWordIndex = 0;
-    private int score = 0;
+    private int score            = 0;
     private String targetWord;
     private List<Integer> missingIndices;
     private StringBuilder currentGuess;
@@ -41,24 +41,23 @@ public class FillGapsGameActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         user = SharedPreferencesUtils.getUser(this);
-        if (user != null) {
-            LanguageUtils.applyLanguageSettings(this, user);
-        }
+        if (user != null) LanguageUtils.applyLanguageSettings(this, user);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_gaps_game);
-        if (user != null) {
-            LanguageUtils.setLayoutDirection(this, user);
-        }
+
+        if (user != null) LanguageUtils.setLayoutDirection(this, user);
+
         rank = getIntent().getIntExtra("RANK", 1);
         initializeViews();
         loadWords();
     }
 
     private void initializeViews() {
-        tvHint = findViewById(R.id.tvHint);
-        tvWord = findViewById(R.id.tvWord);
-        tvProgress = findViewById(R.id.tvProgress);
-        tvScore = findViewById(R.id.tvScore);
+        tvHint           = findViewById(R.id.tvHint);
+        tvWord           = findViewById(R.id.tvWord);
+        tvProgress       = findViewById(R.id.tvProgress);
+        tvScore          = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
 
         Button btnSkip = findViewById(R.id.btnSkip);
@@ -70,8 +69,8 @@ public class FillGapsGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(FillGapsGameActivity.this, "No words available",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FillGapsGameActivity.this,
+                            getString(R.string.no_words_available), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -83,8 +82,8 @@ public class FillGapsGameActivity extends AppCompatActivity {
                     }
                 }
                 if (gameWords.isEmpty()) {
-                    Toast.makeText(FillGapsGameActivity.this, "No suitable words found",
-                            Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FillGapsGameActivity.this,
+                            getString(R.string.no_suitable_words), Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
@@ -94,7 +93,8 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(FillGapsGameActivity.this, "Failed to load words",
+                Toast.makeText(FillGapsGameActivity.this,
+                        getString(R.string.failed_load_words, e.getMessage()),
                         Toast.LENGTH_SHORT).show();
                 finish();
             }
@@ -113,10 +113,10 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
         if (learningLanguage.equals("english")) {
             targetWord = word.getEnglish().toUpperCase();
-            tvHint.setText("Hebrew: " + word.getHebrew());
+            tvHint.setText(getString(R.string.word_builder_hint_hebrew, word.getHebrew()));
         } else {
             targetWord = word.getHebrew();
-            tvHint.setText("English: " + word.getEnglish());
+            tvHint.setText(getString(R.string.word_builder_hint_english, word.getEnglish()));
         }
 
         createWordWithGaps();
@@ -129,9 +129,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
         int numMissing = Math.max(2, targetWord.length() / 2);
 
         List<Integer> allIndices = new ArrayList<>();
-        for (int i = 0; i < targetWord.length(); i++) {
-            allIndices.add(i);
-        }
+        for (int i = 0; i < targetWord.length(); i++) allIndices.add(i);
         Collections.shuffle(allIndices);
 
         for (int i = 0; i < numMissing && i < allIndices.size(); i++) {
@@ -140,11 +138,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
         currentGuess = new StringBuilder();
         for (int i = 0; i < targetWord.length(); i++) {
-            if (missingIndices.contains(i)) {
-                currentGuess.append('_');
-            } else {
-                currentGuess.append(targetWord.charAt(i));
-            }
+            currentGuess.append(missingIndices.contains(i) ? '_' : targetWord.charAt(i));
         }
         updateWordDisplay();
     }
@@ -152,21 +146,14 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private void setupLetterButtons() {
         lettersContainer.removeAllViews();
 
-        // Collect the missing letters
         List<Character> missingLetters = new ArrayList<>();
-        for (int index : missingIndices) {
-            missingLetters.add(targetWord.charAt(index));
-        }
+        for (int index : missingIndices) missingLetters.add(targetWord.charAt(index));
         Collections.shuffle(missingLetters);
 
-        // Use a FlexboxLayout-style via nested LinearLayouts so letters wrap properly
-        // We split into rows of 4 max
         int maxPerRow = 4;
-        int total = missingLetters.size();
-
-        int letterSizeDp = 56;
+        int total     = missingLetters.size();
         float density = getResources().getDisplayMetrics().density;
-        int letterSizePx = (int)(letterSizeDp * density);
+        int letterSizePx = (int)(56 * density);
 
         for (int rowStart = 0; rowStart < total; rowStart += maxPerRow) {
             LinearLayout row = new LinearLayout(this);
@@ -200,16 +187,11 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void fillLetter(char letter, Button button) {
-        // Only respond if button is still available
         if (!"available".equals(button.getTag())) return;
 
-        // Find next gap
         int nextGapIndex = -1;
         for (int i = 0; i < currentGuess.length(); i++) {
-            if (currentGuess.charAt(i) == '_') {
-                nextGapIndex = i;
-                break;
-            }
+            if (currentGuess.charAt(i) == '_') { nextGapIndex = i; break; }
         }
         if (nextGapIndex == -1) return;
 
@@ -219,13 +201,10 @@ public class FillGapsGameActivity extends AppCompatActivity {
         button.setAlpha(0.3f);
         updateWordDisplay();
 
-        if (currentGuess.indexOf("_") == -1) {
-            checkAnswer();
-        }
+        if (currentGuess.indexOf("_") == -1) checkAnswer();
     }
 
     private void updateWordDisplay() {
-        // Show letters with spaces, each on same line — word stays on one line
         StringBuilder display = new StringBuilder();
         for (int i = 0; i < currentGuess.length(); i++) {
             display.append(currentGuess.charAt(i)).append(" ");
@@ -234,13 +213,11 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void checkAnswer() {
-        String answer = currentGuess.toString();
-
-        if (answer.equals(targetWord)) {
+        if (currentGuess.toString().equals(targetWord)) {
             score += 10 * rank;
             updateScore();
             tvWord.setTextColor(Color.parseColor("#43A047"));
-            Toast.makeText(this, "✓ Correct!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.game_correct), Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(() -> {
                 tvWord.setTextColor(Color.BLACK);
@@ -249,22 +226,21 @@ public class FillGapsGameActivity extends AppCompatActivity {
             }, 1000);
         } else {
             tvWord.setTextColor(Color.RED);
-            Toast.makeText(this, "✗ Wrong! Try again", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.game_wrong), Toast.LENGTH_SHORT).show();
 
-            // Reset: rebuild gaps and fresh letter buttons for the same word
             new Handler().postDelayed(() -> {
                 tvWord.setTextColor(Color.BLACK);
-                createWordWithGaps();   // same targetWord, new gap positions
-                setupLetterButtons();   // fresh buttons
+                createWordWithGaps();
+                setupLetterButtons();
             }, 1000);
         }
     }
 
     private void skipWord() {
         new AlertDialog.Builder(this)
-                .setTitle("Skip Word")
-                .setMessage("The correct word was: " + targetWord)
-                .setPositiveButton("Next", (dialog, which) -> {
+                .setTitle(getString(R.string.skip_word_title))
+                .setMessage(getString(R.string.skip_word_msg, targetWord))
+                .setPositiveButton(getString(R.string.next), (d, w) -> {
                     currentWordIndex++;
                     showNextWord();
                 })
@@ -272,26 +248,25 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void updateProgress() {
-        tvProgress.setText("Word " + (currentWordIndex + 1) + " / " + TOTAL_WORDS);
+        tvProgress.setText(getString(R.string.word_progress, currentWordIndex + 1, TOTAL_WORDS));
     }
 
     private void updateScore() {
-        tvScore.setText("Score: " + score);
+        tvScore.setText(getString(R.string.score, score));
     }
 
     private void showResults() {
         saveScoreToStats();
         new AlertDialog.Builder(this)
-                .setTitle("🎉 Game Complete!")
-                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10 * rank)
-                        + "\n(Rank " + rank + " bonus applied!)")
-                .setPositiveButton("Play Again", (dialog, which) -> {
+                .setTitle(getString(R.string.game_complete_title))
+                .setMessage(getString(R.string.game_complete_msg, score, TOTAL_WORDS * 10 * rank, rank))
+                .setPositiveButton(getString(R.string.game_play_again), (d, w) -> {
                     currentWordIndex = 0;
-                    score = 0;
+                    score            = 0;
                     Collections.shuffle(gameWords);
                     showNextWord();
                 })
-                .setNegativeButton("Back", (dialog, which) -> finish())
+                .setNegativeButton(getString(R.string.game_back), (d, w) -> finish())
                 .setCancelable(false)
                 .show();
     }

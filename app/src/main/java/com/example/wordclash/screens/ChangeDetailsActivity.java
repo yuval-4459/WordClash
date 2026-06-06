@@ -253,43 +253,43 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         boolean hasError = false;
 
         if (email.isEmpty()) {
-            etEmail.setError("נא למלא את השדה");
+            etEmail.setError(getString(R.string.validation_fill_field));
             hasError = true;
         } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("כתובת אימייל לא תקינה");
+            etEmail.setError(getString(R.string.validation_invalid_email));
             hasError = true;
         }
 
         if (password.isEmpty()) {
-            etPassword.setError("נא למלא את השדה");
+            etPassword.setError(getString(R.string.validation_fill_field));
             hasError = true;
         } else if (password.length() < 6) {
-            etPassword.setError("סיסמה חייבת להכיל לפחות 6 תווים");
+            etPassword.setError(getString(R.string.validation_password_short));
             hasError = true;
         }
 
         if (userName.isEmpty()) {
-            etUserName.setError("נא למלא את השדה");
+            etUserName.setError(getString(R.string.validation_fill_field));
             hasError = true;
         } else if (userName.length() < 3) {
-            etUserName.setError("שם משתמש חייב להכיל לפחות 3 תווים");
+            etUserName.setError(getString(R.string.validation_username_short));
             hasError = true;
         }
 
         if (isAdmin && etTotalScore.getVisibility() == View.VISIBLE) {
             String scoreStr = etTotalScore.getText().toString().trim();
             if (scoreStr.isEmpty()) {
-                etTotalScore.setError("נא למלא את השדה");
+                etTotalScore.setError(getString(R.string.validation_fill_field));
                 hasError = true;
             } else {
                 try {
                     int scoreValue = Integer.parseInt(scoreStr);
                     if (scoreValue < 0) {
-                        etTotalScore.setError("הניקוד לא יכול להיות שלילי");
+                        etTotalScore.setError(getString(R.string.validation_score_negative));
                         hasError = true;
                     }
                 } catch (NumberFormatException e) {
-                    etTotalScore.setError("ניקוד לא תקין");
+                    etTotalScore.setError(getString(R.string.validation_score_invalid));
                     hasError = true;
                 }
             }
@@ -340,8 +340,8 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
     private void showLanguageChangeWarning() {
         String message = selectedLanguage.equals("english")
-                ? "האפליקציה תעבור לעברית. האם להמשיך?"
-                : "The app will switch to English. Continue?";
+                ? getString(R.string.interface_hebrew) + ". " + getString(R.string.unsaved_changes_msg)
+                : getString(R.string.interface_english) + ". " + getString(R.string.unsaved_changes_msg);
 
         new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.change_learning_language))
@@ -367,7 +367,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
                                         @Override
                                         public void onFailed(Exception e) {
                                             Toast.makeText(ChangeDetailsActivity.this,
-                                                    "Failed to update stats: " + e.getMessage(),
+                                                    getString(R.string.stats_update_failed, e.getMessage()),
                                                     Toast.LENGTH_SHORT).show();
                                             finalizeUpdate();
                                         }

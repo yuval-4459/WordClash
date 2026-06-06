@@ -1,4 +1,3 @@
-<!-- app/src/main/res/values/strings.xml -->
 <resources>
     <string name="app_name">WordClash</string>
 
@@ -13,7 +12,7 @@
     <string name="leaderboard">🏆\nלוח מובילים</string>
     <string name="mini_games">🎮\nמשחקונים</string>
 
-    <!-- Navigation Menu (Hamburger) -->
+    <!-- Navigation Menu -->
     <string name="nav_users_table">📊 טבלת משתמשים</string>
     <string name="nav_add_word">➕ הוסף מילה חדשה</string>
     <string name="nav_manage_words">📝 מחק מילים</string>
@@ -36,7 +35,7 @@
     <string name="practice_infinite">תרגול: %d (אינסופי)</string>
     <string name="words">📚 מילים</string>
     <string name="practice">🎮 תרגול</string>
-    <string name="review_words_first">אנא עיין במילים תחילה!</string>
+    <string name="review_words_first">אנא עיין במילות תחילה!</string>
 
     <!-- Words List -->
     <string name="vocabulary">אוצר מילים דרגה %d</string>
@@ -47,20 +46,139 @@
     <string name="sort_random">אקראי</string>
     <string name="sort_english">A-Z (אנגלית)</string>
     <string name="sort_hebrew">א-ב (עברית)</string>
+    <string name="sort_rank">לפי דרגה</string>
+    <string name="all_ranks">כל הדרגות</string>
+    <string name="all">הכל</string>
+    <string name="signup_btn">הירשם</string>
+    <string name="login_welcome">שלום שחקן!</string>
+    <string name="create_account">צור חשבון חדש</string>
+    <string name="interface_hebrew">הממשק יהיה בעברית</string>
+    <string name="interface_english">The interface will be in English</string>
+    <string name="choose_english">בחר אנגלית</string>
+    <string name="choose_hebrew">בחר עברית</string>
+    <string name="filter_gender">סינון לפי מגדר</string>
+    <string name="search_users_title">חיפוש משתמשים</string>
+    <string name="hint_search_username">חפש לפי שם משתמש…</string>
+    <string name="hint_search_email">חפש לפי אימייל…</string>
+    <string name="edit_user_details">עריכת פרטי משתמש</string>
+    <string name="menu_desc">תפריט</string>
+    <string name="back_btn">חזרה</string>
 
-    <!-- Game Screen -->
+    <!-- Game Screen – General -->
     <string name="score">ניקוד: %d</string>
     <string name="question_progress">שאלה %d / %d</string>
+    <string name="word_progress">מילה %d / %d</string>
     <string name="congratulations">🎉 כל הכבוד!</string>
     <string name="you_failed">❌ נכשלת.\nאתה צריך לפחות 80 נקודות כדי לעבור.</string>
     <string name="practice_complete">התרגול הושלם!</string>
     <string name="your_score">הציון שלך: %d / %d</string>
+
+    <!-- Game – Common Actions -->
+    <string name="game_correct">✓ נכון!</string>
+    <string name="game_wrong">✗ טעות! נסה שוב</string>
+    <string name="game_skip">דלג</string>
+    <string name="game_submit">אשר</string>
+    <string name="game_clear">נקה</string>
+    <string name="game_new">🔄 משחק חדש</string>
+    <string name="game_play_again">שחק שוב</string>
+    <string name="game_back">← חזרה</string>
+    <string name="game_complete_title">🎉 המשחק הסתיים!</string>
+    <string name="game_complete_msg">הניקוד שלך: %1$d / %2$d\n(בונוס דרגה %3$d הוחל!)</string>
+
+    <!-- Match Game -->
+    <string name="match_game_title">🎯 משחק התאמה</string>
+    <string name="matches_progress">התאמות: %1$d/%2$d</string>
+    <string name="match_congrats_msg">התאמת את כל הזוגות!\nניקוד: %1$d נקודות\n(בונוס דרגה %2$d הוחל!)</string>
+
+    <!-- Memory Cards -->
+    <string name="memory_game_title">🃏 קלפי זיכרון</string>
+    <string name="memory_congrats_msg">מצאת את כל הזוגות!\nניקוד: %1$d נקודות\n(בונוס דרגה %2$d הוחל!)</string>
+
+    <!-- True/False Game -->
+    <string name="true_false_game_title">✓✗ נכון או לא נכון?</string>
+
+    <!-- Word Builder -->
+    <string name="word_builder_title">🔤 בונה מילים</string>
+    <string name="word_builder_hint_hebrew">עברית: %s</string>
+    <string name="word_builder_hint_english">אנגלית: %s</string>
+    <string name="skip_word_title">דלג על מילה</string>
+    <string name="skip_word_msg">המילה הנכונה הייתה: %s</string>
+    <string name="next">הבא</string>
+
+    <!-- Fill Gaps -->
+    <string name="fill_gaps_title">📝 מלא את הפערים</string>
+
+    <!-- Listen and Guess -->
+    <string name="listen_guess_title">🔊 הקשב ונחש</string>
+    <string name="tts_not_available">TTS לא זמין לשפה זו.</string>
+    <string name="tts_loading">TTS עדיין נטען, אנא המתן…</string>
+    <string name="tts_failed">TTS נכשל באתחול.</string>
+    <string name="tts_hebrew_missing">עברית TTS לא מותקן. עבור להגדרות → שפה → TTS.</string>
+    <string name="listen_instruction">הקשב היטב ובחר את התרגום הנכון</string>
+
+    <!-- Speed Quiz -->
+    <string name="speed_quiz_title">🚄 חידון מהיר</string>
 
     <!-- Leaderboard -->
     <string name="leaderboard_title">🏆 לוח מובילים</string>
     <string name="top_10_players">10 השחקנים המובילים</string>
     <string name="your_ranking">הדירוג שלך</string>
     <string name="points">%d נק\'</string>
+    <string name="no_users_found">לא נמצאו משתמשים</string>
+    <string name="failed_load_users">טעינת משתמשים נכשלה: %s</string>
+    <string name="failed_load_stats">טעינת סטטיסטיקות נכשלה</string>
+
+    <!-- Login -->
+    <string name="login_title">התחברות</string>
+    <string name="login_btn">התחבר</string>
+    <string name="login_success">התחברת בהצלחה %s</string>
+    <string name="login_wrong_credentials">אימייל או סיסמה שגויים</string>
+    <string name="login_failed">נכשל בהתחברות: %s</string>
+
+    <!-- Sign Up -->
+    <string name="signup_title">הרשמה</string>
+    <string name="signup_success">נרשמת בהצלחה!</string>
+    <string name="signup_failed">נכשל בשמירת המשתמש: %s</string>
+    <string name="email_already_exists">מייל כבר קיים</string>
+
+    <!-- Admin – Words -->
+    <string name="admin_access_denied">גישה נדחתה – מנהל בלבד</string>
+    <string name="admin_add_word_title">הוסף מילה חדשה</string>
+    <string name="word_added_success">המילה נוספה בהצלחה!</string>
+    <string name="word_add_failed">הוספת המילה נכשלה: %s</string>
+    <string name="word_fill_all_fields">אנא מלא את כל השדות</string>
+    <string name="delete_word_title">מחק מילה</string>
+    <string name="delete_word_msg">האם אתה בטוח שברצונך למחוק:\n\n%1$s - %2$s\n\n(דרגה %3$d)</string>
+    <string name="word_deleted_success">המילה נמחקה בהצלחה</string>
+    <string name="word_delete_failed">מחיקת המילה נכשלה: %s</string>
+    <string name="no_words_available">לא נמצאו מילות</string>
+    <string name="failed_load_words">טעינת מילות נכשלה: %s</string>
+    <string name="no_suitable_words">לא נמצאו מילות מתאימות</string>
+
+    <!-- Admin – Users -->
+    <string name="admin_panel_title">Admin Panel</string>
+    <string name="edit_user_title">עריכת משתמש</string>
+    <string name="error_no_user_data">שגיאה: לא התקבלו נתוני משתמש</string>
+    <string name="rank_1">דרגה 1 - מתחיל</string>
+    <string name="rank_2">דרגה 2 - בינוני</string>
+    <string name="rank_3">דרגה 3 - מתקדם</string>
+    <string name="rank_4">דרגה 4 - מומחה</string>
+    <string name="rank_5">דרגה 5 - מאסטר</string>
+    <string name="confirm_update_title">אשר עדכון</string>
+    <string name="confirm_update_msg">האם אתה בטוח שברצונך לעדכן את פרטי המשתמש?</string>
+    <string name="confirm_delete_title">אשר מחיקה</string>
+    <string name="confirm_delete_msg">האם אתה בטוח שברצונך למחוק משתמש זה? פעולה זו לא ניתנת לביטול.</string>
+    <string name="user_updated_success">המשתמש עודכן בהצלחה</string>
+    <string name="user_deleted_success">המשתמש נמחק בהצלחה</string>
+    <string name="user_update_failed">העדכון נכשל: %s</string>
+    <string name="user_delete_failed">המחיקה נכשלה: %s</string>
+    <string name="stats_update_failed">עדכון סטטיסטיקות נכשל: %s</string>
+    <string name="failed_load_user_stats">טעינת סטטיסטיקות משתמש נכשלה: %s</string>
+    <string name="manager_access_denied">לא ניתן לגשת למשתמש זה – הוא מנהל</string>
+    <string name="unsaved_changes_title">שינויים שלא נשמרו</string>
+    <string name="unsaved_changes_msg">יש לך שינויים שלא נשמרו. האם אתה בטוח שברצונך לעזוב?</string>
+    <string name="leave">עזוב</string>
+    <string name="stay">הישאר</string>
 
     <!-- Settings & Change Details -->
     <string name="settings_management">ניהול הגדרות</string>
@@ -77,12 +195,26 @@
     <string name="english">אנגלית</string>
     <string name="hebrew">עברית</string>
     <string name="change_learning_language">שנה שפת לימוד</string>
-    <string name="language_question">איזו שפה תרצה ללמוד</string>
+    <string name="language_question">איזו שפה תרצה ללמוד?</string>
 
-    <string name="app_ok">אישור</string>
-    <string name="app_cancel">ביטול</string>
+    <!-- Profile Picture -->
+    <string name="profile_picture_title">תמונת פרופיל</string>
+    <string name="profile_picture_updated">תמונת הפרופיל עודכנה!</string>
+    <string name="profile_picture_removed">תמונת הפרופיל הוסרה</string>
+    <string name="profile_picture_update_failed">עדכון נכשל: %s</string>
+    <string name="profile_picture_delete_failed">מחיקה נכשלה: %s</string>
+    <string name="delete_picture_title">מחק תמונת פרופיל</string>
+    <string name="delete_picture_msg">האם אתה בטוח שברצונך להסיר את תמונת הפרופיל שלך?</string>
+    <string name="no_image_to_rotate">אין תמונה לסיבוב</string>
+    <string name="camera_permission_required">נדרשת הרשאת מצלמה</string>
+    <string name="image_too_large">התמונה גדולה מדי, אנא בחר תמונה קטנה יותר</string>
+    <string name="image_process_failed">שגיאה בעיבוד התמונה: %s</string>
+    <string name="failed_load_image">טעינת התמונה נכשלה</string>
+    <string name="camera_open_failed">שגיאה בפתיחת המצלמה: %s</string>
 
     <!-- Common -->
+    <string name="app_ok">אישור</string>
+    <string name="app_cancel">ביטול</string>
     <string name="ok">אישור</string>
     <string name="cancel">ביטול</string>
     <string name="delete">מחק</string>
@@ -101,4 +233,25 @@
     <string name="error_loading">שגיאה בטעינת נתונים</string>
     <string name="error_saving">שגיאה בשמירת נתונים</string>
     <string name="user_not_found">משתמש לא נמצא</string>
+    <string name="failed_load_stats_generic">טעינת סטטיסטיקות נכשלה</string>
+
+    <!-- Validation (shared by SignUp / ChangeDetails / AdminUser) -->
+    <string name="validation_fill_field">נא למלא את השדה</string>
+    <string name="validation_invalid_email">כתובת אימייל לא תקינה</string>
+    <string name="validation_password_short">סיסמה חייבת להכיל לפחות 6 תווים</string>
+    <string name="validation_username_short">שם משתמש חייב להכיל לפחות 3 תווים</string>
+    <string name="validation_passwords_mismatch">הסיסמאות אינן תואמות</string>
+    <string name="validation_choose_gender">יש לבחור מגדר</string>
+    <string name="validation_score_negative">הניקוד לא יכול להיות שלילי</string>
+    <string name="validation_score_invalid">ניקוד לא תקין</string>
+    <string name="validation_email_required">חובה להזין אימייל</string>
+    <string name="validation_password_required">חובה להזין סיסמה</string>
+    <string name="validation_username_required">חובה להזין שם משתמש</string>
+    <string name="validation_score_required">חובה להזין ניקוד</string>
+    <string name="game_true">✓ נכון</string>
+    <string name="game_false">✗ לא נכון</string>
+    <string name="english_word_hint">מילה באנגלית</string>
+    <string name="hebrew_word_hint">מילה בעברית (תרגום)</string>
+    <string name="validation_choose_rank">יש לבחור דרגה</string>
+    <string name="validation_rank_range">הדרגה חייבת להיות בין 1 ל-5</string>
 </resources>
