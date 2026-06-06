@@ -12,7 +12,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
-        app:cardBackgroundColor="#FFFFFF"
+        app:cardBackgroundColor="#1A237E"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,9 +29,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:letterSpacing="0.02"
                 android:text="Add New Word"
-                android:textColor="#1A237E"
+                android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:textStyle="bold" />
 
@@ -39,7 +38,8 @@
                 android:layout_width="60dp"
                 android:layout_height="4dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/accent_line" />
+                android:background="#FFFFFF"
+                android:alpha="0.5" />
 
         </LinearLayout>
 
@@ -81,7 +81,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="16dp"
-                    android:textSize="16sp" />
+                    android:textColor="#111111"
+                    android:textSize="18sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -108,9 +109,9 @@
                     android:layoutDirection="locale"
                     android:padding="16dp"
                     android:textAlignment="viewStart"
+                    android:textColor="#111111"
                     android:textDirection="locale"
-                    android:textSize="16sp" />
-
+                    android:textSize="18sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -121,64 +122,40 @@
                 android:layout_marginBottom="8dp"
                 android:text="Select Rank (Level)"
                 android:textColor="#1A237E"
-                android:textSize="16sp"
+                android:textSize="17sp"
                 android:textStyle="bold" />
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="#F5F5F5"
+                android:layout_marginBottom="32dp"
+                app:cardBackgroundColor="#E8EAF6"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="2dp">
 
                 <Spinner
                     android:id="@+id/spinnerWordRank"
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="60dp"
                     android:paddingStart="16dp"
                     android:paddingEnd="16dp" />
             </androidx.cardview.widget.CardView>
 
-            <!-- Action Buttons -->
-            <LinearLayout
+            <!-- Add Word Button only (no Back button) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddWord"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnAddWord"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:text="Add Word"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#1A237E"
-                    app:cornerRadius="12dp"
-                    app:elevation="4dp"
-                    app:icon="@android:drawable/ic_input_add"
-                    app:iconGravity="textStart"
-                    app:iconTint="#FFFFFF" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnBack"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:text="Back"
-                    android:textColor="#FFFFFF"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    app:backgroundTint="#757575"
-                    app:cornerRadius="12dp"
-                    app:elevation="4dp" />
-
-            </LinearLayout>
+                android:layout_height="64dp"
+                android:text="Add Word"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:backgroundTint="#1A237E"
+                app:cornerRadius="12dp"
+                app:elevation="4dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconGravity="textStart"
+                app:iconTint="#FFFFFF" />
 
         </LinearLayout>
 

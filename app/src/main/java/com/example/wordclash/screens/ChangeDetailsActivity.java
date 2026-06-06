@@ -24,7 +24,6 @@ import com.example.wordclash.utils.SharedPreferencesUtils;
 
 import java.util.ArrayList;
 
-// המחלקה יורשת מ-AppCompatActivity ומתקשרת חזק עם מחלקות עזר לשפה ודאטהבייס.
 public class ChangeDetailsActivity extends AppCompatActivity {
 
     private EditText etUserName, etEmail, etPassword, etTotalScore;
@@ -51,7 +50,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.change_details_page);
 
         if (currentUser != null) {
-            // קביעת כיווניות הממשק (RTL/LTR) של קובץ ה-XML לפי שפת הלימוד, כדי שהאלמנטים במסך יוצגו בצד הנכון (מימין לשמאל או משמאל לימין).
             LanguageUtils.setLayoutDirection(this, currentUser);
         }
 
@@ -88,7 +86,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
         tvCurrentLanguage = findViewById(R.id.tvCurrentLanguage);
 
-        // admin only fields
         etTotalScore = findViewById(R.id.TotalScore);
         rankSpinner = findViewById(R.id.RankSpinner);
         isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
@@ -133,7 +130,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 String selected = adapterView.getItemAtPosition(position).toString();
-                // convert display name to language code
                 if (selected.equals(getString(R.string.english))) {
                     selectedLanguage = "english";
                 } else {
@@ -149,15 +145,13 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void setupRankSpinner() {
-        String[] ranks = {"Rank 1", "Rank 2",
-                "Rank 3", "Rank 4", "Rank 5"};
+        String[] ranks = {"Rank 1", "Rank 2", "Rank 3", "Rank 4", "Rank 5"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, ranks);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         rankSpinner.setAdapter(adapter);
     }
 
-    // שליפת הסטטיסטיקות של המשתמש מה-Firebase במידה והמשתמש המחובר הוא אדמין (שורה 70).
     private void loadUserStats() {
         DatabaseService.getInstance().getStats(currentUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -167,7 +161,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
                     rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
                     etTotalScore.setText(String.valueOf(stats.getTotalScore()));
                 } else {
-                    // Create default stats if none exist
                     userStats = new Stats(currentUser.getId(), 1, 0);
                     rankSpinner.setSelection(0);
                     etTotalScore.setText("0");
@@ -176,7 +169,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailed(Exception e) {
-                // create default stats on error
                 userStats = new Stats(currentUser.getId(), 1, 0);
                 rankSpinner.setSelection(0);
                 etTotalScore.setText("0");
@@ -185,18 +177,19 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void setupFieldsBasedOnRole() {
+        // ALL users can edit email, password, username, gender, language
+        etEmail.setEnabled(true);
+        etPassword.setEnabled(true);
+        etUserName.setEnabled(true);
+        genderSpinner.setEnabled(true);
+        languageSpinner.setEnabled(true);
+
         if (isAdmin) {
-            // admin can edit everything
-            etEmail.setEnabled(true);
-            etPassword.setEnabled(true);
-            etUserName.setEnabled(true);
-            genderSpinner.setEnabled(true);
-            languageSpinner.setEnabled(true);
+            // Show admin-only controls
             etTotalScore.setEnabled(true);
             rankSpinner.setEnabled(true);
             isAdminCheckBox.setEnabled(true);
 
-            // show admin controls
             etTotalScore.setVisibility(View.VISIBLE);
             rankSpinner.setVisibility(View.VISIBLE);
             isAdminCheckBox.setVisibility(View.VISIBLE);
@@ -206,14 +199,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             findViewById(R.id.rankCard).setVisibility(View.VISIBLE);
             findViewById(R.id.scoreLayout).setVisibility(View.VISIBLE);
         } else {
-            // regular user has limited editing
-            etEmail.setEnabled(false);
-            etPassword.setEnabled(false);
-            etUserName.setEnabled(true);
-            genderSpinner.setEnabled(true);
-            languageSpinner.setEnabled(true);
-
-            // hide admin controls for normal users
+            // Hide admin-only controls
             etTotalScore.setVisibility(View.GONE);
             rankSpinner.setVisibility(View.GONE);
             isAdminCheckBox.setVisibility(View.GONE);
@@ -230,7 +216,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         etEmail.setText(currentUser.getEmail());
         etPassword.setText(currentUser.getPassword());
 
-        // set gender
         String[] genders = {getString(R.string.male), getString(R.string.female), getString(R.string.other)};
         String[] genderCodes = {"Male", "Female", "Other"};
         for (int i = 0; i < genderCodes.length; i++) {
@@ -241,7 +226,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             }
         }
 
-        // set language
         String learningLanguage = currentUser.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
@@ -253,11 +237,9 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             selectedLanguage = "hebrew";
         }
 
-        // show current language
         tvCurrentLanguage.setText(getString(R.string.learning_language,
                 LanguageUtils.getLearningLanguageDisplayName(this, currentUser)));
 
-        // admin only fields
         if (isAdmin) {
             isAdminCheckBox.setChecked(currentUser.isAdmin());
         }
@@ -265,8 +247,10 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
     private void updateDetails() {
         String userName = etUserName.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
 
-        if (userName.isEmpty()) {
+        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, getString(R.string.error_fill_fields), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -275,7 +259,7 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             selectedGender = currentUser.getGender();
         }
 
-        // convert display gender back to English code
+        // Convert display gender back to English code
         String genderCode = selectedGender;
         if (selectedGender.equals(getString(R.string.male))) genderCode = "Male";
         else if (selectedGender.equals(getString(R.string.female))) genderCode = "Female";
@@ -283,8 +267,10 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
         currentUser.setUserName(userName);
         currentUser.setGender(genderCode);
+        currentUser.setEmail(email);
+        currentUser.setPassword(password);
 
-        // check if language changed
+        // Check if language changed
         String oldLanguage = currentUser.getLearningLanguage();
         if (oldLanguage == null) oldLanguage = "english";
         boolean languageChanged = !selectedLanguage.isEmpty() && !selectedLanguage.equals(oldLanguage);
@@ -294,20 +280,8 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         }
 
         if (isAdmin) {
-            // admin is able to change email, password, rank, score, and admin status
-            String email = etEmail.getText().toString().trim();
-            String password = etPassword.getText().toString().trim();
-
-            if (email.isEmpty() || password.isEmpty()) {
-                Toast.makeText(this, getString(R.string.error_fill_fields), Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            currentUser.setEmail(email);
-            currentUser.setPassword(password);
             currentUser.setAdmin(isAdminCheckBox.isChecked());
 
-            // update stats
             if (userStats != null) {
                 int newRank = rankSpinner.getSelectedItemPosition() + 1;
                 int newScore;
@@ -345,7 +319,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
-                // if is admin, also update stats
                 if (isAdmin && userStats != null) {
                     DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
                         @Override
@@ -375,9 +348,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         });
     }
 
-    // שמירת המשתמש המעודכן ב-SharedPreferences המקומי והפעלה מחדש של האפליקציה ממסך הבית.
-    // הפעולה משתמשת בדגלי אינטנט מיוחדים (CLEAR_TASK ו-NEW_TASK)
-    // כדי לנקות את מחסנית המסכים לחלוטין ולאלץ את אנדרואיד לצייר מחדש את הממשק בשפה ובכיווניות החדשות.
     private void finalizeUpdate() {
         SharedPreferencesUtils.saveUser(ChangeDetailsActivity.this, currentUser);
 
@@ -385,7 +355,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
                 getString(R.string.details_updated),
                 Toast.LENGTH_SHORT).show();
 
-        // Restart app to apply language changes
         Intent intent = new Intent(ChangeDetailsActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

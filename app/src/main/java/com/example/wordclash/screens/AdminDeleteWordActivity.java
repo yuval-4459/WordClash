@@ -6,7 +6,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,8 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-// מסך מנהל המאפשר להציג, לסנן, למיין ולמחוק מילים ממאגר האפליקציה.
-// המסך מנהל רשימה כללית מול Firebase ורשימה מסוננת מקומית לצורך עדכון המסך בזמן אמת.
 public class AdminDeleteWordActivity extends AppCompatActivity {
 
     private final List<Word> filteredWords = new ArrayList<>();
@@ -36,14 +33,13 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
     private Spinner spinnerSort, spinnerRankFilter;
     private List<Word> allWords = new ArrayList<>();
     private String currentSortOption = "Random";
-    private int currentRankFilter = 0; // 0 = All ranks
+    private int currentRankFilter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_manage_words);
 
-        // בדיקת אבטחה המשתמשת ב-SharedPreferencesUtils כדי למנוע ממשתמשים שאינם מנהלים גישה למסך, וסוגרת אותו מיד בעזרת finish במידת הצורך.
         if (!SharedPreferencesUtils.getUser(this).isAdmin()) {
             Toast.makeText(this, "Access denied - Admin only", Toast.LENGTH_SHORT).show();
             finish();
@@ -56,11 +52,9 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         loadWords();
     }
 
-    // קישור רכיבי הגרפיקה מה-XML ל-Java ואתחול ה-AdminWordAdapter.
-    // יצירת האדפטר מתבצעת על ידי העברת הפונקציה confirmDelete כ-Callback ישירות אליו באמצעות הפניה לפעולה.
     private void initializeViews() {
         RecyclerView rvWords = findViewById(R.id.rvWords);
-        Button btnBack = findViewById(R.id.btnBack);
+        // No back button — use system back gesture
         etSearch = findViewById(R.id.etSearch);
         spinnerSort = findViewById(R.id.spinnerSort);
         spinnerRankFilter = findViewById(R.id.spinnerRankFilter);
@@ -68,14 +62,9 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         rvWords.setLayoutManager(new LinearLayoutManager(this));
         wordAdapter = new AdminWordAdapter(this::confirmDelete);
         rvWords.setAdapter(wordAdapter);
-
-        btnBack.setOnClickListener(v -> finish());
     }
 
-    // אתחול תיבות הבחירה (Spinner) למיון וסינון המילים באמצעות ArrayAdapter,
-    // והגדרת מאזיני בחירה (OnItemSelectedListener) שמפעילים מחדש את לוגיקת הסינון בכל שינוי של המשתמש.
     private void setupSpinners() {
-        // sort spinner
         String[] sortOptions = {"Random", "A-Z (English)", "א-ב (Hebrew)", "Rank"};
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, sortOptions);
@@ -90,11 +79,9 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        // rank filter spinner
         String[] rankOptions = {"All Ranks", "Rank 1", "Rank 2", "Rank 3", "Rank 4", "Rank 5"};
         ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, rankOptions);
@@ -104,23 +91,19 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         spinnerRankFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                currentRankFilter = position; // 0 = All, 1-5 = specific ranks
+                currentRankFilter = position;
                 applyFiltersAndSort();
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
     }
 
-    // הגדרת מאזין לשינוי טקסט (TextWatcher) על שדה החיפוש.
-    // המאזין קורא לפונקציית הסינון בכל פעם שהמשתמש מקליד או מוחק אות, מה שמאפשר חיפוש דינמי בזמן אמת (בזמן ההקלדה).
     private void setupSearchListener() {
         etSearch.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -128,12 +111,10 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
-    // שליפת כל המילים באופן אסינכרוני מתוך ה-Firebase בעזרת DatabaseService ושמירתן ברשימה הכללית (allWords) כדי שנוכל לבצע עליהן את החיפוש המקומי במכשיר.
     private void loadWords() {
         DatabaseService.getInstance().getAllWords(new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -153,40 +134,28 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
         });
     }
 
-    // הפונקציה המרכזית במסך שמסננת את המילים לפי הדרגה שנבחרה ושאילתת החיפוש (באנגלית ובעברית).
-    // לאחר מכן היא ממיינת את הרשימה המסוננת (למשל ערבוב אקראי בעזרת Collections.shuffle או מיון אלפביתי בעזרת השוואת למדא) ומעדכנת את האדפטר.
     private void applyFiltersAndSort() {
         String searchQuery = etSearch.getText().toString().trim().toLowerCase();
 
-        // filter by search and rank
         filteredWords.clear();
         for (Word word : allWords) {
-            // filter by rank
-            if (currentRankFilter != 0 && word.getRank() != currentRankFilter) {
-                continue;
-            }
+            if (currentRankFilter != 0 && word.getRank() != currentRankFilter) continue;
 
-            // filter by search query
             if (!searchQuery.isEmpty()) {
                 boolean matchesEnglish = word.getEnglish() != null &&
                         word.getEnglish().toLowerCase().contains(searchQuery);
                 boolean matchesHebrew = word.getHebrew() != null &&
                         word.getHebrew().contains(searchQuery);
-
-                if (!matchesEnglish && !matchesHebrew) {
-                    continue;
-                }
+                if (!matchesEnglish && !matchesHebrew) continue;
             }
 
             filteredWords.add(word);
         }
 
-        // sort based on selected option
         switch (currentSortOption) {
             case "Random":
                 Collections.shuffle(filteredWords);
                 break;
-
             case "A-Z (English)":
                 filteredWords.sort((w1, w2) -> {
                     String en1 = w1.getEnglish() != null ? w1.getEnglish().toLowerCase() : "";
@@ -194,7 +163,6 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                     return en1.compareTo(en2);
                 });
                 break;
-
             case "א-ב (Hebrew)":
                 filteredWords.sort((w1, w2) -> {
                     String he1 = w1.getHebrew() != null ? w1.getHebrew() : "";
@@ -202,17 +170,14 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                     return he1.compareTo(he2);
                 });
                 break;
-
             case "Rank":
                 filteredWords.sort((w1, w2) -> Integer.compare(w1.getRank(), w2.getRank()));
                 break;
         }
 
-        // update adapter
         wordAdapter.setWordList(filteredWords);
     }
 
-    // יצירת תיבת דיאלוג קופצת (AlertDialog.Builder) המבקשת מהמנהל לאשר סופית את מחיקת המילה כדי למנוע מחיקות שגויות בטעות בדירקטורי של הענן.
     private void confirmDelete(Word word) {
         new AlertDialog.Builder(this)
                 .setTitle("Delete Word")
@@ -224,8 +189,6 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 .show();
     }
 
-    // מחיקת המילה בפועל מבסיס הנתונים Firebase בצורה אסינכרונית. ברגע שמתקבל חיווי הצלחה (onCompleted),
-    // המילה מוסרת מהרשימה המקומית ומהאדפטר כדי שהיא תיעלם מהמסך מיד עם אנימציה חלקה ובלי לרענן את כל הדאטהבייס מחדש.
     private void deleteWord(Word word) {
         DatabaseService.getInstance().deleteWord(word, new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -233,8 +196,6 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 Toast.makeText(AdminDeleteWordActivity.this,
                         "Word deleted successfully",
                         Toast.LENGTH_SHORT).show();
-
-                // remove from local lists
                 allWords.remove(word);
                 wordAdapter.removeWord(word);
             }

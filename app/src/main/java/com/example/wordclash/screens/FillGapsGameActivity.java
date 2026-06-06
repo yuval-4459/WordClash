@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +61,6 @@ public class FillGapsGameActivity extends AppCompatActivity {
         tvScore = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
 
-        // Skip button only - no Back button
         Button btnSkip = findViewById(R.id.btnSkip);
         btnSkip.setOnClickListener(v -> skipWord());
     }
@@ -78,7 +78,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
                 gameWords = new ArrayList<>();
                 for (Word word : words) {
                     String english = word.getEnglish();
-                    if (english.length() >= 4 && english.length() <= 8) {
+                    if (english != null && english.length() >= 4 && english.length() <= 8) {
                         gameWords.add(word);
                     }
                 }
@@ -152,30 +152,58 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private void setupLetterButtons() {
         lettersContainer.removeAllViews();
 
+        // Collect the missing letters
         List<Character> missingLetters = new ArrayList<>();
         for (int index : missingIndices) {
             missingLetters.add(targetWord.charAt(index));
         }
         Collections.shuffle(missingLetters);
 
-        for (int i = 0; i < missingLetters.size(); i++) {
-            final char letter = missingLetters.get(i);
-            Button btn = new Button(this);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
-            params.setMargins(6, 6, 6, 6);
-            btn.setLayoutParams(params);
-            btn.setText(String.valueOf(letter));
-            btn.setTextSize(22); // larger for readability
-            btn.setBackgroundColor(Color.parseColor("#2196F3"));
-            btn.setTextColor(Color.WHITE);
-            btn.setPadding(8, 20, 8, 20);
-            btn.setOnClickListener(v -> fillLetter(letter, btn));
-            lettersContainer.addView(btn);
+        // Use a FlexboxLayout-style via nested LinearLayouts so letters wrap properly
+        // We split into rows of 4 max
+        int maxPerRow = 4;
+        int total = missingLetters.size();
+
+        int letterSizeDp = 56;
+        float density = getResources().getDisplayMetrics().density;
+        int letterSizePx = (int)(letterSizeDp * density);
+
+        for (int rowStart = 0; rowStart < total; rowStart += maxPerRow) {
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+            rowParams.setMargins(0, 0, 0, (int)(8 * density));
+            row.setLayoutParams(rowParams);
+            row.setGravity(android.view.Gravity.CENTER_HORIZONTAL);
+
+            int rowEnd = Math.min(rowStart + maxPerRow, total);
+            for (int i = rowStart; i < rowEnd; i++) {
+                final char letter = missingLetters.get(i);
+                Button btn = new Button(this);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        letterSizePx, letterSizePx);
+                params.setMargins((int)(6 * density), 0, (int)(6 * density), 0);
+                btn.setLayoutParams(params);
+                btn.setText(String.valueOf(letter));
+                btn.setTextSize(22);
+                btn.setBackgroundColor(Color.parseColor("#2196F3"));
+                btn.setTextColor(Color.WHITE);
+                btn.setPadding(0, 0, 0, 0);
+                btn.setTag("available");
+                btn.setOnClickListener(v -> fillLetter(letter, btn));
+                row.addView(btn);
+            }
+            lettersContainer.addView(row);
         }
     }
 
     private void fillLetter(char letter, Button button) {
+        // Only respond if button is still available
+        if (!"available".equals(button.getTag())) return;
+
+        // Find next gap
         int nextGapIndex = -1;
         for (int i = 0; i < currentGuess.length(); i++) {
             if (currentGuess.charAt(i) == '_') {
@@ -186,6 +214,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
         if (nextGapIndex == -1) return;
 
         currentGuess.setCharAt(nextGapIndex, letter);
+        button.setTag("used");
         button.setEnabled(false);
         button.setAlpha(0.3f);
         updateWordDisplay();
@@ -196,6 +225,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
     }
 
     private void updateWordDisplay() {
+        // Show letters with spaces, each on same line — word stays on one line
         StringBuilder display = new StringBuilder();
         for (int i = 0; i < currentGuess.length(); i++) {
             display.append(currentGuess.charAt(i)).append(" ");
@@ -209,23 +239,23 @@ public class FillGapsGameActivity extends AppCompatActivity {
         if (answer.equals(targetWord)) {
             score += 10 * rank;
             updateScore();
-            tvWord.setTextColor(Color.parseColor("#43A047")); // green
+            tvWord.setTextColor(Color.parseColor("#43A047"));
             Toast.makeText(this, "✓ Correct!", Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(() -> {
                 tvWord.setTextColor(Color.BLACK);
-                currentWordIndex++; // advance only on correct answer
+                currentWordIndex++;
                 showNextWord();
             }, 1000);
         } else {
             tvWord.setTextColor(Color.RED);
             Toast.makeText(this, "✗ Wrong! Try again", Toast.LENGTH_SHORT).show();
 
-            // FIX: reset the gaps so user can try again - do NOT increment currentWordIndex
+            // Reset: rebuild gaps and fresh letter buttons for the same word
             new Handler().postDelayed(() -> {
                 tvWord.setTextColor(Color.BLACK);
-                createWordWithGaps();   // rebuild the same word with fresh gaps
-                setupLetterButtons();   // rebuild the letter buttons
+                createWordWithGaps();   // same targetWord, new gap positions
+                setupLetterButtons();   // fresh buttons
             }, 1000);
         }
     }

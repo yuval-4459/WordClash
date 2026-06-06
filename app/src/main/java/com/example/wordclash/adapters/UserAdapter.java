@@ -19,7 +19,6 @@ import java.util.List;
 // הadapter יעבוד עם ViewHolder, שנמצא כאן בתוך הקובץ (בסוף הקובץ)
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
-    // private זה משתנה שנגיש אך ורק בתוך הקובץ הזה.
     // final אומר שברגע שנוצרה רשימה, לא ניתן להחליף אותה עם רשימות אחרות, אבל כן ניתן להכניס ולהויא ממנה.
     // רשימה של אובייקטי User (מחלקת מודל) ומאזין OnUserClickListener לטיפול בלחיצות רגילות וארוכות במסך.
     private final List<User> userList;

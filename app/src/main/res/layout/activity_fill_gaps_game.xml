@@ -6,7 +6,6 @@
     android:background="#F5F5F5"
     android:padding="16dp">
 
-    <!-- Skip button only - no Back -->
     <Button
         android:id="@+id/btnSkip"
         android:layout_width="wrap_content"
@@ -59,7 +58,6 @@
 
     </LinearLayout>
 
-    <!-- Hint: bigger text -->
     <TextView
         android:id="@+id/tvHint"
         android:layout_width="0dp"
@@ -85,29 +83,37 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHint">
 
-        <!-- Word display: bigger monospace -->
+        <!--
+            singleLine=true + scrollHorizontally=false makes the text stay on one line
+            but we use a large enough font and the container is match_parent,
+            so the spaced-out letters always fit.
+            adjustViewBounds prevents overflow.
+        -->
         <TextView
             android:id="@+id/tvWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:gravity="center"
-            android:padding="28dp"
+            android:padding="24dp"
             android:text="H _ L L O"
             android:textColor="@android:color/black"
-            android:textSize="36sp"
-            android:textStyle="bold" />
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:breakStrategy="simple"
+            android:hyphenationFrequency="none" />
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Letter buttons -->
+    <!-- Letters container: vertical layout, each row is one LinearLayout added by code -->
     <LinearLayout
         android:id="@+id/lettersContainer"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wordCard" />

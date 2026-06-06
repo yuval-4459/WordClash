@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths>
+    <!-- External files dir (Pictures subfolder) -->
     <external-files-path
         name="my_images"
         path="Pictures" />
+
+    <!-- External cache dir — needed for camera temp photos -->
+    <external-cache-path
+        name="my_external_cache"
+        path="." />
+
+    <!-- Internal cache dir — fallback when external storage unavailable -->
     <cache-path
         name="my_cache_images"
         path="." />
