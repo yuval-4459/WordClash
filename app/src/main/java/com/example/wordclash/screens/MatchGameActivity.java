@@ -59,10 +59,8 @@ public class MatchGameActivity extends AppCompatActivity {
         tvMatches  = findViewById(R.id.tvMatches);
         leftColumn  = findViewById(R.id.leftColumn);
         rightColumn = findViewById(R.id.rightColumn);
-        Button btnBack    = findViewById(R.id.btnBack);
         Button btnNewGame = findViewById(R.id.btnNewGame);
 
-        btnBack.setOnClickListener(v -> finish());
         btnNewGame.setOnClickListener(v -> loadWords());
 
         leftButtons  = new ArrayList<>();

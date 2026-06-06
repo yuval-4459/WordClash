@@ -57,9 +57,7 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         tvScore    = findViewById(R.id.tvScore);
         btnTrue    = findViewById(R.id.btnTrue);
         btnFalse   = findViewById(R.id.btnFalse);
-        Button btnBack = findViewById(R.id.btnBack);
 
-        btnBack.setOnClickListener(v -> finish());
         btnTrue.setOnClickListener(v -> checkAnswer(true));
         btnFalse.setOnClickListener(v -> checkAnswer(false));
     }
@@ -106,22 +104,27 @@ public class TrueFalseGameActivity extends AppCompatActivity {
         Random random = new Random();
         isCorrect = random.nextBoolean();
 
-        String displayEnglish, displayHebrew;
-        if (isCorrect) {
-            displayEnglish = correctWord.getEnglish();
-            displayHebrew  = correctWord.getHebrew();
-        } else {
-            Word wrongWord = allWords.get((currentQuestion + 1) % allWords.size());
-            displayEnglish = correctWord.getEnglish();
-            displayHebrew  = wrongWord.getHebrew();
-        }
-
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
+        String displayEnglish, displayHebrew;
         if (learningLanguage.equals("english")) {
+            displayHebrew = correctWord.getHebrew();
+            if (isCorrect) {
+                displayEnglish = correctWord.getEnglish();
+            } else {
+                Word wrongWord = allWords.get((currentQuestion + 1) % allWords.size());
+                displayEnglish = wrongWord.getEnglish();
+            }
             tvQuestion.setText(displayHebrew + " = " + displayEnglish);
         } else {
+            displayEnglish = correctWord.getEnglish();
+            if (isCorrect) {
+                displayHebrew = correctWord.getHebrew();
+            } else {
+                Word wrongWord = allWords.get((currentQuestion + 1) % allWords.size());
+                displayHebrew = wrongWord.getHebrew();
+            }
             tvQuestion.setText(displayEnglish + " = " + displayHebrew);
         }
 

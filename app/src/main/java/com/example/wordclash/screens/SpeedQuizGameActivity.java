@@ -86,13 +86,11 @@ public class SpeedQuizGameActivity extends AppCompatActivity {
         btnOption2 = findViewById(R.id.btnOption2);
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
-        Button btnBack = findViewById(R.id.btnBack);
 
         btnOption1.setOnClickListener(v -> checkAnswer(btnOption1));
         btnOption2.setOnClickListener(v -> checkAnswer(btnOption2));
         btnOption3.setOnClickListener(v -> checkAnswer(btnOption3));
         btnOption4.setOnClickListener(v -> checkAnswer(btnOption4));
-        btnBack.setOnClickListener(v -> finish());
     }
 
     private void loadStatsAndWords() {
