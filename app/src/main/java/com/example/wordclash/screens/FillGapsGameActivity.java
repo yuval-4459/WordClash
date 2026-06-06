@@ -34,7 +34,6 @@ public class FillGapsGameActivity extends AppCompatActivity {
     private int currentWordIndex = 0;
     private int score = 0;
     private String targetWord;
-    private String displayWord;
     private List<Integer> missingIndices;
     private StringBuilder currentGuess;
 
@@ -44,16 +43,12 @@ public class FillGapsGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.applyLanguageSettings(this, user);
         }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fill_gaps_game);
-
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
-
         rank = getIntent().getIntExtra("RANK", 1);
-
         initializeViews();
         loadWords();
     }
@@ -64,10 +59,9 @@ public class FillGapsGameActivity extends AppCompatActivity {
         tvProgress = findViewById(R.id.tvProgress);
         tvScore = findViewById(R.id.tvScore);
         lettersContainer = findViewById(R.id.lettersContainer);
-        Button btnBack = findViewById(R.id.btnBack);
-        Button btnSkip = findViewById(R.id.btnSkip);
 
-        btnBack.setOnClickListener(v -> finish());
+        // Skip button only - no Back button
+        Button btnSkip = findViewById(R.id.btnSkip);
         btnSkip.setOnClickListener(v -> skipWord());
     }
 
@@ -76,11 +70,11 @@ public class FillGapsGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(FillGapsGameActivity.this, "No words available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FillGapsGameActivity.this, "No words available",
+                            Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
-
                 gameWords = new ArrayList<>();
                 for (Word word : words) {
                     String english = word.getEnglish();
@@ -88,20 +82,20 @@ public class FillGapsGameActivity extends AppCompatActivity {
                         gameWords.add(word);
                     }
                 }
-
                 if (gameWords.isEmpty()) {
-                    Toast.makeText(FillGapsGameActivity.this, "No suitable words found", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(FillGapsGameActivity.this, "No suitable words found",
+                            Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
-
                 Collections.shuffle(gameWords);
                 showNextWord();
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(FillGapsGameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FillGapsGameActivity.this, "Failed to load words",
+                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -114,7 +108,6 @@ public class FillGapsGameActivity extends AppCompatActivity {
         }
 
         Word word = gameWords.get(currentWordIndex);
-
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
 
@@ -153,11 +146,9 @@ public class FillGapsGameActivity extends AppCompatActivity {
                 currentGuess.append(targetWord.charAt(i));
             }
         }
-
         updateWordDisplay();
     }
 
-    // הפונקציה מנקה את המיכל, מייצרת אובייקטי Button חדשים, קובעת להם משקל עיצובי שווה (weight = 1.0f) ומצמידה להם מאזין לחיצה.
     private void setupLetterButtons() {
         lettersContainer.removeAllViews();
 
@@ -169,29 +160,21 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
         for (int i = 0; i < missingLetters.size(); i++) {
             final char letter = missingLetters.get(i);
-
             Button btn = new Button(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    0,
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    1.0f
-            );
-            params.setMargins(4, 4, 4, 4);
+                    0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+            params.setMargins(6, 6, 6, 6);
             btn.setLayoutParams(params);
             btn.setText(String.valueOf(letter));
-            btn.setTextSize(18);
+            btn.setTextSize(22); // larger for readability
             btn.setBackgroundColor(Color.parseColor("#2196F3"));
             btn.setTextColor(Color.WHITE);
-            btn.setPadding(8, 16, 8, 16);
-
+            btn.setPadding(8, 20, 8, 20);
             btn.setOnClickListener(v -> fillLetter(letter, btn));
-
             lettersContainer.addView(btn);
         }
     }
 
-    // הפונקציה רצה בלולאה על מחרוזת הניחוש (currentGuess), מוצאת את הקו התחתון הראשון שמסמן אות חסרה, ומחליפה אותו באות שנלחצה.
-    // בסיום היא משביתה את הכפתור הגרפי ומורידה לו את השקיפות (Alpha) כדי לסמן למשתמש שהוא כבר נלחץ.
     private void fillLetter(char letter, Button button) {
         int nextGapIndex = -1;
         for (int i = 0; i < currentGuess.length(); i++) {
@@ -200,13 +183,11 @@ public class FillGapsGameActivity extends AppCompatActivity {
                 break;
             }
         }
-
         if (nextGapIndex == -1) return;
 
         currentGuess.setCharAt(nextGapIndex, letter);
         button.setEnabled(false);
         button.setAlpha(0.3f);
-
         updateWordDisplay();
 
         if (currentGuess.indexOf("_") == -1) {
@@ -228,23 +209,23 @@ public class FillGapsGameActivity extends AppCompatActivity {
         if (answer.equals(targetWord)) {
             score += 10 * rank;
             updateScore();
-
-            tvWord.setTextColor(Color.GREEN);
+            tvWord.setTextColor(Color.parseColor("#43A047")); // green
             Toast.makeText(this, "✓ Correct!", Toast.LENGTH_SHORT).show();
 
             new Handler().postDelayed(() -> {
                 tvWord.setTextColor(Color.BLACK);
-                currentWordIndex++;
+                currentWordIndex++; // advance only on correct answer
                 showNextWord();
             }, 1000);
         } else {
             tvWord.setTextColor(Color.RED);
             Toast.makeText(this, "✗ Wrong! Try again", Toast.LENGTH_SHORT).show();
 
+            // FIX: reset the gaps so user can try again - do NOT increment currentWordIndex
             new Handler().postDelayed(() -> {
                 tvWord.setTextColor(Color.BLACK);
-                createWordWithGaps();
-                setupLetterButtons();
+                createWordWithGaps();   // rebuild the same word with fresh gaps
+                setupLetterButtons();   // rebuild the letter buttons
             }, 1000);
         }
     }
@@ -270,10 +251,10 @@ public class FillGapsGameActivity extends AppCompatActivity {
 
     private void showResults() {
         saveScoreToStats();
-
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Game Complete!")
-                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10 * rank) + "\n(Rank " + rank + " bonus applied!)")
+                .setMessage("Your Score: " + score + " / " + (TOTAL_WORDS * 10 * rank)
+                        + "\n(Rank " + rank + " bonus applied!)")
                 .setPositiveButton("Play Again", (dialog, which) -> {
                     currentWordIndex = 0;
                     score = 0;
@@ -295,8 +276,7 @@ public class FillGapsGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) {
-            }
+            public void onFailed(Exception e) { }
         });
     }
 }

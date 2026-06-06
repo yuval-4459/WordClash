@@ -59,18 +59,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             success -> {
-                if (photoUri != null) {
-                    try {
-                        InputStream test = getContentResolver().openInputStream(photoUri);
-                        if (test != null) {
-                            test.close();
-                            handleImageSelected(photoUri);
-                        }
-                    } catch (Exception e) {
-                        if (success) {
-                            handleImageSelected(photoUri);
-                        }
-                    }
+                if (Boolean.TRUE.equals(success) && photoUri != null) {
+                    handleImageSelected(photoUri);
                 }
             });
 
@@ -100,7 +90,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         Button btnTakePhoto = findViewById(R.id.btnTakePhoto);
         btnDeletePicture = findViewById(R.id.btnDeletePicture);
         btnRotate = findViewById(R.id.btnRotate);
-        Button btnBack = findViewById(R.id.btnBack);
 
         tvUserName.setText(currentUser.getUserName());
 
@@ -108,7 +97,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         btnTakePhoto.setOnClickListener(v -> checkCameraPermissionAndTakePhoto());
         btnDeletePicture.setOnClickListener(v -> confirmDeletePicture());
         btnRotate.setOnClickListener(v -> rotateImage());
-        btnBack.setOnClickListener(v -> finish());
     }
 
     // הפונקציה שולפת את נתיב התמונה. מכיוון שהתמונה נשמרת כטקסט ארוך,
@@ -171,6 +159,7 @@ public class ProfilePictureActivity extends AppCompatActivity {
     // המאפשרת לאפליקציית המצלמה החיצונית לכתוב את התמונה שצולמה ישירות לתוך התיקייה של האפליקציה שלנו.
     private void openCamera() {
         try {
+            photoUri = null;
             File photoFile = new File(getCacheDir(),
                     "profile_picture_" + System.currentTimeMillis() + ".jpg");
             photoFile.createNewFile();

@@ -1,6 +1,7 @@
 package com.example.wordclash.screens;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.tts.TextToSpeech;
@@ -29,10 +30,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
     private TextView tvProgress;
     private TextView tvScore;
     private Button btnListen;
-    private Button btnOption1;
-    private Button btnOption2;
-    private Button btnOption3;
-    private Button btnOption4;
+    private Button btnOption1, btnOption2, btnOption3, btnOption4;
     private User user;
     private int rank = 1;
     private List<Word> allWords;
@@ -43,9 +41,14 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     private TextToSpeech tts;
     private boolean ttsReady = false;
-    // Tracks whether words are loaded and waiting for TTS to be ready
     private boolean wordsLoaded = false;
     private boolean ttsInitialized = false;
+
+    // Color constants for readability
+    private static final int COLOR_DEFAULT  = Color.parseColor("#2196F3");
+    private static final int COLOR_CORRECT  = Color.parseColor("#43A047");
+    private static final int COLOR_WRONG    = Color.parseColor("#E53935");
+    private static final int COLOR_DISABLED = Color.parseColor("#9E9E9E");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,40 +56,40 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         if (user != null) {
             LanguageUtils.applyLanguageSettings(this, user);
         }
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_listen_guess_game);
-
         if (user != null) {
             LanguageUtils.setLayoutDirection(this, user);
         }
-
         rank = getIntent().getIntExtra("RANK", 1);
-
         initializeViews();
-        // Start TTS and word loading in parallel
         initializeTTS();
         loadWords();
     }
 
     private void initializeViews() {
         tvProgress = findViewById(R.id.tvProgress);
-        tvScore = findViewById(R.id.tvScore);
-        btnListen = findViewById(R.id.btnListen);
+        tvScore    = findViewById(R.id.tvScore);
+        btnListen  = findViewById(R.id.btnListen);
         btnOption1 = findViewById(R.id.btnOption1);
         btnOption2 = findViewById(R.id.btnOption2);
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
-        Button btnBack = findViewById(R.id.btnBack);
+
+        // Bigger text on answer buttons for "grandma test"
+        for (Button b : new Button[]{btnOption1, btnOption2, btnOption3, btnOption4}) {
+            b.setTextSize(20f);
+            b.setTypeface(null, Typeface.BOLD);
+            b.setPadding(16, 24, 16, 24);
+        }
 
         btnListen.setOnClickListener(v -> speakWord());
         btnOption1.setOnClickListener(v -> checkAnswer(btnOption1));
         btnOption2.setOnClickListener(v -> checkAnswer(btnOption2));
         btnOption3.setOnClickListener(v -> checkAnswer(btnOption3));
         btnOption4.setOnClickListener(v -> checkAnswer(btnOption4));
-        btnBack.setOnClickListener(v -> finish());
+        // No back button - use system gesture
 
-        // Disable listen button until TTS is ready
         btnListen.setEnabled(false);
         btnListen.setAlpha(0.5f);
     }
@@ -96,23 +99,19 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             if (status == TextToSpeech.SUCCESS) {
                 String learningLanguage = user.getLearningLanguage();
                 if (learningLanguage == null) learningLanguage = "english";
-
                 boolean languageSet = false;
 
                 if (learningLanguage.equals("english")) {
                     int result = tts.setLanguage(Locale.US);
-                    if (result != TextToSpeech.LANG_MISSING_DATA && result != TextToSpeech.LANG_NOT_SUPPORTED) {
+                    if (result != TextToSpeech.LANG_MISSING_DATA
+                            && result != TextToSpeech.LANG_NOT_SUPPORTED) {
                         languageSet = true;
                     }
                 } else {
-                    // Hebrew: try multiple locale variations
                     Locale[] hebrewLocales = {
-                            new Locale("iw", "IL"),
-                            new Locale("iw"),
-                            new Locale("he", "IL"),
-                            new Locale("he"),
+                            new Locale("iw", "IL"), new Locale("iw"),
+                            new Locale("he", "IL"), new Locale("he"),
                     };
-
                     for (Locale locale : hebrewLocales) {
                         int result = tts.setLanguage(locale);
                         if (result != TextToSpeech.LANG_MISSING_DATA
@@ -121,8 +120,6 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                             break;
                         }
                     }
-
-                    // If none of the standard locales worked, try to find any available Hebrew voice
                     if (!languageSet) {
                         try {
                             for (java.util.Locale available : tts.getAvailableLanguages()) {
@@ -136,9 +133,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                                     }
                                 }
                             }
-                        } catch (Exception ignored) {
-                            // getAvailableLanguages() can throw on some devices
-                        }
+                        } catch (Exception ignored) { }
                     }
                 }
 
@@ -149,21 +144,19 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                         ttsReady = true;
                         btnListen.setEnabled(true);
                         btnListen.setAlpha(1.0f);
-                        // If words are already loaded, speak the first word now
                         if (wordsLoaded && currentQuestionIndex < gameWords.size()) {
                             new Handler().postDelayed(this::speakWord, 300);
                         }
                     } else {
                         Toast.makeText(this,
-                                "Hebrew Text-to-Speech is not installed on this device.\n" +
-                                        "Please install it in Settings → Language & Input → Text-to-Speech.",
+                                "Hebrew TTS not installed. Go to Settings → Language → TTS.",
                                 Toast.LENGTH_LONG).show();
                     }
                 });
             } else {
                 runOnUiThread(() -> {
                     ttsInitialized = true;
-                    Toast.makeText(this, "Text-to-Speech failed to initialize.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "TTS failed to initialize.", Toast.LENGTH_LONG).show();
                 });
             }
         });
@@ -174,27 +167,24 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<Word> words) {
                 if (words == null || words.isEmpty()) {
-                    Toast.makeText(ListenGuessGameActivity.this, "No words available", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ListenGuessGameActivity.this, "No words available",
+                            Toast.LENGTH_SHORT).show();
                     finish();
                     return;
                 }
-
                 allWords = words;
                 selectRandomWords();
-
                 wordsLoaded = true;
                 showQuestion();
-
-                // If TTS is already ready by the time words load, speak immediately
                 if (ttsReady) {
                     new Handler().postDelayed(ListenGuessGameActivity.this::speakWord, 500);
                 }
-                // Otherwise speakWord will be called from the TTS init callback above
             }
 
             @Override
             public void onFailed(Exception e) {
-                Toast.makeText(ListenGuessGameActivity.this, "Failed to load words", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ListenGuessGameActivity.this, "Failed to load words",
+                        Toast.LENGTH_SHORT).show();
                 finish();
             }
         });
@@ -204,7 +194,6 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         gameWords = new ArrayList<>();
         List<Word> shuffled = new ArrayList<>(allWords);
         Collections.shuffle(shuffled);
-
         int TOTAL_QUESTIONS = 10;
         for (int i = 0; i < Math.min(TOTAL_QUESTIONS, shuffled.size()); i++) {
             gameWords.add(shuffled.get(i));
@@ -216,15 +205,11 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             endGame();
             return;
         }
-
         answerSelected = false;
         Word currentWord = gameWords.get(currentQuestionIndex);
-
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
-
         boolean isLearningEnglish = learningLanguage.equals("english");
-
         setupOptions(currentWord, !isLearningEnglish);
         updateProgress();
     }
@@ -236,11 +221,9 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         List<Word> otherWords = new ArrayList<>(allWords);
         otherWords.remove(correctWord);
         Collections.shuffle(otherWords);
-
         for (int i = 0; i < Math.min(3, otherWords.size()); i++) {
             options.add(otherWords.get(i));
         }
-
         Collections.shuffle(options);
 
         Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
@@ -249,79 +232,82 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             String text = showHebrew ? word.getHebrew() : word.getEnglish();
             buttons[i].setText(text);
             buttons[i].setTag(word);
-            buttons[i].setBackgroundColor(Color.parseColor("#2196F3"));
+            buttons[i].setBackgroundColor(COLOR_DEFAULT);
+            buttons[i].setTextColor(Color.WHITE);
             buttons[i].setEnabled(true);
+            buttons[i].setAlpha(1.0f);
         }
     }
 
     private void speakWord() {
         if (!ttsReady) {
             if (!ttsInitialized) {
-                Toast.makeText(this, "Text-to-Speech is still loading, please wait...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "TTS still loading, please wait...", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Text-to-Speech is not available for Hebrew on this device.", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "TTS not available for this language.", Toast.LENGTH_LONG).show();
             }
             return;
         }
-
         if (gameWords == null || currentQuestionIndex >= gameWords.size()) return;
 
         Word currentWord = gameWords.get(currentQuestionIndex);
         String learningLanguage = user.getLearningLanguage();
         if (learningLanguage == null) learningLanguage = "english";
-
         String textToSpeak = learningLanguage.equals("english")
                 ? currentWord.getEnglish()
                 : currentWord.getHebrew();
-
         tts.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
     }
 
     private void checkAnswer(Button selectedButton) {
         if (answerSelected) return;
-
         answerSelected = true;
 
         Word selectedWord = (Word) selectedButton.getTag();
         Word correctWord = gameWords.get(currentQuestionIndex);
 
+        disableAllButtons();
+
         if (selectedWord.getId().equals(correctWord.getId())) {
-            selectedButton.setBackgroundColor(Color.GREEN);
+            // Correct - bold green, white text
+            selectedButton.setBackgroundColor(COLOR_CORRECT);
+            selectedButton.setTextColor(Color.WHITE);
             score += 10 * rank;
             updateScore();
         } else {
-            selectedButton.setBackgroundColor(Color.RED);
-            showCorrectAnswer();
+            // Wrong - red for selected
+            selectedButton.setBackgroundColor(COLOR_WRONG);
+            selectedButton.setTextColor(Color.WHITE);
+            // Show correct answer in green
+            highlightCorrect(correctWord);
         }
 
-        disableAllButtons();
-        new Handler().postDelayed(this::nextQuestion, 1500);
+        new Handler().postDelayed(this::nextQuestion, 1800);
     }
 
-    private void showCorrectAnswer() {
-        Word correctWord = gameWords.get(currentQuestionIndex);
+    /** Highlight the correct button in green after a wrong answer */
+    private void highlightCorrect(Word correctWord) {
         Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
-
         for (Button button : buttons) {
             Word word = (Word) button.getTag();
             if (word != null && word.getId().equals(correctWord.getId())) {
-                button.setBackgroundColor(Color.GREEN);
+                button.setBackgroundColor(COLOR_CORRECT);
+                button.setTextColor(Color.WHITE);
                 break;
             }
         }
     }
 
     private void disableAllButtons() {
-        btnOption1.setEnabled(false);
-        btnOption2.setEnabled(false);
-        btnOption3.setEnabled(false);
-        btnOption4.setEnabled(false);
+        Button[] buttons = {btnOption1, btnOption2, btnOption3, btnOption4};
+        for (Button b : buttons) {
+            b.setEnabled(false);
+        }
     }
 
     private void nextQuestion() {
         currentQuestionIndex++;
         showQuestion();
-        // Auto-speak next word if TTS is ready
         if (ttsReady && currentQuestionIndex < gameWords.size()) {
             new Handler().postDelayed(this::speakWord, 500);
         }
@@ -337,10 +323,9 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
     private void endGame() {
         saveScoreToStats();
-
         int percentage = (score * 100) / (gameWords.size() * 10 * rank);
-        String message = "Your Score: " + score + " / " + (gameWords.size() * 10 * rank) + "\n" +
-                "Accuracy: " + percentage + "%\n(Rank " + rank + " bonus applied!)";
+        String message = "Your Score: " + score + " / " + (gameWords.size() * 10 * rank)
+                + "\nAccuracy: " + percentage + "%\n(Rank " + rank + " bonus applied!)";
 
         new AlertDialog.Builder(this)
                 .setTitle("🎉 Game Complete!")
@@ -369,8 +354,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailed(Exception e) {
-            }
+            public void onFailed(Exception e) { }
         });
     }
 

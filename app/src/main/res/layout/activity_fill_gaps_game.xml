@@ -6,23 +6,14 @@
     android:background="#F5F5F5"
     android:padding="16dp">
 
-    <Button
-        android:id="@+id/btnBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:backgroundTint="#757575"
-        android:text="← Back"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+    <!-- Skip button only - no Back -->
     <Button
         android:id="@+id/btnSkip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#8E24AA"
         android:text="Skip"
-        android:textSize="14sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -30,20 +21,20 @@
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="📝 Fill the Gaps"
         android:textColor="#1A237E"
-        android:textSize="24sp"
+        android:textSize="28sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnBack" />
+        app:layout_constraintTop_toBottomOf="@id/btnSkip" />
 
     <LinearLayout
         android:id="@+id/scoreLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -56,27 +47,28 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
             android:text="Word 1 / 10"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/tvScore"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Score: 0"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
     </LinearLayout>
 
+    <!-- Hint: bigger text -->
     <TextView
         android:id="@+id/tvHint"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="20dp"
         android:gravity="center"
         android:text="Hebrew: שלום"
         android:textColor="#424242"
-        android:textSize="18sp"
+        android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scoreLayout" />
@@ -93,20 +85,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvHint">
 
+        <!-- Word display: bigger monospace -->
         <TextView
             android:id="@+id/tvWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
             android:gravity="center"
-            android:padding="24dp"
+            android:padding="28dp"
             android:text="H _ L L O"
             android:textColor="@android:color/black"
-            android:textSize="32sp"
+            android:textSize="36sp"
             android:textStyle="bold" />
 
     </androidx.cardview.widget.CardView>
 
+    <!-- Letter buttons -->
     <LinearLayout
         android:id="@+id/lettersContainer"
         android:layout_width="0dp"
