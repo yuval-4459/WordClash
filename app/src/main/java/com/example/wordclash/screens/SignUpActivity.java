@@ -24,10 +24,8 @@ import java.util.ArrayList;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    // Firebase
     private DatabaseService db;
 
-    // views from the XML
     private EditText etEmail, etPassword, etPassword2, etUserName;
     private TextInputLayout tilEmail, tilPassword, tilConfirmPassword, tilUserName;
     private String selectedGender = "";
@@ -37,16 +35,15 @@ public class SignUpActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.signup_page);
 
-        // ui Components
-        etEmail = findViewById(R.id.Email);
+        etEmail    = findViewById(R.id.Email);
         etPassword = findViewById(R.id.Password);
         etPassword2 = findViewById(R.id.PassswordAuthentication);
-        etUserName = findViewById(R.id.UserName);
+        etUserName  = findViewById(R.id.UserName);
 
-        tilEmail = findViewById(R.id.tilEmail);
-        tilPassword = findViewById(R.id.tilPassword);
+        tilEmail           = findViewById(R.id.tilEmail);
+        tilPassword        = findViewById(R.id.tilPassword);
         tilConfirmPassword = findViewById(R.id.tilConfirmPassword);
-        tilUserName = findViewById(R.id.tilUserName);
+        tilUserName        = findViewById(R.id.tilUserName);
 
         Spinner genderSpinner = findViewById(R.id.Gender);
         Button btnConfirm = findViewById(R.id.ConfirmsignUpButton);
@@ -56,16 +53,18 @@ public class SignUpActivity extends AppCompatActivity {
 
         db = DatabaseService.getInstance();
 
-        // gender Spinner
+        // ------------------------------------------------------------------
+        // Gender Spinner — use readable layouts so the chosen option is visible
+        // ------------------------------------------------------------------
         ArrayList<String> genders = new ArrayList<>();
         genders.add("Choose");
         genders.add("Male");
         genders.add("Female");
         genders.add("Other");
 
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, genders);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, R.layout.item_spinner, genders);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         genderSpinner.setAdapter(adapter);
 
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -85,39 +84,50 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        String email = etEmail.getText().toString().trim();
+        String email    = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
         String password2 = etPassword2.getText().toString().trim();
-        String userName = etUserName.getText().toString().trim();
+        String userName  = etUserName.getText().toString().trim();
 
-        // בדיקת תקינות השדות לפני פנייה ישירה
-
+        // Clear previous errors
         tilEmail.setError(null);
         tilPassword.setError(null);
         tilConfirmPassword.setError(null);
         tilUserName.setError(null);
 
         boolean hasError = false;
+
+        // --- Validation: same rules as AdminUserActivity ---
         if (email.isEmpty()) {
             tilEmail.setError("נא למלא את השדה");
             hasError = true;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            tilEmail.setError("כתובת אימייל לא תקינה");
+            hasError = true;
         }
+
         if (password.isEmpty()) {
             tilPassword.setError("נא למלא את השדה");
             hasError = true;
+        } else if (password.length() < 6) {
+            tilPassword.setError("סיסמה חייבת להכיל לפחות 6 תווים");
+            hasError = true;
         }
+
         if (password2.isEmpty()) {
             tilConfirmPassword.setError("נא למלא את השדה");
             hasError = true;
         }
+
         if (userName.isEmpty()) {
             tilUserName.setError("נא למלא את השדה");
             hasError = true;
+        } else if (userName.length() < 3) {
+            tilUserName.setError("שם משתמש חייב להכיל לפחות 3 תווים");
+            hasError = true;
         }
 
-        if (hasError) {
-            return;
-        }
+        if (hasError) return;
 
         if (!password.equals(password2)) {
             tilConfirmPassword.setError("הסיסמאות אינן תואמות");
@@ -129,9 +139,9 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         }
 
-        String id = db.generateUserId();
-        // create user without language preference (will be set in next screen)
-        User user = new User(id, email, password, userName, selectedGender, false, null, new ArrayList<>());
+        String id   = db.generateUserId();
+        User   user = new User(id, email, password, userName,
+                selectedGender, false, null, new ArrayList<>());
 
         db.checkIfEmailExists(user.getEmail(), new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -142,14 +152,16 @@ public class SignUpActivity extends AppCompatActivity {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<>() {
                         @Override
                         public void onCompleted(Void v) {
-                            // יצירת משתמש חדש ונתוני סטטיסטיקה במידה והמייל פנוי
                             Stats initialStats = new Stats(user.getId(), 1, 0);
                             db.createStats(initialStats, null);
-                            Toast.makeText(SignUpActivity.this, "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUpActivity.this,
+                                    "נרשמת בהצלחה!", Toast.LENGTH_SHORT).show();
                             SharedPreferencesUtils.saveUser(SignUpActivity.this, user);
-                            // go to language selection screen
-                            Intent intent = new Intent(SignUpActivity.this, LanguageSelectionActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            Intent intent = new Intent(
+                                    SignUpActivity.this, LanguageSelectionActivity.class);
+                            intent.addFlags(
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
+                                            | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();
                         }
@@ -157,9 +169,8 @@ public class SignUpActivity extends AppCompatActivity {
                         @Override
                         public void onFailed(Exception e) {
                             Toast.makeText(SignUpActivity.this,
-                                            "נכשל בשמירת המשתמש: " + e.getMessage(),
-                                            Toast.LENGTH_LONG)
-                                    .show();
+                                    "נכשל בשמירת המשתמש: " + e.getMessage(),
+                                    Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -168,9 +179,8 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(SignUpActivity.this,
-                                "נכשל בשמירת המשתמש: " + e.getMessage(),
-                                Toast.LENGTH_LONG)
-                        .show();
+                        "נכשל בשמירת המשתמש: " + e.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
         });
     }

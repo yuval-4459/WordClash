@@ -26,7 +26,6 @@ import com.google.android.material.textfield.TextInputLayout;
 
 public class AdminUserActivity extends AppCompatActivity {
 
-    // ui Components
     private Spinner genderSpinner, rankSpinner;
     private TextInputLayout emailLayout, passwordLayout, usernameLayout, scoreLayout;
     private EditText emailField, passwordField, usernameField, totalScoreField;
@@ -36,10 +35,9 @@ public class AdminUserActivity extends AppCompatActivity {
     private CardView mainCard;
     private View rootView;
 
-    // data
     private User selectedUser;
     private Stats userStats;
-    private boolean isDataLoaded = false;
+    private boolean isDataLoaded    = false;
     private boolean hasUnsavedChanges = false;
 
     @Override
@@ -77,44 +75,46 @@ public class AdminUserActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        rootView = findViewById(android.R.id.content);
-        mainCard = findViewById(R.id.mainCard);
+        rootView    = findViewById(android.R.id.content);
+        mainCard    = findViewById(R.id.mainCard);
         loadingProgress = findViewById(R.id.loadingProgress);
 
-        emailLayout = findViewById(R.id.emailLayout);
+        emailLayout    = findViewById(R.id.emailLayout);
         passwordLayout = findViewById(R.id.passwordLayout);
         usernameLayout = findViewById(R.id.usernameLayout);
-        scoreLayout = findViewById(R.id.scoreLayout);
+        scoreLayout    = findViewById(R.id.scoreLayout);
 
-        emailField = findViewById(R.id.Email);
-        passwordField = findViewById(R.id.Password);
-        usernameField = findViewById(R.id.UserName);
+        emailField      = findViewById(R.id.Email);
+        passwordField   = findViewById(R.id.Password);
+        usernameField   = findViewById(R.id.UserName);
         totalScoreField = findViewById(R.id.TotalScore);
 
         genderSpinner = findViewById(R.id.Gender);
-        rankSpinner = findViewById(R.id.RankSpinner);
+        rankSpinner   = findViewById(R.id.RankSpinner);
 
         isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
 
         updateBtn = findViewById(R.id.updateUserBtn);
         deleteBtn = findViewById(R.id.deleteUserBtn);
-        // cancelBtn הוסר — system back מספיק
 
         setButtonsEnabled(false);
     }
 
     private void setupSpinners() {
+        // Gender — readable adapter
         String[] genders = {"Male", "Female", "Other"};
-        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, genders);
-        genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(
+                this, R.layout.item_spinner, genders);
+        genderAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         genderSpinner.setAdapter(genderAdapter);
 
-        String[] ranks = {"Rank 1 - Beginner", "Rank 2 - Intermediate",
-                "Rank 3 - Advanced", "Rank 4 - Expert", "Rank 5 - Master"};
-        ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, ranks);
-        rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Rank — readable adapter
+        String[] ranks = {
+                "Rank 1 - Beginner", "Rank 2 - Intermediate",
+                "Rank 3 - Advanced",  "Rank 4 - Expert", "Rank 5 - Master"};
+        ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(
+                this, R.layout.item_spinner, ranks);
+        rankAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         rankSpinner.setAdapter(rankAdapter);
     }
 
@@ -130,18 +130,11 @@ public class AdminUserActivity extends AppCompatActivity {
 
     private void setupChangeTracking() {
         TextWatcher changeWatcher = new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 hasUnsavedChanges = true;
             }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
+            @Override public void afterTextChanged(Editable s) {}
         };
 
         emailField.addTextChangedListener(changeWatcher);
@@ -151,29 +144,24 @@ public class AdminUserActivity extends AppCompatActivity {
 
         genderSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(android.widget.AdapterView<?> parent,
+                                       View view, int position, long id) {
                 if (isDataLoaded) hasUnsavedChanges = true;
             }
-
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {
-            }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
         rankSpinner.setOnItemSelectedListener(new android.widget.AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(android.widget.AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(android.widget.AdapterView<?> parent,
+                                       View view, int position, long id) {
                 if (isDataLoaded) hasUnsavedChanges = true;
             }
-
-            @Override
-            public void onNothingSelected(android.widget.AdapterView<?> parent) {
-            }
+            @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
         });
 
-        isAdminCheckBox.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isDataLoaded) hasUnsavedChanges = true;
-        });
+        isAdminCheckBox.setOnCheckedChangeListener(
+                (buttonView, isChecked) -> { if (isDataLoaded) hasUnsavedChanges = true; });
     }
 
     private void populateFields() {
@@ -194,49 +182,53 @@ public class AdminUserActivity extends AppCompatActivity {
     }
 
     private void loadUserStats() {
-        DatabaseService.getInstance().getStats(selectedUser.getId(), new DatabaseService.DatabaseCallback<>() {
-            @Override
-            public void onCompleted(Stats stats) {
-                runOnUiThread(() -> {
-                    if (stats != null) {
-                        userStats = stats;
-                        rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
-                        totalScoreField.setText(String.valueOf(stats.getTotalScore()));
-                    } else {
-                        userStats = new Stats(selectedUser.getId(), 1, 0);
-                        rankSpinner.setSelection(0);
-                        totalScoreField.setText("0");
+        DatabaseService.getInstance().getStats(selectedUser.getId(),
+                new DatabaseService.DatabaseCallback<>() {
+                    @Override
+                    public void onCompleted(Stats stats) {
+                        runOnUiThread(() -> {
+                            if (stats != null) {
+                                userStats = stats;
+                                rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
+                                totalScoreField.setText(String.valueOf(stats.getTotalScore()));
+                            } else {
+                                userStats = new Stats(selectedUser.getId(), 1, 0);
+                                rankSpinner.setSelection(0);
+                                totalScoreField.setText("0");
+                            }
+                            showLoading(false);
+                            setButtonsEnabled(true);
+                            isDataLoaded     = true;
+                            hasUnsavedChanges = false;
+                        });
                     }
-                    showLoading(false);
-                    setButtonsEnabled(true);
-                    isDataLoaded = true;
-                    hasUnsavedChanges = false;
-                });
-            }
 
-            @Override
-            public void onFailed(Exception e) {
-                runOnUiThread(() -> {
-                    showError("Failed to load user stats: " + e.getMessage());
-                    userStats = new Stats(selectedUser.getId(), 1, 0);
-                    rankSpinner.setSelection(0);
-                    totalScoreField.setText("0");
-                    showLoading(false);
-                    setButtonsEnabled(true);
-                    isDataLoaded = true;
-                    hasUnsavedChanges = false;
+                    @Override
+                    public void onFailed(Exception e) {
+                        runOnUiThread(() -> {
+                            showError("Failed to load user stats: " + e.getMessage());
+                            userStats = new Stats(selectedUser.getId(), 1, 0);
+                            rankSpinner.setSelection(0);
+                            totalScoreField.setText("0");
+                            showLoading(false);
+                            setButtonsEnabled(true);
+                            isDataLoaded     = true;
+                            hasUnsavedChanges = false;
+                        });
+                    }
                 });
-            }
-        });
     }
 
+    // ------------------------------------------------------------------
+    // Validation — same rules as SignUpActivity / ChangeDetailsActivity
+    // ------------------------------------------------------------------
     private boolean validateInputs() {
         boolean isValid = true;
 
-        String email = emailField.getText().toString().trim();
+        String email    = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
         String username = usernameField.getText().toString().trim();
-        String score = totalScoreField.getText().toString().trim();
+        String score    = totalScoreField.getText().toString().trim();
 
         emailLayout.setError(null);
         passwordLayout.setError(null);
@@ -312,10 +304,10 @@ public class AdminUserActivity extends AppCompatActivity {
         showLoading(true);
         setButtonsEnabled(false);
 
-        String email = emailField.getText().toString().trim();
+        String email    = emailField.getText().toString().trim();
         String password = passwordField.getText().toString().trim();
         String username = usernameField.getText().toString().trim();
-        String gender = genderSpinner.getSelectedItem().toString();
+        String gender   = genderSpinner.getSelectedItem().toString();
         boolean isAdmin = isAdminCheckBox.isChecked();
 
         selectedUser.setEmail(email);
@@ -324,31 +316,78 @@ public class AdminUserActivity extends AppCompatActivity {
         selectedUser.setGender(gender);
         selectedUser.setAdmin(isAdmin);
 
-        int newRank = rankSpinner.getSelectedItemPosition() + 1;
-
-        int newScore;
+        int newRank  = rankSpinner.getSelectedItemPosition() + 1;
+        int newScore = 0;
         try {
             newScore = Integer.parseInt(totalScoreField.getText().toString().trim());
-        } catch (NumberFormatException e) {
-            newScore = 0;
-        }
+        } catch (NumberFormatException ignored) {}
 
         userStats.setRank(newRank);
         userStats.setTotalScore(newScore);
 
-        DatabaseService.getInstance().updateUser(selectedUser, new DatabaseService.DatabaseCallback<>() {
-            @Override
-            public void onCompleted(Void v) {
-                DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
+        DatabaseService.getInstance().updateUser(selectedUser,
+                new DatabaseService.DatabaseCallback<>() {
                     @Override
-                    public void onCompleted(Void unused) {
+                    public void onCompleted(Void v) {
+                        DatabaseService.getInstance().updateStats(userStats,
+                                new DatabaseService.DatabaseCallback<>() {
+                                    @Override
+                                    public void onCompleted(Void unused) {
+                                        runOnUiThread(() -> {
+                                            showLoading(false);
+                                            hasUnsavedChanges = false;
+                                            showSuccess("User updated successfully");
+
+                                            new android.os.Handler().postDelayed(() -> {
+                                                Intent intent = new Intent(
+                                                        AdminUserActivity.this, UserListActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                startActivity(intent);
+                                                finish();
+                                            }, 1500);
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onFailed(Exception e) {
+                                        runOnUiThread(() -> {
+                                            showLoading(false);
+                                            setButtonsEnabled(true);
+                                            showError("Failed to update stats: " + e.getMessage());
+                                        });
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public void onFailed(Exception e) {
+                        runOnUiThread(() -> {
+                            showLoading(false);
+                            setButtonsEnabled(true);
+                            showError("Update failed: " + e.getMessage());
+                        });
+                    }
+                });
+    }
+
+    private void deleteUser() {
+        if (selectedUser == null) return;
+
+        showLoading(true);
+        setButtonsEnabled(false);
+
+        DatabaseService.getInstance().deleteUser(selectedUser.getId(),
+                new DatabaseService.DatabaseCallback<>() {
+                    @Override
+                    public void onCompleted(Void v) {
                         runOnUiThread(() -> {
                             showLoading(false);
                             hasUnsavedChanges = false;
-                            showSuccess("User updated successfully");
+                            showSuccess("User deleted successfully");
 
                             new android.os.Handler().postDelayed(() -> {
-                                Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
+                                Intent intent = new Intent(
+                                        AdminUserActivity.this, UserListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
                                 finish();
@@ -361,55 +400,10 @@ public class AdminUserActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             showLoading(false);
                             setButtonsEnabled(true);
-                            showError("Failed to update stats: " + e.getMessage());
+                            showError("Delete failed: " + e.getMessage());
                         });
                     }
                 });
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                runOnUiThread(() -> {
-                    showLoading(false);
-                    setButtonsEnabled(true);
-                    showError("Update failed: " + e.getMessage());
-                });
-            }
-        });
-    }
-
-    private void deleteUser() {
-        if (selectedUser == null) return;
-
-        showLoading(true);
-        setButtonsEnabled(false);
-
-        DatabaseService.getInstance().deleteUser(selectedUser.getId(), new DatabaseService.DatabaseCallback<>() {
-            @Override
-            public void onCompleted(Void v) {
-                runOnUiThread(() -> {
-                    showLoading(false);
-                    hasUnsavedChanges = false;
-                    showSuccess("User deleted successfully");
-
-                    new android.os.Handler().postDelayed(() -> {
-                        Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        finish();
-                    }, 1500);
-                });
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                runOnUiThread(() -> {
-                    showLoading(false);
-                    setButtonsEnabled(true);
-                    showError("Delete failed: " + e.getMessage());
-                });
-            }
-        });
     }
 
     private void showLoading(boolean show) {

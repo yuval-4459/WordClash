@@ -32,8 +32,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 
-// מסך המאפשר למשתמש להעלות תמונת פרופיל מהגלריה או מהמצלמה, לסובב אותה או למחוק אותה.
-// המסך יורש מ-AppCompatActivity ומעדכן את המידע גם בענן וגם מקומית בזיכרון המכשיר.
 public class ProfilePictureActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_CODE = 100;
@@ -42,12 +40,12 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private Button btnDeletePicture;
     private Button btnRotate;
     private User currentUser;
+    // photoUri is set BEFORE launching the camera and never cleared before the result arrives.
     private Uri photoUri;
     private Bitmap currentBitmap;
     private int currentRotation = 0;
 
-    // שימוש ברכיב ActivityResultLauncher המודרני של אנדרואיד במקום הפונקציה המיושנת startActivityForResult.
-    // הוא מאפשר להפעיל את אפליקציית הגלריה או המצלמה של המכשיר ולקבל חזרה את כתובת התמונה (Uri) בצורה מאובטחת.
+    // Gallery launcher — unchanged
     private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
@@ -56,12 +54,16 @@ public class ProfilePictureActivity extends AppCompatActivity {
                 }
             });
 
+    // Camera launcher — reads photoUri that was set just before launch()
     private final ActivityResultLauncher<Uri> cameraLauncher = registerForActivityResult(
             new ActivityResultContracts.TakePicture(),
             success -> {
+                // photoUri is guaranteed non-null here because we set it in openCamera()
+                // before calling cameraLauncher.launch(photoUri)
                 if (Boolean.TRUE.equals(success) && photoUri != null) {
                     handleImageSelected(photoUri);
                 }
+                // Whether success or not, photoUri stays set so a retry works without re-creating a file.
             });
 
     @Override
@@ -69,8 +71,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_picture);
 
-        // שליפת המשתמש המחובר מהזיכרון המקומי ובדיקה אם קיימת לו תמונת פרופיל שמורה בענן.
-        // אם התמונה לא קיימת, המסך יציג אוטומטית את האות הראשונה של שם המשתמש שלו כעיצוב ברירת מחדל (Avatar).
         currentUser = SharedPreferencesUtils.getUser(this);
         if (currentUser == null) {
             Toast.makeText(this, "User not found", Toast.LENGTH_SHORT).show();
@@ -99,8 +99,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         btnRotate.setOnClickListener(v -> rotateImage());
     }
 
-    // הפונקציה שולפת את נתיב התמונה. מכיוון שהתמונה נשמרת כטקסט ארוך,
-    // הפונקציה מפענחת את מחרוזת ה-Base64 חזרה למערך בייטים, והופכת אותו לאובייקט Bitmap תצוגתי באמצעות BitmapFactory.
     private void displayCurrentPicture() {
         String profilePictureUrl = currentUser.getProfilePictureUrl();
 
@@ -154,12 +152,19 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    // יצירת קובץ זמני בזיכרון המטמון (Cache) של המכשיר ושימוש ברכיב FileProvider המובנה.
-    // רכיב זה חיוני באנדרואיד כדי להפיק כתובת Uri מאובטחת,
-    // המאפשרת לאפליקציית המצלמה החיצונית לכתוב את התמונה שצולמה ישירות לתוך התיקייה של האפליקציה שלנו.
+    /**
+     * Creates a fresh temp file every time the user taps "Take Photo", then immediately
+     * launches the camera with the new URI. This prevents the crash that occurred on the
+     * second capture when the previous file was already written and the URI was stale.
+     *
+     * Key fix: photoUri is always assigned *before* cameraLauncher.launch() is called,
+     * so the result callback always sees a valid, matching URI regardless of how many
+     * times the user takes a photo.
+     */
     private void openCamera() {
         try {
-            photoUri = null;
+            // Always create a brand-new file. The old temp file is left in cache and
+            // the OS will clean it up; we never try to overwrite it.
             File storageDir = getExternalCacheDir();
             if (storageDir == null) {
                 storageDir = getCacheDir();
@@ -167,9 +172,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
             File photoFile = new File(storageDir,
                     "profile_picture_" + System.currentTimeMillis() + ".jpg");
             photoFile.createNewFile();
-            photoUri = FileProvider.getUriForFile(this,
+
+            // Assign BEFORE launch so the result callback always has the correct URI.
+            photoUri = FileProvider.getUriForFile(
+                    this,
                     getApplicationContext().getPackageName() + ".fileprovider",
                     photoFile);
+
             cameraLauncher.launch(photoUri);
         } catch (Exception e) {
             Toast.makeText(this, "Error opening camera: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -177,7 +186,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_PERMISSION_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -188,13 +198,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    // היא מבצעת אופטימיזציה של הזיכרון באמצעות כיווץ ושינוי גודל (Resize)
-    // ל-512x512 פיקסלים כדי למנוע קריסה מוחלטת של המכשיר בגלל מחסור בזיכרון (OutOfMemoryError).
     private void handleImageSelected(Uri uri) {
         try {
-            // שימוש במאפיין inJustDecodeBounds כדי לקרוא אך ורק את המימדים של התמונה (אורך ורוחב) מהקובץ.
-            // זה מאפשר לנו לחשב את יחס הכיווץ (inSampleSize)
-            // לפני שאנחנו טוענים את הפיקסלים הכבדים של התמונה לתוך זיכרון ה-RAM של המכשיר.
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inJustDecodeBounds = true;
             try (InputStream sizeStream = getContentResolver().openInputStream(uri)) {
@@ -237,35 +242,24 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    // פונקציית עזר המשתמשת במחלקה המובנית ExifInterface כדי לקרוא את נתוני ה-Exif (המטא-דאטה הנסתר של הקובץ).
-    // היא מזהה אם המצלמה של המכשיר צילמה את התמונה לאורך או על הצד, ומתקנת את זווית הראייה באמצעות מחלקת Matrix כדי שלא תופיע הפוכה במסך.
     private Bitmap fixImageOrientation(InputStream input, Bitmap bitmap) {
         try {
             ExifInterface exif = new ExifInterface(input);
-            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+            int orientation = exif.getAttributeInt(
+                    ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
 
             Matrix matrix = new Matrix();
             switch (orientation) {
-                case ExifInterface.ORIENTATION_ROTATE_90:
-                    matrix.postRotate(90);
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_180:
-                    matrix.postRotate(180);
-                    break;
-                case ExifInterface.ORIENTATION_ROTATE_270:
-                    matrix.postRotate(270);
-                    break;
-                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
-                    matrix.setScale(-1, 1);
-                    break;
-                case ExifInterface.ORIENTATION_FLIP_VERTICAL:
-                    matrix.setScale(1, -1);
-                    break;
-                default:
-                    return bitmap;
+                case ExifInterface.ORIENTATION_ROTATE_90:    matrix.postRotate(90);   break;
+                case ExifInterface.ORIENTATION_ROTATE_180:   matrix.postRotate(180);  break;
+                case ExifInterface.ORIENTATION_ROTATE_270:   matrix.postRotate(270);  break;
+                case ExifInterface.ORIENTATION_FLIP_HORIZONTAL: matrix.setScale(-1, 1); break;
+                case ExifInterface.ORIENTATION_FLIP_VERTICAL:   matrix.setScale(1, -1); break;
+                default: return bitmap;
             }
 
-            Bitmap rotated = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            Bitmap rotated = Bitmap.createBitmap(
+                    bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
             bitmap.recycle();
             return rotated;
         } catch (Exception e) {
@@ -273,8 +267,6 @@ public class ProfilePictureActivity extends AppCompatActivity {
         }
     }
 
-    // היא מסובבת את אובייקט ה-Bitmap הנוכחי ב-90 מעלות בכל לחיצה באמצעות Matrix,
-    // מציגה את התוצאה המעודכנת על המסך ושומרת את המחרוזת החדשה ב-Firebase.
     private void rotateImage() {
         if (currentBitmap == null) {
             Toast.makeText(this, "No image to rotate", Toast.LENGTH_SHORT).show();
@@ -286,7 +278,8 @@ public class ProfilePictureActivity extends AppCompatActivity {
         Matrix matrix = new Matrix();
         matrix.postRotate(90);
 
-        Bitmap rotated = Bitmap.createBitmap(currentBitmap, 0, 0,
+        Bitmap rotated = Bitmap.createBitmap(
+                currentBitmap, 0, 0,
                 currentBitmap.getWidth(), currentBitmap.getHeight(), matrix, true);
 
         currentBitmap.recycle();
@@ -301,13 +294,13 @@ public class ProfilePictureActivity extends AppCompatActivity {
 
     private int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         int height = options.outHeight;
-        int width = options.outWidth;
+        int width  = options.outWidth;
         int inSampleSize = 1;
         if (height > reqHeight || width > reqWidth) {
             int halfHeight = height / 2;
-            int halfWidth = width / 2;
+            int halfWidth  = width  / 2;
             while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
+                    && (halfWidth  / inSampleSize) >= reqWidth) {
                 inSampleSize *= 2;
             }
         }
@@ -331,25 +324,17 @@ public class ProfilePictureActivity extends AppCompatActivity {
     }
 
     private Bitmap resizeBitmap(Bitmap bitmap, int maxWidth, int maxHeight) {
-        int width = bitmap.getWidth();
+        int width  = bitmap.getWidth();
         int height = bitmap.getHeight();
-
-        float scale = Math.min(
-                (float) maxWidth / width,
-                (float) maxHeight / height
-        );
-
+        float scale = Math.min((float) maxWidth / width, (float) maxHeight / height);
         if (scale < 1.0f) {
-            int newWidth = Math.round(width * scale);
+            int newWidth  = Math.round(width  * scale);
             int newHeight = Math.round(height * scale);
             return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
         }
-
         return bitmap;
     }
 
-    // דוחסת את אובייקט ה-Bitmap הגרפי לפורמט JPEG עם 80 אחוזי איכות,
-    // והופכת את מערך הבייטים שנוצר למחרוזת טקסט (String) מסוג Base64 כדי שיהיה ניתן לשמור אותה ישירות בתוך שדה טקסט פשוט בבסיס הנתונים.
     private String bitmapToBase64(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
@@ -357,24 +342,20 @@ public class ProfilePictureActivity extends AppCompatActivity {
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
 
-    // מעדכנות את אובייקט המשתמש בענן בצורה אסינכרונית באמצעות DatabaseService. ברגע שמתקבל חיווי הצלחה (onCompleted),
-    // המידע החדש נשמר מיד גם ב-SharedPreferencesUtils כדי שכל שאר המסכים באפליקציה יציגו את התמונה המעודכנת בלי צורך לפנות שוב לאינטרנט.
     private void saveProfilePicture() {
         DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(ProfilePictureActivity.this, currentUser);
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Profile picture updated!",
-                        Toast.LENGTH_SHORT).show();
+                        "Profile picture updated!", Toast.LENGTH_SHORT).show();
                 displayCurrentPicture();
             }
 
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Failed to update: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                        "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -396,16 +377,14 @@ public class ProfilePictureActivity extends AppCompatActivity {
             public void onCompleted(Void unused) {
                 SharedPreferencesUtils.saveUser(ProfilePictureActivity.this, currentUser);
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Profile picture removed",
-                        Toast.LENGTH_SHORT).show();
+                        "Profile picture removed", Toast.LENGTH_SHORT).show();
                 displayCurrentPicture();
             }
 
             @Override
             public void onFailed(Exception e) {
                 Toast.makeText(ProfilePictureActivity.this,
-                        "Failed to delete: " + e.getMessage(),
-                        Toast.LENGTH_SHORT).show();
+                        "Failed to delete: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

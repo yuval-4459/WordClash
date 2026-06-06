@@ -32,10 +32,10 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     private TextView tvCurrentLanguage, tvAdminControlsTitle;
     private CheckBox isAdminCheckBox;
 
-    private String selectedGender = "";
+    private String selectedGender   = "";
     private String selectedLanguage = "";
 
-    private User currentUser;
+    private User  currentUser;
     private Stats userStats;
     private boolean isAdmin = false;
 
@@ -78,17 +78,17 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        etUserName = findViewById(R.id.UserName);
-        etEmail = findViewById(R.id.Email);
-        etPassword = findViewById(R.id.Password);
-        genderSpinner = findViewById(R.id.Gender);
+        etUserName  = findViewById(R.id.UserName);
+        etEmail     = findViewById(R.id.Email);
+        etPassword  = findViewById(R.id.Password);
+        genderSpinner   = findViewById(R.id.Gender);
         languageSpinner = findViewById(R.id.LanguageSpinner);
         btnUpdateDetails = findViewById(R.id.btnUpdateDetails);
         tvCurrentLanguage = findViewById(R.id.tvCurrentLanguage);
 
-        etTotalScore = findViewById(R.id.TotalScore);
-        rankSpinner = findViewById(R.id.RankSpinner);
-        isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
+        etTotalScore      = findViewById(R.id.TotalScore);
+        rankSpinner       = findViewById(R.id.RankSpinner);
+        isAdminCheckBox   = findViewById(R.id.isAdminCheckBox);
         tvAdminControlsTitle = findViewById(R.id.tvAdminControlsTitle);
     }
 
@@ -98,14 +98,16 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         genders.add(getString(R.string.female));
         genders.add(getString(R.string.other));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, genders);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Use readable spinner layouts (dark text on light background)
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, R.layout.item_spinner, genders);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         genderSpinner.setAdapter(adapter);
 
         genderSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemSelected(AdapterView<?> adapterView,
+                                       View view, int position, long l) {
                 selectedGender = adapterView.getItemAtPosition(position).toString();
             }
 
@@ -121,20 +123,18 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         languages.add(getString(R.string.english));
         languages.add(getString(R.string.hebrew));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, languages);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, R.layout.item_spinner, languages);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         languageSpinner.setAdapter(adapter);
 
         languageSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+            public void onItemSelected(AdapterView<?> adapterView,
+                                       View view, int position, long l) {
                 String selected = adapterView.getItemAtPosition(position).toString();
-                if (selected.equals(getString(R.string.english))) {
-                    selectedLanguage = "english";
-                } else {
-                    selectedLanguage = "hebrew";
-                }
+                selectedLanguage = selected.equals(getString(R.string.english))
+                        ? "english" : "hebrew";
             }
 
             @Override
@@ -146,38 +146,38 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
     private void setupRankSpinner() {
         String[] ranks = {"Rank 1", "Rank 2", "Rank 3", "Rank 4", "Rank 5"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, ranks);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(
+                this, R.layout.item_spinner, ranks);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         rankSpinner.setAdapter(adapter);
     }
 
     private void loadUserStats() {
-        DatabaseService.getInstance().getStats(currentUser.getId(), new DatabaseService.DatabaseCallback<>() {
-            @Override
-            public void onCompleted(Stats stats) {
-                if (stats != null) {
-                    userStats = stats;
-                    rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
-                    etTotalScore.setText(String.valueOf(stats.getTotalScore()));
-                } else {
-                    userStats = new Stats(currentUser.getId(), 1, 0);
-                    rankSpinner.setSelection(0);
-                    etTotalScore.setText("0");
-                }
-            }
+        DatabaseService.getInstance().getStats(currentUser.getId(),
+                new DatabaseService.DatabaseCallback<>() {
+                    @Override
+                    public void onCompleted(Stats stats) {
+                        if (stats != null) {
+                            userStats = stats;
+                            rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
+                            etTotalScore.setText(String.valueOf(stats.getTotalScore()));
+                        } else {
+                            userStats = new Stats(currentUser.getId(), 1, 0);
+                            rankSpinner.setSelection(0);
+                            etTotalScore.setText("0");
+                        }
+                    }
 
-            @Override
-            public void onFailed(Exception e) {
-                userStats = new Stats(currentUser.getId(), 1, 0);
-                rankSpinner.setSelection(0);
-                etTotalScore.setText("0");
-            }
-        });
+                    @Override
+                    public void onFailed(Exception e) {
+                        userStats = new Stats(currentUser.getId(), 1, 0);
+                        rankSpinner.setSelection(0);
+                        etTotalScore.setText("0");
+                    }
+                });
     }
 
     private void setupFieldsBasedOnRole() {
-        // ALL users can edit email, password, username, gender, language
         etEmail.setEnabled(true);
         etPassword.setEnabled(true);
         etUserName.setEnabled(true);
@@ -185,7 +185,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         languageSpinner.setEnabled(true);
 
         if (isAdmin) {
-            // Show admin-only controls
             etTotalScore.setEnabled(true);
             rankSpinner.setEnabled(true);
             isAdminCheckBox.setEnabled(true);
@@ -199,7 +198,6 @@ public class ChangeDetailsActivity extends AppCompatActivity {
             findViewById(R.id.rankCard).setVisibility(View.VISIBLE);
             findViewById(R.id.scoreLayout).setVisibility(View.VISIBLE);
         } else {
-            // Hide admin-only controls
             etTotalScore.setVisibility(View.GONE);
             rankSpinner.setVisibility(View.GONE);
             isAdminCheckBox.setVisibility(View.GONE);
@@ -216,12 +214,11 @@ public class ChangeDetailsActivity extends AppCompatActivity {
         etEmail.setText(currentUser.getEmail());
         etPassword.setText(currentUser.getPassword());
 
-        String[] genders = {getString(R.string.male), getString(R.string.female), getString(R.string.other)};
         String[] genderCodes = {"Male", "Female", "Other"};
         for (int i = 0; i < genderCodes.length; i++) {
             if (genderCodes[i].equalsIgnoreCase(currentUser.getGender())) {
                 genderSpinner.setSelection(i);
-                selectedGender = genders[i];
+                selectedGender = genderSpinner.getItemAtPosition(i).toString();
                 break;
             }
         }
@@ -247,33 +244,74 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
     private void updateDetails() {
         String userName = etUserName.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
+        String email    = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        if (userName.isEmpty() || email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, getString(R.string.error_fill_fields), Toast.LENGTH_SHORT).show();
-            return;
+        // ------------------------------------------------------------------
+        // Validation — same rules as AdminUserActivity
+        // ------------------------------------------------------------------
+        boolean hasError = false;
+
+        if (email.isEmpty()) {
+            etEmail.setError("נא למלא את השדה");
+            hasError = true;
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("כתובת אימייל לא תקינה");
+            hasError = true;
         }
 
-        if (selectedGender.isEmpty()) {
-            selectedGender = currentUser.getGender();
+        if (password.isEmpty()) {
+            etPassword.setError("נא למלא את השדה");
+            hasError = true;
+        } else if (password.length() < 6) {
+            etPassword.setError("סיסמה חייבת להכיל לפחות 6 תווים");
+            hasError = true;
         }
+
+        if (userName.isEmpty()) {
+            etUserName.setError("נא למלא את השדה");
+            hasError = true;
+        } else if (userName.length() < 3) {
+            etUserName.setError("שם משתמש חייב להכיל לפחות 3 תווים");
+            hasError = true;
+        }
+
+        if (isAdmin && etTotalScore.getVisibility() == View.VISIBLE) {
+            String scoreStr = etTotalScore.getText().toString().trim();
+            if (scoreStr.isEmpty()) {
+                etTotalScore.setError("נא למלא את השדה");
+                hasError = true;
+            } else {
+                try {
+                    int scoreValue = Integer.parseInt(scoreStr);
+                    if (scoreValue < 0) {
+                        etTotalScore.setError("הניקוד לא יכול להיות שלילי");
+                        hasError = true;
+                    }
+                } catch (NumberFormatException e) {
+                    etTotalScore.setError("ניקוד לא תקין");
+                    hasError = true;
+                }
+            }
+        }
+
+        if (hasError) return;
 
         // Convert display gender back to English code
         String genderCode = selectedGender;
-        if (selectedGender.equals(getString(R.string.male))) genderCode = "Male";
+        if (selectedGender.equals(getString(R.string.male)))   genderCode = "Male";
         else if (selectedGender.equals(getString(R.string.female))) genderCode = "Female";
-        else if (selectedGender.equals(getString(R.string.other))) genderCode = "Other";
+        else if (selectedGender.equals(getString(R.string.other)))  genderCode = "Other";
 
         currentUser.setUserName(userName);
         currentUser.setGender(genderCode);
         currentUser.setEmail(email);
         currentUser.setPassword(password);
 
-        // Check if language changed
         String oldLanguage = currentUser.getLearningLanguage();
         if (oldLanguage == null) oldLanguage = "english";
-        boolean languageChanged = !selectedLanguage.isEmpty() && !selectedLanguage.equals(oldLanguage);
+        boolean languageChanged = !selectedLanguage.isEmpty()
+                && !selectedLanguage.equals(oldLanguage);
 
         if (!selectedLanguage.isEmpty()) {
             currentUser.setLearningLanguage(selectedLanguage);
@@ -284,12 +322,10 @@ public class ChangeDetailsActivity extends AppCompatActivity {
 
             if (userStats != null) {
                 int newRank = rankSpinner.getSelectedItemPosition() + 1;
-                int newScore;
+                int newScore = 0;
                 try {
                     newScore = Integer.parseInt(etTotalScore.getText().toString().trim());
-                } catch (NumberFormatException e) {
-                    newScore = 0;
-                }
+                } catch (NumberFormatException ignored) {}
                 userStats.setRank(newRank);
                 userStats.setTotalScore(newScore);
             }
@@ -316,44 +352,45 @@ public class ChangeDetailsActivity extends AppCompatActivity {
     }
 
     private void saveChanges() {
-        DatabaseService.getInstance().updateUser(currentUser, new DatabaseService.DatabaseCallback<>() {
-            @Override
-            public void onCompleted(Void v) {
-                if (isAdmin && userStats != null) {
-                    DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
-                        @Override
-                        public void onCompleted(Void unused) {
+        DatabaseService.getInstance().updateUser(currentUser,
+                new DatabaseService.DatabaseCallback<>() {
+                    @Override
+                    public void onCompleted(Void v) {
+                        if (isAdmin && userStats != null) {
+                            DatabaseService.getInstance().updateStats(userStats,
+                                    new DatabaseService.DatabaseCallback<>() {
+                                        @Override
+                                        public void onCompleted(Void unused) {
+                                            finalizeUpdate();
+                                        }
+
+                                        @Override
+                                        public void onFailed(Exception e) {
+                                            Toast.makeText(ChangeDetailsActivity.this,
+                                                    "Failed to update stats: " + e.getMessage(),
+                                                    Toast.LENGTH_SHORT).show();
+                                            finalizeUpdate();
+                                        }
+                                    });
+                        } else {
                             finalizeUpdate();
                         }
+                    }
 
-                        @Override
-                        public void onFailed(Exception e) {
-                            Toast.makeText(ChangeDetailsActivity.this,
-                                    "Failed to update stats: " + e.getMessage(),
-                                    Toast.LENGTH_SHORT).show();
-                            finalizeUpdate();
-                        }
-                    });
-                } else {
-                    finalizeUpdate();
-                }
-            }
-
-            @Override
-            public void onFailed(Exception e) {
-                Toast.makeText(ChangeDetailsActivity.this,
-                        getString(R.string.error_saving) + ": " + e.getMessage(),
-                        Toast.LENGTH_LONG).show();
-            }
-        });
+                    @Override
+                    public void onFailed(Exception e) {
+                        Toast.makeText(ChangeDetailsActivity.this,
+                                getString(R.string.error_saving) + ": " + e.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void finalizeUpdate() {
         SharedPreferencesUtils.saveUser(ChangeDetailsActivity.this, currentUser);
 
         Toast.makeText(ChangeDetailsActivity.this,
-                getString(R.string.details_updated),
-                Toast.LENGTH_SHORT).show();
+                getString(R.string.details_updated), Toast.LENGTH_SHORT).show();
 
         Intent intent = new Intent(ChangeDetailsActivity.this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
