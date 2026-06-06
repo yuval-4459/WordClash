@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <!-- Header Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/headerCard"
             android:layout_width="0dp"
@@ -63,19 +62,10 @@
 
                 </LinearLayout>
 
-                <Button
-                    android:id="@+id/btnBack"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#757575"
-                    android:text="← Back"
-                    android:textSize="14sp" />
-
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Games Grid -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -84,7 +74,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/headerCard">
 
-            <!-- Row 1: Match Game & True/False -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,7 +83,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardMatchGame"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -123,7 +112,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Match Game"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -142,7 +131,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardTrueFalse"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -172,7 +161,7 @@
                             android:layout_marginTop="8dp"
                             android:text="True/False"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -190,7 +179,6 @@
 
             </LinearLayout>
 
-            <!-- Row 2: Word Builder & Fill Gaps -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -200,7 +188,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardWordBuilder"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -229,7 +217,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Word Builder"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -248,7 +236,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardFillGaps"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -277,7 +265,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Fill the Gaps"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -295,7 +283,6 @@
 
             </LinearLayout>
 
-            <!-- Row 3: Listen Guess & Memory Cards -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -305,7 +292,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardListenGuess"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -334,7 +321,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Listen n Guess"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -353,7 +340,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardMemoryCards"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -382,7 +369,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Memory Cards"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -400,7 +387,6 @@
 
             </LinearLayout>
 
-            <!-- Row 4: Speed Quiz -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -408,11 +394,10 @@
                 android:weightSum="2">
 
 
-                <!-- Speed Quiz — distinct color: deep orange, not teal -->
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cardSpeedQuiz"
                     android:layout_width="0dp"
-                    android:layout_height="160dp"
+                    android:layout_height="180dp"
                     android:layout_margin="8dp"
                     android:layout_weight="1"
                     android:clickable="true"
@@ -441,7 +426,7 @@
                             android:layout_marginTop="8dp"
                             android:text="Speed Quiz"
                             android:textColor="#FFFFFF"
-                            android:textSize="20sp"
+                            android:textSize="18sp"
                             android:textStyle="bold" />
 
                         <TextView

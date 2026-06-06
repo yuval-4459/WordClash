@@ -9,7 +9,6 @@
     android:padding="16dp"
     tools:context=".screens.RanksActivity">
 
-    <!-- Header Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/headerCard"
         android:layout_width="0dp"
@@ -25,57 +24,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
+            android:gravity="center"
+            android:orientation="vertical"
             android:padding="16dp">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tvOnlinePlayers"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🟢 0 Players Online"
-                    android:textColor="#43A047"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvTitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="Choose Your Level"
-                    android:textColor="#1A237E"
-                    android:textSize="26sp"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="80dp"
-                    android:layout_height="4dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/accent_line" />
-
-            </LinearLayout>
-
-            <Button
-                android:id="@+id/btnBack"
+            <TextView
+                android:id="@+id/tvOnlinePlayers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="#757575"
-                android:text="← Back"
-                android:textSize="14sp" />
+                android:text="🟢 0 Players Online"
+                android:textColor="#43A047"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Choose Your Level"
+                android:textColor="#1A237E"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <View
+                android:layout_width="80dp"
+                android:layout_height="4dp"
+                android:layout_marginTop="6dp"
+                android:background="@drawable/accent_line" />
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Scrollable container for levels -->
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -90,7 +71,6 @@
             android:orientation="vertical"
             android:padding="8dp">
 
-            <!-- Level 1 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardLevel1"
                 android:layout_width="match_parent"
@@ -118,7 +98,7 @@
                             android:layout_height="wrap_content"
                             android:text="Level 1"
                             android:textColor="#1A237E"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -127,14 +107,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Unlocked"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnLevel1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:backgroundTint="#1565C0"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
@@ -146,7 +126,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Level 2 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardLevel2"
                 android:layout_width="match_parent"
@@ -174,7 +153,7 @@
                             android:layout_height="wrap_content"
                             android:text="Level 2"
                             android:textColor="#1A237E"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -183,14 +162,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Unlocked"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnLevel2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:backgroundTint="#1565C0"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
@@ -202,7 +181,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Level 3 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardLevel3"
                 android:layout_width="match_parent"
@@ -230,7 +208,7 @@
                             android:layout_height="wrap_content"
                             android:text="Level 3"
                             android:textColor="#1A237E"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -239,14 +217,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Unlocked"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnLevel3"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:backgroundTint="#1565C0"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
@@ -258,7 +236,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Level 4 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardLevel4"
                 android:layout_width="match_parent"
@@ -286,7 +263,7 @@
                             android:layout_height="wrap_content"
                             android:text="Level 4"
                             android:textColor="#1A237E"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -295,14 +272,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="🔒 Locked"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnLevel4"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:backgroundTint="#1565C0"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"
@@ -314,7 +291,6 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Level 5 -->
             <androidx.cardview.widget.CardView
                 android:id="@+id/cardLevel5"
                 android:layout_width="match_parent"
@@ -342,7 +318,7 @@
                             android:layout_height="wrap_content"
                             android:text="Level 5"
                             android:textColor="#1A237E"
-                            android:textSize="20sp"
+                            android:textSize="24sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -351,14 +327,14 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="🔒 Locked"
-                            android:textSize="14sp" />
+                            android:textSize="18sp" />
 
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btnLevel5"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:backgroundTint="#1565C0"
                         android:paddingStart="24dp"
                         android:paddingEnd="24dp"

@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -25,15 +24,13 @@ import com.example.wordclash.services.DatabaseService;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
-// מסך מנהל המאפשר לערוך פרטי משתמש קיים ואת הסטטיסטיקות שלו, או למחוק אותו לחלוטין.
-// המסך יורש מ-AppCompatActivity ומקבל את אובייקט המשתמש מהמסך הקודם.
 public class AdminUserActivity extends AppCompatActivity {
 
     // ui Components
     private Spinner genderSpinner, rankSpinner;
     private TextInputLayout emailLayout, passwordLayout, usernameLayout, scoreLayout;
     private EditText emailField, passwordField, usernameField, totalScoreField;
-    private Button updateBtn, deleteBtn, cancelBtn;
+    private android.widget.Button updateBtn, deleteBtn;
     private CheckBox isAdminCheckBox;
     private ProgressBar loadingProgress;
     private CardView mainCard;
@@ -50,14 +47,11 @@ public class AdminUserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_users);
 
-        // enable back button in action bar
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setTitle("Edit User");
         }
 
-        // שליפת אובייקט המשתמש שנשלח מהמסך הקודם דרך ה-Intent,
-        // תוך שימוש במנגנון Serializable המאפשר העברת עצמים שלמים בין מסכים באנדרואיד.
         selectedUser = getIntent().getSerializableExtra("user", User.class);
 
         if (selectedUser == null) {
@@ -66,7 +60,6 @@ public class AdminUserActivity extends AppCompatActivity {
             return;
         }
 
-        // שימוש ברכיב OnBackPressedDispatcher המודרני של אנדרואיד כדי לתפוס את הלחיצה על כפתור החזור הפיזי במכשיר ולבדוק אם יש שינויים שלא נשמרו לפני היציאה.
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -74,15 +67,12 @@ public class AdminUserActivity extends AppCompatActivity {
             }
         });
 
-
         initViews();
         setupSpinners();
         setupListeners();
-
         setupChangeTracking();
         showLoading(true);
         populateFields();
-
         loadUserStats();
     }
 
@@ -91,44 +81,35 @@ public class AdminUserActivity extends AppCompatActivity {
         mainCard = findViewById(R.id.mainCard);
         loadingProgress = findViewById(R.id.loadingProgress);
 
-        // TextInputLayouts for better material design
         emailLayout = findViewById(R.id.emailLayout);
         passwordLayout = findViewById(R.id.passwordLayout);
         usernameLayout = findViewById(R.id.usernameLayout);
         scoreLayout = findViewById(R.id.scoreLayout);
 
-        // EditTexts
         emailField = findViewById(R.id.Email);
         passwordField = findViewById(R.id.Password);
         usernameField = findViewById(R.id.UserName);
         totalScoreField = findViewById(R.id.TotalScore);
 
-        // Spinners
         genderSpinner = findViewById(R.id.Gender);
         rankSpinner = findViewById(R.id.RankSpinner);
 
-        // Checkbox
         isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
 
-        // Buttons
         updateBtn = findViewById(R.id.updateUserBtn);
         deleteBtn = findViewById(R.id.deleteUserBtn);
-        cancelBtn = findViewById(R.id.cancelBtn);
+        // cancelBtn הוסר — system back מספיק
 
-        // Initially disable buttons until data loads
         setButtonsEnabled(false);
     }
 
-    // אתחול תיבות הבחירה (Spinner) עבור מגדר ודרגות בעזרת ArrayAdapter, המקשר בין מערך מחרוזות פשוט לרכיב התצוגה הגרפי ב-XML.
     private void setupSpinners() {
-        // Gender spinner with better styling
         String[] genders = {"Male", "Female", "Other"};
         ArrayAdapter<String> genderAdapter = new ArrayAdapter<>(this,
                 android.R.layout.simple_spinner_item, genders);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         genderSpinner.setAdapter(genderAdapter);
 
-        // Rank spinner (1-5 ranks)
         String[] ranks = {"Rank 1 - Beginner", "Rank 2 - Intermediate",
                 "Rank 3 - Advanced", "Rank 4 - Expert", "Rank 5 - Master"};
         ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(this,
@@ -145,12 +126,8 @@ public class AdminUserActivity extends AppCompatActivity {
         });
 
         deleteBtn.setOnClickListener(v -> showDeleteConfirmation());
-
-        cancelBtn.setOnClickListener(v -> handleBackPress());
     }
 
-    // הגדרת מאזינים מסוג TextWatcher על שדות הטקסט ומאזיני בחירה בתיבות,
-    // כדי לעקוב בזמן אמת אם המנהל ביצע שינוי כלשהו בנתונים ולסמן שהמידע לא שמור.
     private void setupChangeTracking() {
         TextWatcher changeWatcher = new TextWatcher() {
             @Override
@@ -207,7 +184,6 @@ public class AdminUserActivity extends AppCompatActivity {
         usernameField.setText(selectedUser.getUserName());
         isAdminCheckBox.setChecked(selectedUser.isAdmin());
 
-        // Set gender
         String[] genders = {"Male", "Female", "Other"};
         for (int i = 0; i < genders.length; i++) {
             if (genders[i].equalsIgnoreCase(selectedUser.getGender())) {
@@ -217,8 +193,6 @@ public class AdminUserActivity extends AppCompatActivity {
         }
     }
 
-    // שליפת הסטטיסטיקות של המשתמש מה-Firebase בעזרת DatabaseService.
-    // במידה ולא קיימות סטטיסטיקות בענן עבורו, נוצר אובייקט Stats חדש עם ערכי ברירת מחדל של דרגה 1 ו-0 נקודות.
     private void loadUserStats() {
         DatabaseService.getInstance().getStats(selectedUser.getId(), new DatabaseService.DatabaseCallback<>() {
             @Override
@@ -229,7 +203,6 @@ public class AdminUserActivity extends AppCompatActivity {
                         rankSpinner.setSelection(Math.max(0, Math.min(stats.getRank() - 1, 4)));
                         totalScoreField.setText(String.valueOf(stats.getTotalScore()));
                     } else {
-                        // create default stats if none exist
                         userStats = new Stats(selectedUser.getId(), 1, 0);
                         rankSpinner.setSelection(0);
                         totalScoreField.setText("0");
@@ -245,7 +218,6 @@ public class AdminUserActivity extends AppCompatActivity {
             public void onFailed(Exception e) {
                 runOnUiThread(() -> {
                     showError("Failed to load user stats: " + e.getMessage());
-                    // create default stats
                     userStats = new Stats(selectedUser.getId(), 1, 0);
                     rankSpinner.setSelection(0);
                     totalScoreField.setText("0");
@@ -258,8 +230,6 @@ public class AdminUserActivity extends AppCompatActivity {
         });
     }
 
-    // פונקציית אימות קלט הבודקת תקינות אימייל באמצעות תבנית מובנית של אנדרואיד (Patterns.EMAIL_ADDRESS), מוודאת אורכי טקסט,
-    // ומבצעת try-catch כדי למנוע קריסה משגיאת NumberFormatException במידה והניקוד שהוזן בשדה אינו מספר תקין.
     private boolean validateInputs() {
         boolean isValid = true;
 
@@ -268,13 +238,11 @@ public class AdminUserActivity extends AppCompatActivity {
         String username = usernameField.getText().toString().trim();
         String score = totalScoreField.getText().toString().trim();
 
-        // clear previous errors
         emailLayout.setError(null);
         passwordLayout.setError(null);
         usernameLayout.setError(null);
         scoreLayout.setError(null);
 
-        // validate email
         if (email.isEmpty()) {
             emailLayout.setError("Email is required");
             isValid = false;
@@ -283,7 +251,6 @@ public class AdminUserActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // validate password
         if (password.isEmpty()) {
             passwordLayout.setError("Password is required");
             isValid = false;
@@ -292,7 +259,6 @@ public class AdminUserActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // validate username
         if (username.isEmpty()) {
             usernameLayout.setError("Username is required");
             isValid = false;
@@ -301,7 +267,6 @@ public class AdminUserActivity extends AppCompatActivity {
             isValid = false;
         }
 
-        // validate score
         if (score.isEmpty()) {
             scoreLayout.setError("Score is required");
             isValid = false;
@@ -341,8 +306,6 @@ public class AdminUserActivity extends AppCompatActivity {
                 .show();
     }
 
-    // מעדכנת את פרטי המשתמש והסטטיסטיקות שלו ב-Firebase בצורה מדורגת
-    // (קודם המשתמש ולאחר מכן הסטטיסטיקות בתוך ה-Callback של ההצלחה) כדי לשמור על סנכרון ושלמות הנתונים בענן.
     private void updateUser() {
         if (selectedUser == null) return;
 
@@ -355,14 +318,12 @@ public class AdminUserActivity extends AppCompatActivity {
         String gender = genderSpinner.getSelectedItem().toString();
         boolean isAdmin = isAdminCheckBox.isChecked();
 
-        // update user details
         selectedUser.setEmail(email);
         selectedUser.setPassword(password);
         selectedUser.setUserName(username);
         selectedUser.setGender(gender);
         selectedUser.setAdmin(isAdmin);
 
-        // update stats (extract rank number from "Rank X - Description" format)
         int newRank = rankSpinner.getSelectedItemPosition() + 1;
 
         int newScore;
@@ -375,11 +336,9 @@ public class AdminUserActivity extends AppCompatActivity {
         userStats.setRank(newRank);
         userStats.setTotalScore(newScore);
 
-        // save user
         DatabaseService.getInstance().updateUser(selectedUser, new DatabaseService.DatabaseCallback<>() {
             @Override
             public void onCompleted(Void v) {
-                // save stats
                 DatabaseService.getInstance().updateStats(userStats, new DatabaseService.DatabaseCallback<>() {
                     @Override
                     public void onCompleted(Void unused) {
@@ -388,9 +347,6 @@ public class AdminUserActivity extends AppCompatActivity {
                             hasUnsavedChanges = false;
                             showSuccess("User updated successfully");
 
-
-                            // שימוש במחלקת Handler עם הפעולה postDelayed כדי ליצור השהייה של שנייה וחצי.
-                            // זה מאפשר למשתמש להספיק לקרוא את הודעת הSnackbar לפני שהמסך נסגר ומחזיר אותו אוטומטית ל-UserListActivity.
                             new android.os.Handler().postDelayed(() -> {
                                 Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -436,8 +392,6 @@ public class AdminUserActivity extends AppCompatActivity {
                     hasUnsavedChanges = false;
                     showSuccess("User deleted successfully");
 
-                    // שימוש במחלקת Handler עם הפעולה postDelayed כדי ליצור השהייה של שנייה וחצי.
-                    // זה מאפשר למשתמש להספיק לקרוא את הודעת החיווי הירקה (Snackbar) לפני שהמסך נסגר ומחזיר אותו אוטומטית ל-UserListActivity.
                     new android.os.Handler().postDelayed(() -> {
                         Intent intent = new Intent(AdminUserActivity.this, UserListActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -466,7 +420,6 @@ public class AdminUserActivity extends AppCompatActivity {
     private void setButtonsEnabled(boolean enabled) {
         updateBtn.setEnabled(enabled);
         deleteBtn.setEnabled(enabled);
-        cancelBtn.setEnabled(enabled);
         emailField.setEnabled(enabled);
         passwordField.setEnabled(enabled);
         usernameField.setEnabled(enabled);
@@ -510,6 +463,4 @@ public class AdminUserActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-
 }

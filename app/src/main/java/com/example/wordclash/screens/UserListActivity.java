@@ -7,7 +7,6 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -36,7 +35,6 @@ public class UserListActivity extends AppCompatActivity {
     UserAdapter userAdapter;
     EditText searchUsername, searchEmail;
     Spinner searchGender;
-    Button btnBackToMain;
     private User currentUser;
 
     @Override
@@ -56,16 +54,9 @@ public class UserListActivity extends AppCompatActivity {
         searchUsername = findViewById(R.id.searchUsername);
         searchEmail = findViewById(R.id.searchEmail);
         searchGender = findViewById(R.id.searchGender);
-        btnBackToMain = findViewById(R.id.btnBackToMain);
+        // btnBackToMain הוסר — system back מספיק
 
         rvUsers.setLayoutManager(new LinearLayoutManager(this));
-
-        // back button click listener
-        btnBackToMain.setOnClickListener(v -> {
-            Intent intent = new Intent(UserListActivity.this, MainActivity.class);
-            startActivity(intent);
-            finish();
-        });
 
         userAdapter = new UserAdapter(new UserAdapter.OnUserClickListener() {
             @Override
@@ -93,10 +84,8 @@ public class UserListActivity extends AppCompatActivity {
 
         rvUsers.setAdapter(userAdapter);
 
-        // setup gender spinner
         setupGenderSpinner();
-        // setup search functionality for all fields
-        // - instead of clicking confirm to search for someone it will automaticly change
+
         TextWatcher searchWatcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -130,15 +119,12 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<User> users) {
                 allUsers.clear();
-                // sort users: admins first, then regular users
                 List<User> adminUsers = new ArrayList<>();
                 List<User> regularUsers = new ArrayList<>();
                 for (User user : users) {
-                    // skip current admin user from the list
                     if (currentUser != null && user.getId().equals(currentUser.getId())) {
                         continue;
                     }
-
                     if (user.isAdmin()) {
                         adminUsers.add(user);
                     } else {
@@ -175,8 +161,6 @@ public class UserListActivity extends AppCompatActivity {
         List<User> filteredList = new ArrayList<>();
 
         for (User user : allUsers) {
-
-            // check username criteria (only if field is not empty)
             if (!usernameQuery.isEmpty()) {
                 if (user.getUserName() == null ||
                         !user.getUserName().toLowerCase().contains(usernameQuery)) {
@@ -184,7 +168,6 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            // check email criteria (only if field is not empty)
             if (!emailQuery.isEmpty()) {
                 if (user.getEmail() == null ||
                         !user.getEmail().toLowerCase().contains(emailQuery)) {
@@ -192,7 +175,6 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            // check gender criteria (only if not "All")
             if (!genderQuery.equals("All")) {
                 if (user.getGender() == null ||
                         !user.getGender().equalsIgnoreCase(genderQuery)) {
@@ -200,9 +182,7 @@ public class UserListActivity extends AppCompatActivity {
                 }
             }
 
-            // add user only if all the criteria have been continued
             filteredList.add(user);
-
         }
 
         userAdapter.setUserList(filteredList);
@@ -216,15 +196,12 @@ public class UserListActivity extends AppCompatActivity {
             @Override
             public void onCompleted(List<User> users) {
                 allUsers.clear();
-                // sort users: admins first, then regular users
                 List<User> adminUsers = new ArrayList<>();
                 List<User> regularUsers = new ArrayList<>();
                 for (User user : users) {
-                    // skip current admin user from the list
                     if (currentUser != null && user.getId().equals(currentUser.getId())) {
                         continue;
                     }
-
                     if (user.isAdmin()) {
                         adminUsers.add(user);
                     } else {

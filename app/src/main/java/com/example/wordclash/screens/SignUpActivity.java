@@ -17,6 +17,7 @@ import com.example.wordclash.models.Stats;
 import com.example.wordclash.models.User;
 import com.example.wordclash.services.DatabaseService;
 import com.example.wordclash.utils.SharedPreferencesUtils;
+import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     // views from the XML
     private EditText etEmail, etPassword, etPassword2, etUserName;
+    private TextInputLayout tilEmail, tilPassword, tilConfirmPassword, tilUserName;
     private String selectedGender = "";
 
     @Override
@@ -40,6 +42,12 @@ public class SignUpActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.Password);
         etPassword2 = findViewById(R.id.PassswordAuthentication);
         etUserName = findViewById(R.id.UserName);
+
+        tilEmail = findViewById(R.id.tilEmail);
+        tilPassword = findViewById(R.id.tilPassword);
+        tilConfirmPassword = findViewById(R.id.tilConfirmPassword);
+        tilUserName = findViewById(R.id.tilUserName);
+
         Spinner genderSpinner = findViewById(R.id.Gender);
         Button btnConfirm = findViewById(R.id.ConfirmsignUpButton);
 
@@ -84,14 +92,35 @@ public class SignUpActivity extends AppCompatActivity {
 
         // בדיקת תקינות השדות לפני פנייה ישירה
 
-        if (email.isEmpty() || password.isEmpty()
-                || password2.isEmpty() || userName.isEmpty()) {
-            Toast.makeText(this, "נא למלא את כל השדות", Toast.LENGTH_SHORT).show();
+        tilEmail.setError(null);
+        tilPassword.setError(null);
+        tilConfirmPassword.setError(null);
+        tilUserName.setError(null);
+
+        boolean hasError = false;
+        if (email.isEmpty()) {
+            tilEmail.setError("נא למלא את השדה");
+            hasError = true;
+        }
+        if (password.isEmpty()) {
+            tilPassword.setError("נא למלא את השדה");
+            hasError = true;
+        }
+        if (password2.isEmpty()) {
+            tilConfirmPassword.setError("נא למלא את השדה");
+            hasError = true;
+        }
+        if (userName.isEmpty()) {
+            tilUserName.setError("נא למלא את השדה");
+            hasError = true;
+        }
+
+        if (hasError) {
             return;
         }
 
         if (!password.equals(password2)) {
-            Toast.makeText(this, "הסיסמאות אינן תואמות", Toast.LENGTH_SHORT).show();
+            tilConfirmPassword.setError("הסיסמאות אינן תואמות");
             return;
         }
 
@@ -108,7 +137,7 @@ public class SignUpActivity extends AppCompatActivity {
             @Override
             public void onCompleted(Boolean exist) {
                 if (exist) {
-                    Toast.makeText(SignUpActivity.this, "מייל כבר קיים", Toast.LENGTH_LONG).show();
+                    tilEmail.setError("מייל כבר קיים");
                 } else {
                     db.createNewUser(user, new DatabaseService.DatabaseCallback<>() {
                         @Override

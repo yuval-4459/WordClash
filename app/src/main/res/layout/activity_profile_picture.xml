@@ -11,7 +11,6 @@
         android:layout_height="wrap_content"
         android:padding="24dp">
 
-        <!-- Header -->
         <androidx.cardview.widget.CardView
             android:id="@+id/headerCard"
             android:layout_width="0dp"
@@ -49,7 +48,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Content card -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -67,7 +65,6 @@
                 android:orientation="vertical"
                 android:padding="32dp">
 
-                <!-- Username -->
                 <TextView
                     android:id="@+id/tvUserName"
                     android:layout_width="wrap_content"
@@ -78,7 +75,6 @@
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
-                <!-- Avatar -->
                 <FrameLayout
                     android:layout_width="200dp"
                     android:layout_height="200dp"
@@ -120,13 +116,13 @@
 
                 </FrameLayout>
 
-                <!-- Buttons - bigger text, taller -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnChooseFromGallery"
                     android:layout_width="match_parent"
                     android:layout_height="72dp"
                     android:layout_marginBottom="14dp"
                     android:text="📁  Choose from Gallery"
+                    android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:backgroundTint="#1A237E"
@@ -139,6 +135,7 @@
                     android:layout_height="72dp"
                     android:layout_marginBottom="14dp"
                     android:text="📷  Take Photo"
+                    android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:backgroundTint="#43A047"
@@ -151,6 +148,7 @@
                     android:layout_height="72dp"
                     android:layout_marginBottom="14dp"
                     android:text="🔄  Rotate 90°"
+                    android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:visibility="gone"
@@ -163,13 +161,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="72dp"
                     android:text="🗑️  Delete Picture"
+                    android:textColor="#FFFFFF"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:backgroundTint="#D32F2F"
                     app:cornerRadius="14dp"
                     app:elevation="4dp" />
-
-                <!-- No back button - use system gesture -->
 
             </LinearLayout>
 

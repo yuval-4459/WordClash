@@ -12,7 +12,6 @@
         android:layout_marginTop="30dp"
         android:padding="24dp">
 
-        <!-- Header Card -->
         <androidx.cardview.widget.CardView
             android:id="@+id/headerCard"
             android:layout_width="0dp"
@@ -58,7 +57,6 @@
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Form Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -75,8 +73,8 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Email Input -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilEmail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -96,12 +94,12 @@
                         android:inputType="textEmailAddress"
                         android:padding="16dp"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password Input -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -122,12 +120,12 @@
                         android:inputType="textPassword"
                         android:padding="16dp"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Confirm Password Input -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilConfirmPassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -148,12 +146,12 @@
                         android:inputType="textPassword"
                         android:padding="16dp"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Username Input -->
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilUserName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -172,11 +170,10 @@
                         android:layout_height="wrap_content"
                         android:padding="16dp"
                         android:textColor="#000000"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Gender Spinner -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -197,7 +194,7 @@
                     <Spinner
                         android:id="@+id/Gender"
                         android:layout_width="match_parent"
-                        android:layout_height="56dp"
+                        android:layout_height="64dp"
                         android:paddingStart="16dp"
                         android:paddingEnd="16dp"
 
@@ -205,7 +202,6 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Sign Up Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/ConfirmsignUpButton"
                     android:layout_width="match_parent"
@@ -218,7 +214,6 @@
                     app:cornerRadius="12dp"
                     app:elevation="4dp" />
 
-                <!-- Back Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/BacktoLandingButton"
                     android:layout_width="match_parent"

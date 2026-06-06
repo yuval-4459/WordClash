@@ -55,13 +55,11 @@ public class LevelActivity extends AppCompatActivity {
         tvPracticeHint = findViewById(R.id.tvPracticeHint);
         Button btnWords = findViewById(R.id.btnWords);
         btnPractice = findViewById(R.id.btnPractice);
-        Button btn_level_Back = findViewById(R.id.btnBack);
 
         tvLevelTitle.setText("Rank " + currentRank);
 
         btnWords.setOnClickListener(v -> openWordsList());
         btnPractice.setOnClickListener(v -> openPractice());
-        btn_level_Back.setOnClickListener(v -> finish());
     }
 
     private void loadStats() {

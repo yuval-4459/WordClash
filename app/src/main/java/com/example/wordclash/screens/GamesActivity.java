@@ -2,7 +2,6 @@ package com.example.wordclash.screens;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,7 +46,6 @@ public class GamesActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        Button btnBack = findViewById(R.id.btnBack);
         CardView cardMatchGame = findViewById(R.id.cardMatchGame);
         CardView cardFillGaps = findViewById(R.id.cardFillGaps);
         CardView cardListenGuess = findViewById(R.id.cardListenGuess);
@@ -55,8 +53,6 @@ public class GamesActivity extends AppCompatActivity {
         CardView cardTrueFalse = findViewById(R.id.cardTrueFalse);
         CardView cardMemoryCards = findViewById(R.id.cardMemoryCards);
         CardView cardSpeedQuiz = findViewById(R.id.cardSpeedQuiz);
-
-        btnBack.setOnClickListener(v -> finish());
 
         // Match Game
         cardMatchGame.setOnClickListener(v -> {

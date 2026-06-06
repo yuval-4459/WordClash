@@ -5,7 +5,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
-    <!-- Top Header Card (title + search + sort) -->
     <androidx.cardview.widget.CardView
         android:id="@+id/headerCard"
         android:layout_width="0dp"
@@ -24,7 +23,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Title -->
             <TextView
                 android:id="@+id/tvWordsTitle"
                 android:layout_width="wrap_content"
@@ -42,33 +40,50 @@
                 android:layout_marginTop="6dp"
                 android:background="@drawable/accent_line" />
 
-            <!-- Search Field -->
             <EditText
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@android:drawable/edit_text"
+                android:background="@drawable/rounded_bg"
                 android:hint="Search English or Hebrew..."
                 android:inputType="text"
                 android:maxLines="1"
-                android:padding="10dp"
-                android:textSize="14sp" />
+                android:minHeight="64dp"
+                android:padding="16dp"
+                android:textColor="#000000"
+                android:textColorHint="#666666"
+                android:textSize="18sp" />
 
-            <!-- Sort Spinner -->
-            <Spinner
-                android:id="@+id/spinnerSort"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="64dp"
                 android:layout_marginTop="8dp"
-                android:background="@android:drawable/btn_dropdown"
-                android:padding="8dp" />
+                android:background="@drawable/rounded_bg">
+
+                <Spinner
+                    android:id="@+id/spinnerSort"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="48dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="end|center_vertical"
+                    android:layout_marginEnd="16dp"
+                    android:text="▼"
+                    android:textColor="#666666"
+                    android:textSize="14sp"
+                    android:importantForAccessibility="no" />
+            </FrameLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
 
-    <!-- Words RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvWords"
         android:layout_width="0dp"
@@ -76,16 +91,15 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="0dp"
         android:clipToPadding="false"
         android:paddingTop="4dp"
-        android:paddingBottom="8dp"
+        android:paddingBottom="88dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/headerCard" />
 
-    <!-- Floating "I'm Ready" Button — anchored to bottom, no overlap -->
     <Button
         android:id="@+id/btnReady"
         android:layout_width="0dp"

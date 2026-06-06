@@ -160,7 +160,11 @@ public class ProfilePictureActivity extends AppCompatActivity {
     private void openCamera() {
         try {
             photoUri = null;
-            File photoFile = new File(getCacheDir(),
+            File storageDir = getExternalCacheDir();
+            if (storageDir == null) {
+                storageDir = getCacheDir();
+            }
+            File photoFile = new File(storageDir,
                     "profile_picture_" + System.currentTimeMillis() + ".jpg");
             photoFile.createNewFile();
             photoUri = FileProvider.getUriForFile(this,

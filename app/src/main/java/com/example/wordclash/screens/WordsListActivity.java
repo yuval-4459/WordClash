@@ -78,29 +78,30 @@ public class WordsListActivity extends AppCompatActivity {
         // show when scrolling up (user comes back toward top — ready button should reappear)
         // this is the OPPOSITE of the previous logic where the button was at the top.
         rvWords.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            private int buttonState = 1; // 1 = visible, 0 = hidden
+
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                if (dy > 0) {
+                if (dy > 0 && buttonState == 1) {
                     // scrolling down — hide the bottom button to see more list
-                    if (btnReady.getVisibility() == View.VISIBLE) {
-                        btnReady.animate()
-                                .translationY(btnReady.getHeight() + 32f)
-                                .alpha(0.0f)
-                                .setDuration(250)
-                                .withEndAction(() -> btnReady.setVisibility(View.GONE))
-                                .start();
-                    }
-                } else if (dy < 0) {
+                    buttonState = 0;
+                    btnReady.animate().cancel();
+                    btnReady.animate()
+                            .translationY(btnReady.getHeight() + 64f)
+                            .alpha(0.0f)
+                            .setDuration(200)
+                            .withEndAction(() -> btnReady.setVisibility(View.GONE))
+                            .start();
+                } else if (dy < 0 && buttonState == 0) {
                     // scrolling up — show the bottom button again
-                    if (btnReady.getVisibility() == View.GONE) {
-                        btnReady.setVisibility(View.VISIBLE);
-                        btnReady.setTranslationY(btnReady.getHeight() + 32f);
-                        btnReady.animate()
-                                .translationY(0)
-                                .alpha(1.0f)
-                                .setDuration(250)
-                                .start();
-                    }
+                    buttonState = 1;
+                    btnReady.animate().cancel();
+                    btnReady.setVisibility(View.VISIBLE);
+                    btnReady.animate()
+                            .translationY(0)
+                            .alpha(1.0f)
+                            .setDuration(200)
+                            .start();
                 }
             }
         });
@@ -110,8 +111,30 @@ public class WordsListActivity extends AppCompatActivity {
 
     private void setupSortSpinner() {
         String[] sortOptions = {"Random", "A-Z (English)", "א-ב (Hebrew)"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, sortOptions);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions) {
+            @NonNull
+            @Override
+            public View getView(int position, View convertView, @NonNull android.view.ViewGroup parent) {
+                View v = super.getView(position, convertView, parent);
+                if (v instanceof TextView) {
+                    ((TextView) v).setTextColor(android.graphics.Color.BLACK);
+                    ((TextView) v).setTextSize(18);
+                }
+                return v;
+            }
+
+            @Override
+            public View getDropDownView(int position, View convertView, @NonNull android.view.ViewGroup parent) {
+                View v = super.getDropDownView(position, convertView, parent);
+                if (v instanceof TextView) {
+                    ((TextView) v).setTextColor(android.graphics.Color.WHITE);
+                    ((TextView) v).setTextSize(18);
+                }
+                return v;
+            }
+        };
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSort.setAdapter(adapter);
 

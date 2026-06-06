@@ -46,9 +46,6 @@ public class RanksActivity extends AppCompatActivity {
         initializeViews();
         loadUserStats();
         updateOnlinePlayersCount();
-
-        Button btn_Ranks_back = findViewById(R.id.btnBack);
-        btn_Ranks_back.setOnClickListener(v -> finish());
     }
 
     private void initializeUser() {
@@ -121,7 +118,7 @@ public class RanksActivity extends AppCompatActivity {
             button.setEnabled(true);
             // use own color resource instead of deprecated AOSP holo_blue_light
             button.setBackgroundTintList(getResources().getColorStateList(R.color.primary));
-            button.setText("Play");
+            button.setText(getString(R.string.play_level, level));
             statusText.setText(getString(R.string.unlocked));
             statusText.setTextColor(getResources().getColor(R.color.success));
             button.setOnClickListener(v -> startLevel(level));
@@ -144,7 +141,7 @@ public class RanksActivity extends AppCompatActivity {
     }
 
     // האזנה רציפה לנתיב השחקנים ב-Firebase באמצעות מאזין מסוג ValueEventListener.
-    // המאזין מתעדכן אוטומטית בכל פעם ששחקן נכנס או יוצא, ומחשב את כמות הילדים (getChildrenCount) להצגה על המסך.
+    // המאזין מתעדעכן אוטומטית בכל פעם ששחקן נכנס או יוצא, ומחשב את כמות הילדים (getChildrenCount) להצגה על המסך.
     private void updateOnlinePlayersCount() {
         DatabaseReference onlineRef = FirebaseDatabase.getInstance().getReference("online_users");
 
