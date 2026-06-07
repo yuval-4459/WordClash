@@ -49,7 +49,7 @@ public class DatabaseService {
 
     // ========== משתמשים (Users) ==========
 
-    // קבלת המופע היחיד של השירות
+    // קבלת המופע היחיד של השירות - כדי שלא יווצר חיבור חדש וכפול מול הFireBase
     public static DatabaseService getInstance() {
         if (instance == null) {
             instance = new DatabaseService();

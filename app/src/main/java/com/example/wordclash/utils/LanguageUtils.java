@@ -29,12 +29,15 @@ public class LanguageUtils {
         // if learning Hebrew, UI should be in English
         String uiLanguage = learningLanguage.equals("english") ? "he" : "en";
 
+        // מגדיר את אובייקט השפה הרשמי של המערכת לפי הבחירה
         Locale locale = new Locale(uiLanguage);
         Locale.setDefault(locale);
 
         Configuration config = new Configuration();
         config.setLocale(locale);
 
+        // מעדכן את ההגדרות של האפליקציה.
+        // זה גורם לאנדרואיד להבין לבד שהוא צריך למשוך את המילים מקובץ ה-strings.xml
         context.getResources().updateConfiguration(config, context.getResources().getDisplayMetrics());
     }
 

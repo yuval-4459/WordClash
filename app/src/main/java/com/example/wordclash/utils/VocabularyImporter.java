@@ -67,6 +67,7 @@ public class VocabularyImporter {
     private static void importLevel(JsonObject levelData, int rank) {
         if (levelData == null) return;
 
+        //  לולאה מורחבת (For-Each) שרצה על כל זוג של מפתח וערך ב-JSON (המפתח הוא ה-ID והערך הוא נתוני המילה)
         for (Map.Entry<String, com.google.gson.JsonElement> entry : levelData.entrySet()) {
             try {
                 JsonObject wordData = entry.getValue().getAsJsonObject();

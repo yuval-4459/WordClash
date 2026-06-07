@@ -215,6 +215,8 @@ public class MainActivity extends AppCompatActivity
     private void logout() {
         SharedPreferencesUtils.signOutUser(this);
         Intent intent = new Intent(this, LandingActivity.class);
+        // FLAG_ACTIVITY_CLEAR_TASK - מוחק ומנקה לחלוטין את כל האקטיביטיז שנמצאות כרגע במחסנית.
+        // FLAG_ACTIVITY_NEW_TASK - פותח את האקטיביטי החדשה (מסך הנחיתה) כמסך הבסיס של משימה חדשה ונקייה.
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
     }

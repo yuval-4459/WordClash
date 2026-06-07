@@ -70,6 +70,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         btnOption3 = findViewById(R.id.btnOption3);
         btnOption4 = findViewById(R.id.btnOption4);
 
+        // רץ על המערך מההתחלה ועד הסוף (לולאת for each)
         for (Button b : new Button[]{btnOption1, btnOption2, btnOption3, btnOption4}) {
             b.setTextSize(20f);
             b.setTypeface(null, Typeface.BOLD);
@@ -86,11 +87,15 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         btnListen.setAlpha(0.5f);
     }
 
+    // יוצרת רכיב שממיר טקסט לדיבור (מנוע הדיבור של גוגל בטלפון).
+    // הסטטוס זה מאזין.
+    // אני צריך לבדוק האם זה עלה בהצלחה בכלל. אם כן, המשך בהתאם לשפת הלימוד.
     private void initializeTTS() {
         tts = new TextToSpeech(this, status -> {
             if (status == TextToSpeech.SUCCESS) {
                 String learningLanguage = user.getLearningLanguage();
                 if (learningLanguage == null) learningLanguage = "english";
+                // האם הצלחנו להגדיר את השפה או לא
                 boolean languageSet = false;
 
                 if (learningLanguage.equals("english")) {
@@ -104,6 +109,7 @@ public class ListenGuessGameActivity extends AppCompatActivity {
                             new Locale("iw", "IL"), new Locale("iw"),
                             new Locale("he", "IL"), new Locale("he")
                     };
+                    // רץ על המערך מההתחלה ועד הסוף (לולאת for each)
                     for (Locale locale : hebrewLocales) {
                         int result = tts.setLanguage(locale);
                         if (result != TextToSpeech.LANG_MISSING_DATA

@@ -62,6 +62,11 @@ public class WordAdapter extends RecyclerView.Adapter<WordAdapter.ViewHolder> {
         final TextView tvEnglish;
         final TextView tvHebrew;
 
+        // ה-ViewHolder משמש כ"מחסן" או "זיכרון מטמון" (Cache) קטן לשורה.
+        // הוא מבצע את פעולת ה-findViewById על הרכיבים רק פעם אחת בלבד – ברגע שהשורה מיוצרת לראשונה. הוא מחזיק אותם מוכנים ביד.
+        //
+        //כשהמשתמש גולל ברשימה, ה-RecyclerView לא מחפש את הרכיבים מחדש. הוא פשוט לוקח את ה-ViewHolder המוכן,
+        // פונה ישירות למשתנים שלו (holder.tvEnglish ו-holder.tvHebrew) ומחליף רק את המלל הפנימי בצורה חלקה ומהירה במתודה onBindViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvEnglish = itemView.findViewById(R.id.tvEnglish);

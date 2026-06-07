@@ -11,6 +11,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
@@ -34,6 +35,7 @@ public class AdminUserActivity extends AppCompatActivity {
     private ProgressBar loadingProgress;
     private CardView mainCard;
     private View rootView;
+    private TextView tvRank;
 
     private User selectedUser;
     private Stats userStats;
@@ -91,6 +93,8 @@ public class AdminUserActivity extends AppCompatActivity {
 
         genderSpinner = findViewById(R.id.Gender);
         rankSpinner = findViewById(R.id.RankSpinner);
+        tvRank = findViewById(R.id.rankTitle);
+
 
         isAdminCheckBox = findViewById(R.id.isAdminCheckBox);
 
@@ -216,6 +220,8 @@ public class AdminUserActivity extends AppCompatActivity {
                                 rankSpinner.setSelection(0);
                                 totalScoreField.setText("0");
                             }
+                            tvRank.setText(getString(R.string.level, stats.getRank()));
+
                             showLoading(false);
                             setButtonsEnabled(true);
                             isDataLoaded = true;
