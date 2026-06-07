@@ -153,8 +153,8 @@ public class UserListActivity extends AppCompatActivity {
                 getString(R.string.other)
         };
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, genders);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.item_spinner, genders);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         searchGender.setAdapter(adapter);
     }
 

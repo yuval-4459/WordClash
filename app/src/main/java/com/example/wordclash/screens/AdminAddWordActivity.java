@@ -47,8 +47,8 @@ public class AdminAddWordActivity extends AppCompatActivity {
     private void setupRankSpinner() {
         String[] ranks = {"1", "2", "3", "4", "5"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, ranks);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.item_spinner, ranks);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerRank.setAdapter(adapter);
     }
 

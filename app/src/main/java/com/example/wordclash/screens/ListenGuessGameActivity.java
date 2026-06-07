@@ -100,6 +100,8 @@ public class ListenGuessGameActivity extends AppCompatActivity {
 
                 if (learningLanguage.equals("english")) {
                     int result = tts.setLanguage(Locale.US);
+                    // השפה נתמכת, אך קבצי הקול חסרים במכשיר ויש להורידם LANG_MISSING_DATA
+                    // LANG_NOT_SUPPORTED - השפה אינה נתמכת כלל על ידי מנוע ה(tts) במכשיר
                     if (result != TextToSpeech.LANG_MISSING_DATA
                             && result != TextToSpeech.LANG_NOT_SUPPORTED) {
                         languageSet = true;
@@ -241,7 +243,9 @@ public class ListenGuessGameActivity extends AppCompatActivity {
         if (!ttsReady) {
             Toast.makeText(this,
                     ttsInitialized
+                            // אם true
                             ? getString(R.string.tts_not_available)
+                            //אחרת false
                             : getString(R.string.tts_loading),
                     Toast.LENGTH_SHORT).show();
             return;

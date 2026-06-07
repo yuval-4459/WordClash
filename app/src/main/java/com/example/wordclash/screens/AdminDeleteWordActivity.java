@@ -72,8 +72,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 getString(R.string.sort_rank)
         };
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, sortOptions);
-        sortAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.item_spinner, sortOptions);
+        sortAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerSort.setAdapter(sortAdapter);
 
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -97,8 +97,8 @@ public class AdminDeleteWordActivity extends AppCompatActivity {
                 getString(R.string.rank, 5)
         };
         ArrayAdapter<String> rankAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, rankOptions);
-        rankAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                R.layout.item_spinner, rankOptions);
+        rankAdapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerRankFilter.setAdapter(rankAdapter);
 
         spinnerRankFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

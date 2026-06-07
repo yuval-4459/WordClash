@@ -116,30 +116,8 @@ public class WordsListActivity extends AppCompatActivity {
                 getString(R.string.sort_hebrew)
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, sortOptions) {
-            @NonNull
-            @Override
-            public View getView(int position, View convertView, @NonNull android.view.ViewGroup parent) {
-                View v = super.getView(position, convertView, parent);
-                if (v instanceof TextView) {
-                    ((TextView) v).setTextColor(android.graphics.Color.BLACK);
-                    ((TextView) v).setTextSize(18);
-                }
-                return v;
-            }
-
-            @Override
-            public View getDropDownView(int position, View convertView, @NonNull android.view.ViewGroup parent) {
-                View v = super.getDropDownView(position, convertView, parent);
-                if (v instanceof TextView) {
-                    ((TextView) v).setTextColor(android.graphics.Color.WHITE);
-                    ((TextView) v).setTextSize(18);
-                }
-                return v;
-            }
-        };
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.item_spinner, sortOptions);
+        adapter.setDropDownViewResource(R.layout.item_spinner_dropdown);
         spinnerSort.setAdapter(adapter);
 
         spinnerSort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
